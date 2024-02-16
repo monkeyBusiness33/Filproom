@@ -1,0 +1,42 @@
+[
+    {
+        "topic":"shipping",
+        "question": "How do I ship the item once I get a sale?",
+        "answer": "Go to 'sales' tab\nAccept order\nclick order line and click fulfilment\nselect DPD/UPS\nReference is automatic\nWont need to add tracking as that will automatically populate into our system\nSelect the item you’re shipping and submit"
+    },
+    {
+        "topic": "shipping",
+        "question": "Do you provide the shipping labels?",
+        "answer": "We provide DPD and UPS shipping labels which are covered by our fees! (These fee’s are included in the final sale price and not  your payout)\nPlease do not create your own label at your own costs as our team need the labels generated on our system to be able to receive your item"
+    },
+    {
+        "topic": "payout",
+        "question": "When do I get the payout after I ship?",
+        "answer": "As soon as your item has been authenticated and passed by our team your order will be added to our payment queue\nThis is usually around 0-3 working days (But it should be much faster!)"
+    },
+    {
+        "topic": "payout",
+        "question": "I didn't receive the payout yet, what should I do?",
+        "answer": "Contact our account management team on these details (victoria@theeditldn.com & +44 7597519375)"
+    },
+    {
+        "topic": "payout",
+        "question": "How do your fee’s work?",
+        "answer": "We add our our fee’s on top of your payout which will be included in the buying customers final price\nFee’s will not come out of your payout at all!"
+    },
+    {
+        "topic": "shipping",
+        "question": "What condition should boxes/product be in when shipping?",
+        "answer": "All items must new and unused. Packaging and box’s must be in perfect condition and match the item they are being shipped with\nIf you have any questions about item conditions please contact our team on : (victoria@theeditldn.com & +44 7597519375)"
+    },
+    {
+        "topic": "shipping",
+        "question": "Do you cover damage fees from the couriers?",
+        "answer": "We do! Should you item be damaged in transit, we will raise a claim directly with the courier but to do so we require your item to be shipped securely with adequate dunnage (bubble wrap etc) as without this our couriers will not payout."
+    },
+    {
+        "topic": "payout",
+        "question": "How long does it take to authenticate once my product reaches HQ?",
+        "answer": "Item’s are generally authenticated within 24hrs of being received, however during busy periods this may vary"
+    }
+]

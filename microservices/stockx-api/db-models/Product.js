@@ -1,0 +1,28 @@
+module.exports = (sequelize, Sequelize) => {
+    return sequelize.define("product", {
+        ID:              {type: Sequelize.BIGINT,      allowNull: false, primaryKey: true, autoIncrement: true},
+        stockxId:            {type: Sequelize.STRING(200),  allowNull: false},
+        styleId:            {type: Sequelize.STRING(200),  allowNull: false},
+        brand:               {type: Sequelize.STRING(200),  allowNull: true},
+        title:               {type: Sequelize.STRING(200),  allowNull: true},
+        description:         {type: Sequelize.STRING(2000),  allowNull: true},
+        price:               {type: Sequelize.FLOAT(10,2),  allowNull: true},
+        salesLast72Hours:  {type: Sequelize.INTEGER,  allowNull: true},
+        salesLast72HoursChangePercentage:  {type: Sequelize.FLOAT(10,2),  allowNull: true},
+        lastSalePrice:       {type: Sequelize.FLOAT(10,2),  allowNull: true},
+        lastSaleChangePercentage:  {type: Sequelize.FLOAT(10,2),  allowNull: true},
+        volatilityScore:     {type: Sequelize.FLOAT(10,2),  allowNull: true},
+        volatilityScoreChangePercentage:     {type: Sequelize.FLOAT(10,2),  allowNull: true},
+        category:            {type: Sequelize.STRING(200),  allowNull: true},
+        url:                 {type: Sequelize.STRING(200),  allowNull: true},
+        releaseDate:         {type: Sequelize.DATEONLY,     allowNull: true},
+        queuedAt:            {type: Sequelize.DATE,         allowNull: true},
+        processAt:            {type: Sequelize.DATE,         allowNull: true},
+        importedDate:        {type: Sequelize.DATEONLY,     allowNull: true},
+        imageReferenceUrl:   {type: Sequelize.STRING(1000), allowNull: true},
+        category2:           {type: Sequelize.STRING(500), allowNull: true},
+        gender:              {type: Sequelize.STRING(200), allowNull: true},
+        color:               {type: Sequelize.STRING(300), allowNull: true},
+        retailPrice:         {type: Sequelize.DECIMAL(10,2), allowNull: true},
+    });
+};

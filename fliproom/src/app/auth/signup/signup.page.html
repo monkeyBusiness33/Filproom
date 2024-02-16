@@ -1,0 +1,103 @@
+
+<ion-content>
+  <div class="wrapper">
+    <div id="section1" class="padding">
+      <div class="img-wrapper">
+        <img src="assets/fliproom_logo-text_white.svg" alt="">
+      </div>
+
+      <div id="section1-body">
+        <div id="usp">
+          <h1>All in on One Platform for your Business</h1>
+          <p>Inventory & Orders Management, Consignment Platform and Marketing Agency</p>
+        </div>
+<!--        <div class="partners-section margin-top-xl">-->
+<!--          <p>In partnership with</p>-->
+<!--          <img id="edit-ldn" src="assets/images/the-edit-ldn-logo.avif" alt="">-->
+<!--        </div>-->
+      </div>
+
+
+      <div id="feedbacks-section">
+        <ion-card>
+          <ion-card-content>
+            <p id="message">"The scales of which we can build on the ideas they are creating for us, are huge, and they are frequently suggesting ideas of how we can advance the technologies further."</p>
+            <p id="author">Millie - The Edit LDN</p>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <div id="section2">
+      <div id="wrapper-form" class="padding">
+        <h2 class="center margin-bottom">Sign Up</h2>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit($event)">
+          <div class="two-cell-grid">
+            <mat-form-field appearance="fill">
+              <mat-label>Name</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input matInput formControlName="name" placeholder="Name">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Surname</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input matInput formControlName="surname" placeholder="Surname">
+            </mat-form-field>
+          </div>
+
+
+          <mat-form-field appearance="fill" >
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>mail</mat-icon>
+            <input matInput formControlName="email" placeholder="Email">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" >
+            <mat-label>Password</mat-label>
+            <mat-icon matPrefix>lock_cosed</mat-icon>
+            <input matInput #passwordInput1 formControlName="password" placeholder="Password" type="password">
+            <mat-icon matSuffix (click)="passwordInput1.type = 'text'"     *ngIf="passwordInput1.type == 'password'">visibility</mat-icon>
+            <mat-icon matSuffix (click)="passwordInput1.type = 'password'" *ngIf="passwordInput1.type == 'text'">visibility_off</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" >
+            <mat-label>Confirm Password</mat-label>
+            <mat-icon matPrefix>lock_cosed</mat-icon>
+            <input matInput #passwordInput2 formControlName="confirmPassword" placeholder="Confirm Password" type="password">
+            <mat-icon matSuffix (click)="passwordInput2.type = 'text'"     *ngIf="passwordInput2.type == 'password'">visibility</mat-icon>
+            <mat-icon matSuffix (click)="passwordInput2.type = 'password'" *ngIf="passwordInput2.type == 'text'">visibility_off</mat-icon>
+          </mat-form-field>
+
+          <button mat-flat-button class="margin-top" color="primary" [class.loading]="isLoading" test-id="signup">Sign Up</button>
+        </form>
+
+        <span id="line-break" class="margin-top margin-bottom">OR</span>
+
+        <button mat-flat-button (click)="authApi.googleSignIn()"  [class.loading]="isLoading"  class="social-btn">
+          <img matPrefix src="assets/images/google.png" alt="" srcset="">
+          Sign Up with Google
+        </button>
+
+        <button mat-flat-button (click)="authApi.appleSignIn_v2()" [class.loading]="isLoading" class="margin-top-s social-btn" *ngIf="env.platform == 'ios'">
+          <img matPrefix src="assets/images/apple.png" alt="" srcset="">
+          Sign Up with Apple
+        </button>
+
+        <div class="center margin-top-l bold">
+          <span>By Signing up you agree to our </span>
+           <a href="https://www.fliproom.io/terms-conditions" target="_blank">Terms and Conditions</a>
+        </div>
+
+        <div class="center margin-top">
+          <span>Do you have an account?</span>
+          <a class="button" [routerLink]="['/signin']" queryParamsHandling="preserve">Sign In</a>
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+</ion-content>

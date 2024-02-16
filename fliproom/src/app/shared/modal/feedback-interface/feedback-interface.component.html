@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <span class="material-symbols-outlined" translate="no" >arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{data.title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ng-template #contentTemplate>
+  <form [formGroup]="feedbackForm">
+    <p *ngIf="mode === 'feedback' && data.subTitle" class="center">{{data.subTitle}}</p>
+    <div class="stars-rating" *ngIf="mode == 'feedback'">
+      <ion-button size="small" fill="clear" class="rate-button" [ngStyle]="{'width' : fontSize, 'height' : fontSize}" *ngFor="let index of iconsArray" id="{{index}}" (click)="changeRating($event)">
+        <span class="material-symbols-outlined" [ngStyle]="{'color': ((halfStar === 'false' && index < this.Math.round(this.parseFloat(rating))) || (halfStar === 'true' && index < this.parseFloat(rating))) ? activeColor : defaultColor, 'font-size' : fontSize }">star</span>
+        <ion-icon  name="{{(halfStar ==='true' && (rating - index > 0) && (rating - index <= 0.5)) ? halfIcon : (index < this.Math.round(this.parseFloat(rating))) ? activeIcon : defaultIcon}}"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!--    Feedback mode or rating mode-->
+    <div class="reasons" *ngIf="displayReasons">
+      <p *ngIf="mode == 'feedback'"><b>Why?</b></p>
+      <p *ngFor="let feedbackReason of feedbackForm.get('reasons')['controls']; let i=index">
+        <mat-checkbox [formControl]="feedbackReason">{{data.reasons[i]}}</mat-checkbox>
+        <input matInput *ngIf="data.reasons[i] == 'Other' && reasonsFormArray.controls[i].value" ngClass="extraFeedback"  type="text" autocomplete="null" formControlName="extraFeedback" maxlength=500 placeholder="Tell us more...">
+      </p>
+      <mat-hint class="error" *ngIf="feedbackForm.touched && feedbackForm.get('reasons').errors.noOptionSelected">Please select at least one option</mat-hint>
+    </div>
+
+    <!--    Option Cards mode-->
+    <div class="options" *ngIf="mode == 'option-cards'">
+      <ion-card *ngFor="let optionCard of data.optionCards; let i=index" class=" option-card button" [ngClass]="{'margin-bottom': i != data.optionCards.length -1 }" button (click)="onOptionClick(i)" >
+        <ion-card-content>
+          <div class="body flex-split">
+            <div class="content">
+              <span class="title" *ngIf="optionCard.title">{{optionCard.title}}</span>
+              <span class="subtitle" *ngIf="optionCard.description">{{optionCard.description}}</span>
+              <section *ngIf="optionCard.list && optionCard.list.length > 0" class="list">
+                <ul>
+                  <li *ngFor="let li of optionCard.list">{{li}}</li>
+                </ul>
+              </section>
+            </div>
+            <div *ngIf="optionCard.suffix" class="suffix">
+              {{optionCard.suffix}}
+            </div>
+
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <mat-hint class="error" *ngIf="feedbackForm.touched && feedbackForm.get('option').invalid">Please select one option</mat-hint>
+    </div>
+
+    <!--    Bulk Feedback Mode -->
+    <div formArrayName="topics">
+      <div *ngFor="let topic of feedbackForm.get('topics')['controls']; let i=index" [formGroupName]="i">
+        <!--        <div class="flex-split">-->
+        <div class="topic" >
+          <p><b>{{topic.value.title}}</b></p>
+        </div>
+        <div class="stars-rating padding-bottom-s" >
+          <ion-button size="small" fill="clear" class="rate-button" [ngStyle]="{'width' : fontSize, 'height' : fontSize}" *ngFor="let index of topic.value.iconsArray" id="{{index}}" (click)="changeRating($event,i)">
+            <span class="material-symbols-outlined" [ngStyle]="{'color': setRatingStarColor(index,topic.value.rating), 'font-size' : fontSize }">star</span>
+            <ion-icon  name="{{(halfStar ==='true' && (topic.value.rating - index > 0) && (topic.value.rating - index <= 0.5)) ? halfIcon : (index < this.Math.round(this.parseFloat(topic.value.rating))) ? activeIcon : defaultIcon}}"></ion-icon>
+          </ion-button>
+        </div>
+        <!--        </div>-->
+        <mat-form-field appearance="fill" class="extra-feedback-field">
+          <mat-label>{{'Feedback' | titlecase}}</mat-label>
+          <input matInput id="title"  test-id="title" type="text" autocomplete="null" formControlName="extraFeedback" maxlength=500>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+
+<!-- If useIonContent is false, this will render -->
+<ion-content *ngIf="!data.ionContentAlt;">
+  <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+</ion-content>
+
+<!-- If ionContentAlt is true, this will render -->
+  <div mat-dialog-content *ngIf="data.ionContentAlt;">
+    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+  </div>
+
+
+<ion-footer  >
+  <button *ngIf="!data.hideSubmit" mat-flat-button     test-id="confirm" (click)="onSubmit()" color="primary" >Submit</button>
+  <button *ngIf="data.showInterestDismissal" mat-flat-button     test-id="not-interested" (click)="onNotInterested()" color="primary" >Not Interested</button>
+</ion-footer>

@@ -1,0 +1,25 @@
+steps:
+# Install node packages
+- name: 'node:16.10.0'
+  entrypoint: npm
+  dir: 'fliproom/'
+  args: [ 'install' ]
+
+#- name: 'gcr.io/cloud-builders/git'
+#  args: ['clone', 'https://github.com/cometchat-pro/cometchat-pro-angular-ui-kit.git']
+#  dir: 'fliproom/src'
+
+# Build testing web app
+- name: 'node:16.10.0'
+  entrypoint: npm
+  dir: 'fliproom/'
+  args: [ 'run', 'build:prod']
+  
+- name: gcr.io/cloud-builders/gsutil
+  args: ['mv', 'production.app.yaml', 'app.yaml']
+  dir: 'fliproom/'
+
+- name: "gcr.io/cloud-builders/gcloud"
+  args: ["app", "deploy", "--version", "current"]
+  dir: 'fliproom/'
+timeout: "1600s"

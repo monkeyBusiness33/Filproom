@@ -1,0 +1,32 @@
+div.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 600px;
+    margin: auto;
+    mat-form-field.other-form-control {
+        max-width: 50%;
+        ::ng-deep .mat-form-field-wrapper {
+            padding-bottom: 0!important;
+        }
+    }
+}
+
+div.info-grid {
+    grid-template-columns: 2fr 2fr 3fr;
+    column-gap: 0.5em;
+}
+img.integrator_logo {
+    max-width: 7em;
+    max-height: 1.3em;
+    margin: .5em 0;
+    // Color inversion in dark theme
+    &.color-inversion {
+        filter: invert(1);
+    }
+
+    @media screen and (min-width: 900px) {
+        max-width: 10em;
+    }
+}

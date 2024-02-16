@@ -1,0 +1,17 @@
+.inventory-product-overview-card{
+  .product-header{
+    display: flex;
+    align-items: center;
+    .product-card-image-wrapper{
+      border-radius: var(--ion-border-radius);
+      overflow: hidden;
+      max-height: 5em!important;
+      min-height: 3em;
+      max-width: 5em!important;
+    }
+  }
+}
+
+ion-card {
+  border-radius: var(--ion-border-radius);
+}

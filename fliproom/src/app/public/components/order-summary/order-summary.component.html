@@ -1,0 +1,126 @@
+
+<div class="order-summary tailwind" *ngIf="order">
+
+
+  <div class="order-summary-content">
+    <div class="logo-container margin-bottom flex-centered " [ngClass]="{'margin-top-s': environment.screenType == 'mobile'}">
+      <img class= "custom-logo" src="assets/images/edit-ldn-ps.png" />
+    </div>
+
+    <app-steps class="margin-bottom" [steps]="getCustomerOrderStatuses()" *ngIf="orderMode== 'view'"></app-steps>
+    <div class="contact-details margin-bottom-s">
+      <ion-card class="ps-contact">
+        <ion-card-content >
+          <div class="content-root">
+            <div class="card-header-title">
+              <span>Order</span>
+            </div>
+            <div class="card-body">
+              <div class="bold">{{order.user.fullName | titlecase}}</div>
+              <div>{{order.ID}}</div>
+              <div>{{order.createdAt | date:"EEEE, MMMM d, y" }}</div>
+              <div>{{order.createdAt | date: 'shortTime' }}</div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="contact-details margin-bottom-s">
+      <ion-card class="ps-contact">
+        <ion-card-content >
+          <div class="content-root">
+            <div class="card-header-title">
+              <span>Personal Shopper</span>
+            </div>
+            <div class="card-body">
+              <div class="bold">{{order.user.fullName | titlecase}}</div>
+              <div>{{order.user.email}}</div>
+              <div *ngIf="order.user.phoneNumber">{{order.user.phoneNumber}}</div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="shipping-address margin-bottom-s">
+      <ion-card class="shipping-address">
+        <ion-card-content>
+          <div class="content-root">
+            <div class="card-header-title">
+              <span>Shipping Address</span>
+            </div>
+            <div class="card-body"  *ngIf="order.consignee">
+              <div class="bold">{{order.consignee.fullName | titlecase}}</div>
+              <div  *ngIf="order.consignee.email">{{order.consignee.email}}</div>
+              <div *ngIf="order.consignee.phoneNumber" >{{order.consignee.phoneNumber}}</div>
+              <div>{{order.consignee.addressFirstLine | titlecase}}</div>
+              <div>{{order.consignee.postcode | uppercase}}</div>
+              <div>{{order.consignee.city | titlecase}} {{order.consignee.city ? ',': ''}} {{order.consignee.country | titlecase}}</div>
+            </div>
+          </div>
+          <!--          TODO: Add display condition-->
+          <div class="content-suffix" *ngIf="orderMode=='checkout'">
+            <a class="button" (click)="onEditCustomer()" test-id="edit-customer">{{ !order.consigneeID?'Add':'Edit'}}</a>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="shipping-address margin-bottom-s ">
+      <ion-card class="shipping-address">
+        <ion-card-content>
+          <div class="content-root">
+            <div class="card-header-title"  [ngClass]="{'no-margin-bottom': !order.notes}">
+              <span>Order Notes</span>
+            </div>
+            <div class="card-body">
+              <div>{{order.notes}}</div>
+            </div>
+          </div>
+          <div class="content-suffix">
+            <a class="button" (click)="onEditNotes()" test-id="edit-notes">{{order.notes? 'Edit': 'Add'}}</a>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <button mat-button mat-flat-button color="primary"  class="margin-bottom" id="payment-redirect-btn" *ngIf="orderMode=='checkout'" test-id="pay" (click)="redirectToCheckout()">Proceed to payment</button>
+      <!-- Checkout will insert the payment form here -->
+<!--    <div class="payment-details margin-bottom-s " *ngIf="orderMode=='view'">-->
+<!--      <ion-card class="payment-method-view">-->
+<!--        <ion-card-content>-->
+<!--          <div class="content-root">-->
+<!--            <div class="card-header-title">-->
+<!--              <span>Payment Method</span>-->
+<!--            </div>-->
+<!--          &lt;!&ndash;TODO: Replace with real data&ndash;&gt;-->
+<!--            <div class="card-body">-->
+<!--              <div class="bold">{{'Apple Pay' | titlecase}}</div>-->
+<!--              <div>{{'**** **** **** 4444'}}</div>-->
+<!--              <div class="bold">{{'£'+ order.totalAmount}}</div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </ion-card-content>-->
+<!--      </ion-card>-->
+<!--      <ion-card class="billing-address-view ">-->
+<!--        <ion-card-content>-->
+<!--          <div class="content-root">-->
+<!--            <div class="card-header-title">-->
+<!--              <span>Billing Address</span>-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--              <div>{{order.consignee.addressFirstLine | titlecase}}</div>-->
+<!--              <div>{{order.consignee.postcode | uppercase}}</div>-->
+<!--              <div>{{order.consignee.city + ', ' +order.consignee.country | titlecase}}</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </ion-card-content>-->
+<!--      </ion-card>-->
+<!--    </div>-->
+    <div class="button" class="logo-container margin-bottom-s flex-centered" (click)="navigateToLanding()">
+      <img class= "powered-by" src="assets/powered-by-fliproom.png" />
+    </div>
+    <div class="terms-container flex-centered">
+      <a class="button" target="_blank" href="https://www.theeditldn.com/pages/terms-of-the-edit-ldn-marketplace" >Terms & Conditions</a>
+    </div>
+  </div>
+
+</div>

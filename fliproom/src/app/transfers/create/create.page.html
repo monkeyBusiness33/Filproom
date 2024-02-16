@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button ></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="currentStepName == 'header'">New Transfer</ion-title>
+    <ion-title *ngIf="currentStepName != 'header'">New Transfer | {{transferDetailsList.length}} Items</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<div class="loading-placeholder" *ngIf="isLoading">
+  <ion-spinner name="crescent"></ion-spinner>
+</div>
+<app-transfer-header *ngIf="!isLoading && currentStepName == 'header'" [(transferHeaderForm)]="transferHeaderForm" (onNext)="onHeaderCompleted()"></app-transfer-header>
+
+<app-transfer-details *ngIf="!isLoading && currentStepName == 'details'" [selectedWarehouse]="transferHeaderFormData.origin" [destinationWarehouse]="transferHeaderFormData.destination" [(transferDetailsList)]="transferDetailsList" (onBack)="onDetailsBack()" (onNext)="onDetailsCompleted()"></app-transfer-details>
+
+<app-transfer-review *ngIf="!isLoading && currentStepName == 'review'" [transferHeader]="transferHeaderFormData" [transferDetailsList]="transferDetailsList" (onBack)="onReviewBack()" (onNext)="onTransferConfirmed()"></app-transfer-review>
+</ion-content>

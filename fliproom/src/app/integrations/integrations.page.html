@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Integrations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wrapper">
+    <div class="loading-placeholder" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <ion-card class="margin-bottom button" *ngFor="let integration of integrations" (click)="onIntegrationClick(integration)">
+        <ion-card-content>
+          <div class="flex-split">
+            <img *ngIf="integration.key == 'the-edit-ldn'" slot="start" class="integrator_logo" [ngClass]="{'color-inversion':isDarkTheme?.matches}" src="assets/images/the-edit-ldn-logo.avif" />
+
+            <img *ngIf="integration.key == 'laced'" slot="start" class="integrator_logo" [ngClass]="{'color-inversion':isDarkTheme?.matches}" src="assets/images/laced_logo.svg" />
+            <a *ngIf="integration.key == 'laced' && !integration.setupCompleted " class="button">Set Up</a>
+            <a *ngIf="integration.key == 'laced' && !integration.setupCompleted && !user.isBetaUser('integrations-laced') " class="button">Request Access</a>
+            
+            <img *ngIf="integration.key == 'stockx'" slot="start" class="integrator_logo" src="assets/images/stockx_logo.svg" />
+            <img *ngIf="integration.key == 'instagram'" slot="start" class="integrator_logo" src="assets/images/instagram_logo.png" />
+            <a *ngIf="integration.key != 'the-edit-ldn' && integration.key != 'laced'" class="button">Request Access</a>
+
+            <mat-form-field class="other-form-control" *ngIf="integration.key == 'other'" appearance="fill" slot="start">
+              <mat-label>Select Other</mat-label>
+              <mat-select [(ngModel)]="otherIntegration">
+                <mat-option *ngFor="let option of integration.options" [value]="option">{{option | titlecase}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="info-grid margin-top-xs" *ngIf="integration.setupCompleted">
+            <span class="key">Items</span>
+            <span class="key">Sales</span>
+            <span class="key">Pending Orders</span>
+            <span class="value">{{integration.analytics.items}}</span>
+            <span class="value">{{integration.analytics.sales}}</span>
+            <span class="value" color="error">{{integration.analytics.pending}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

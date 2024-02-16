@@ -1,0 +1,156 @@
+div.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 600px;
+    margin: auto;
+
+    ion-accordion {
+        ion-item{
+            --border-radius: 1em;
+            margin-bottom: 0.5em;
+            --border-width: 0;
+        }
+
+        &[value="general"] {
+            div#account-brand {
+                display: flex;
+
+                div.account-logo-wrapper {
+                    display: flex;
+                    font-size: var(--ion-font-size-s);
+                    border-radius: 10px;
+                    background-color: var(--ion-field-background);
+                    margin-bottom: 1.34375em;
+                    max-width: 10em;
+                    min-width: 4.2em;
+                    height: 4.2em; // to match the hieght of a mat-form-field
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+
+                    mat-icon {
+                        margin: auto;
+                        color: var(--ion-color-grey);
+                    }
+
+                    img {
+                        width: fit-content;
+                        height: fit-content;
+                        margin: auto;
+                        max-height: -webkit-fill-available;
+                        max-width: -webkit-fill-available;
+                    }
+                }
+            }
+
+            div#full-name {
+                display: flex;
+            }
+
+            div#phone-number {
+                display: flex;
+
+                mat-form-field#country-code {
+                    width: 30%;
+                }
+            }
+
+            button#change-password{
+              padding-left: 0.5em; 
+            }
+
+            button#cancel-account {
+                width: 100%;
+            }
+        }
+
+        &[value="sale-channels"] {
+            ion-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 1em;
+                row-gap: 1em;
+
+                ion-card-content {
+                    display: flex;
+                    justify-content: space-between;
+                    flex-direction: column;
+                }
+            }
+        }
+
+        &[value="warehouses"] {
+            ion-card-content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            button#add-warehouse {
+                display: block;
+                margin: auto;
+            }
+            span.fullAddress {
+              white-space: break-spaces;
+            }
+        }
+
+    }
+
+    button#submit {
+        width: 100%;
+    }
+
+}
+.popover{
+  ion-list{
+    padding: 0px !important;
+  }
+  ::ng-deep div.inner-scroll.scroll-y{
+    padding: 0px !important;
+  }
+  ::ng-deep ion-content{
+    padding: 0px !important;
+  }
+
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.charts-list{
+  width: 100%;
+  #add-chip{
+    margin-left: 0px;
+    margin-right: 2px;
+  }
+  mat-chip{
+    background-color: var(--ion-field-background);
+  }
+  .primary-chip{
+    color: var(--ion-color-primary);
+    background-color: var(--ion-color-primary-faded)!important;
+  }
+
+}
+
+
+.charts-list.cdk-drop-list-dragging .chart-tag:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+

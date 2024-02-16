@@ -1,0 +1,55 @@
+.inventory-list ion-list {
+  ion-card {
+    div.wrapper {
+      display: flex;
+    }
+    ion-card-content {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+
+      div.header {
+        span.title {
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+        
+        span.age {
+          white-space: nowrap;
+        }
+      }
+
+      div.body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        span.tag {
+          align-self: flex-end;
+        }
+      }
+
+      div.money {
+        display: flex;
+        flex-grow: 1;
+        align-items: flex-end;
+
+        div.money-wrap {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+
+    }
+    span.suffix {
+      background-color: var(--ion-color-primary);
+      color: var(--ion-color-primary-contrast);
+      text-align: center;
+    }
+  }
+}
+
+

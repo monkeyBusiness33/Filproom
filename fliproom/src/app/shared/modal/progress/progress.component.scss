@@ -1,0 +1,34 @@
+mat-form-field {
+    width: 100%;
+}
+
+.mat-dialog-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+}
+h1.progress-title {
+    font-size: 1em;
+    text-align: center;
+}
+p.progress-subtitle {
+    font-size: .9em;
+    color: var(--ion-color-grey);
+    text-align: center;
+}
+
+// Progress bar colors
+
+div.progress-bar::ng-deep mat-progress-bar {
+    div.mat-progress-bar-fill::after {
+        background-color: var(--ion-color-primary) !important;
+    }
+
+    &.success div.mat-progress-bar-fill::after {
+        background-color: var(--ion-color-success) !important;
+    }
+
+    &.error div.mat-progress-bar-fill::after {
+        background-color: var(--ion-color-danger) !important;
+    }
+}

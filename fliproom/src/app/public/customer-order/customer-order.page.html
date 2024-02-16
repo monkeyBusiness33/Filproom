@@ -1,0 +1,15 @@
+
+<ion-content class="no-padding">
+<!--  WEB MODE -->
+  <div class="split-grid max-height" *ngIf="environment.screenType != 'mobile'">
+    <app-order-summary [order]="order" [guestJWT]="guestJWT" [orderMode]="orderMode"  (refreshDataEvent)="refreshData()"></app-order-summary>
+    <app-items-summary [order]="order" [orderMode]="orderMode" ></app-items-summary>
+  </div>
+<!--MOBILE MODE-->
+
+  <div class="max-height" *ngIf="environment.screenType == 'mobile'">
+    <app-items-summary [order]="order" [orderMode]="orderMode"></app-items-summary>
+    <app-order-summary [order]="order" [guestJWT]="guestJWT"  (refreshDataEvent)="refreshData()" [orderMode] ="orderMode" ></app-order-summary>
+  </div>
+
+</ion-content>

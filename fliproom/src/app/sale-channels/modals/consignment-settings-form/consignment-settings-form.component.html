@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Consignment Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="consignmentSettingsForm">
+    <div class="consignment-rates margin-bottom" formArrayName="consignmentRates">
+      <div class="header">
+        <p class="bold">Consignment Fees</p>
+      </div>
+      <div class="info-grid" *ngFor="let consignmentRate of consignmentSettingsForm.get('consignmentRates')['controls']; let rateIdx=index" [formGroupName]="rateIdx">
+        <mat-form-field appearance="fill">
+          <mat-label>Min Price ({{user.account.currencySymbol}})</mat-label>
+          <input matInput formControlName="minPrice" type="number">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Max Price ({{user.account.currencySymbol}})</mat-label>
+          <input matInput formControlName="maxPrice" type="number">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Fee Rate (%)</mat-label>
+          <input matInput formControlName="value" type="number">
+        </mat-form-field>
+
+        <div class="center" style="padding-bottom: 1.34375em;">
+          <span class="material-symbols-outlined" (click)="onToggleTransactionRateDelete(rateIdx)" *ngIf="!consignmentRate.value.toRemove" test-id="remove">remove</span>
+          <span class="material-symbols-outlined" (click)="onToggleTransactionRateDelete(rateIdx)" *ngIf="consignmentRate.value.toRemove">add</span>
+        </div>
+
+        <mat-hint class="error" *ngIf="consignmentRate.touched && !consignmentRate.valid && !consignmentRate.value.toRemove">Invalid Consignment Fee</mat-hint>
+      </div>
+
+      <p class="new-fee center">
+        <a class="button" (click)="onAddTransactionRate()">Add</a>
+      </p>
+    </div>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <button mat-flat-button color="primary" (click)="onSave()" [class.loading]="isLoading" test-id="submit">Save</button>
+</ion-footer>

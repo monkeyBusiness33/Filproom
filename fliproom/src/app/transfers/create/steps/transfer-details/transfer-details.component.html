@@ -1,0 +1,108 @@
+
+
+<div class="page-wrapper">
+    <div class="mobile content margin-bottom-s" *ngIf="environment.screenType == 'mobile'">
+        <ion-list>
+          <ion-card *ngFor="let item of transferDetailsList" [attr.test-id]="item.ID" class="margin-bottom item">
+            <div class="section1">
+              <div class="product-card-image-wrapper">
+                <img [src]="item.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+              </div>
+              <ion-card-content>
+                <span class="bold">{{item.product.code | uppercase}} ({{item.variant | variant}})</span>
+                <span class="grey">{{item.product.title | uppercase}}</span>
+
+                <div class="tags-list">
+                  <span class="tag" color="primary">{{item.account.name}}</span>
+                  <span class="tag" *ngIf="item.inventoryID" color="success">stock</span>
+                  <span class="tag" *ngIf="!item.inventoryID" color="error">sold</span>
+                </div>
+              </ion-card-content>
+            </div>
+            <span class="suffix barcode" *ngIf="item.barcode">
+              {{item.barcode | uppercase}}
+            </span>
+          </ion-card>
+        </ion-list>
+    </div>
+
+    <div class="desktop content margin-bottom-s" *ngIf="environment.screenType == 'desktop'">
+        <table-wrapper #tableWrapper [class.shorten]="true" [configs]=tableConfigs (onDataRequest)="onDataRequest($event)"
+            [dataRequested]="dataRequested" matSort>
+            <ng-container matColumnDef="product.imageReference">
+                <th mat-header-cell *matHeaderCellDef> Image </th>
+                <td mat-cell *matCellDef="let element" class="image">
+                  <img [src]="element.product.imageReference" alt="" onerror="this.src = './assets/images/placeholder.png';">
+                </td>
+              </ng-container>
+
+            <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Item ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="account.ID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Account ID</th>
+                <td mat-cell *matCellDef="let element"> {{element.account.ID}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="account.name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
+                <td mat-cell *matCellDef="let element"> {{element.account.name | uppercase}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="product.code">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+                <td mat-cell *matCellDef="let element"> {{element.product.code | uppercase}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="product.title">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Title</th>
+                <td mat-cell *matCellDef="let element"> {{element.product.title | uppercase}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="variant.name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant </th>
+                <td mat-cell *matCellDef="let element"> {{element.variant | variant}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="barcode">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Barcode </th>
+                <td mat-cell *matCellDef="let element"> {{element.barcode | uppercase}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="inventoryID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Inventory ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.inventoryID}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status.name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let element">
+                    <span class="tag" *ngIf="element.inventoryID" color="success">stock</span>
+                    <span class="tag" *ngIf="!element.inventoryID" color="error">sold</span>
+                </td>
+              </ng-container>
+        </table-wrapper>
+    </div>
+
+    <div class="buttons">
+      <button mat-stroked-button class="margin-right-s"  (click)="onBackButtonClicked()" test-id="back">Back</button>
+      <button mat-flat-button color="primary"  class="margin-left-s" (click)="onNextButtonClicked()" test-id="next">Next</button>
+    </div>
+</div>
+
+
+<ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="environment.screenType == 'mobile'">
+    <ion-fab-button (click)="onSearchProduct()" color="primary" test-id="product-search">
+      <mat-icon>search</mat-icon>
+    </ion-fab-button>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="user.iam.service.warehousing">
+    <ion-fab-button (click)="onScanBarcode()" color="primary" test-id="barcode">
+      <mat-icon>qr_code_scanner</mat-icon>
+    </ion-fab-button>
+</ion-fab>
+
+

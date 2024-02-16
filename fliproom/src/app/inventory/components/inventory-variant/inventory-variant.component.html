@@ -1,0 +1,79 @@
+  <ion-card class="margin-bottom-s product-card" *ngIf="environment.screenType=='mobile'">
+    <img [src]="product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+    <ion-card-content>
+      <span class="bold">{{(product.code ? product.code : 'NO SKU')| uppercase}} - ({{(selectedVariant)| variant}})</span>
+      <span class="grey">{{product.title | uppercase}}</span>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="margin-bottom-s overview-card" *ngIf="selectedVariant">
+    <ion-card-content>
+      <div class="info-grid" id="overview">
+        <span class="key">Payout</span>
+        <span class="key">Quantity</span>
+        <span class="key">Market Price</span>
+        <span class="value">{{payoutRangeMessage}}</span>
+        <span class="value">{{totalQuantity}}</span>
+        <span class="value" *ngIf="selectedVariant.sourceProductVariant">{{selectedVariant.sourceProductVariant.price | currency}}</span>
+        <span class="material-symbols-outlined" translate="no" *ngIf="!selectedVariant.sourceProductVariant" color="error" (click)="onSyncProblemClick()">sync_problem</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="margin-bottom-s"  *ngIf="environment.screenType=='mobile' && tabs.length > 1">
+    <ion-segment mode="ios" (ionChange)="onSegmentChanged($event)" [value]="inventoryType" >
+      <ion-segment-button *ngFor="let tab of tabs" [value]="tab">
+        <ion-label>{{tab | titlecase}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+
+
+  <div *ngIf="filteredInventory.length == 0" class="margin-top center">
+    <span class="grey">No inventory records available</span>
+    <br>
+    <a class="button" (click)="onCreateInventoryRecord()" *ngIf="inventoryType != 'consignment'" test-id="create-inventory-record">Create One</a>
+  </div>
+
+  <ion-list>
+    <ion-card button [id]="inventoryRecord.ID" class="inventory margin-bottom-s" (click)="onInventoryRecordClick(inventoryRecord)" *ngFor="let inventoryRecord of filteredInventory">
+      <ion-card-content>
+        <div id="section1">
+          <div class="flex-split margin-bottom-s">
+            <div class="flex margin-right-s">
+              <span class="material-symbols-outlined large center-self margin-right-xxs light-grey" translate="no">location_on</span>
+              <span class="bold ">{{(inventoryRecord.warehouseID ? inventoryRecord.warehouse.name : 'transit') | uppercase}}</span>
+              <span class="bold" *ngIf="inventoryType== 'consignment'">&nbsp; &middot; &nbsp; {{inventoryRecord.account.name + ' #' + inventoryRecord.account.ID | titlecase}}</span>
+            </div>
+
+            <span class="bold" id="quantity-box">{{'X' + inventoryRecord.quantity}}</span>
+          </div>
+          <div class="info-grid margin-bottom-xs">
+            <div>
+              <span *ngIf="user.iam.inventory.view_cost && trackCost" class="key">Unit Cost</span>
+            </div>
+            <span class="key">Payout</span>
+            <div>
+              <span *ngIf="user.iam.inventory.view_cost" class="key">Profit</span>
+            </div>
+            <div>
+              <span *ngIf="user.iam.inventory.view_cost" class="value">{{inventoryRecord.cost | currency}}</span>
+            </div>
+            <span class="value">{{user.account.currencySymbol}} {{inventoryRecord.payoutRangeMessage}}</span>
+            <div>
+              <span *ngIf="user.iam.inventory.view_cost" class="value">{{user.account.currencySymbol}} {{inventoryRecord.profitRangeMessage}}</span>
+            </div>
+          </div>
+          <div *ngIf="inventoryRecord.notes" class="margin-bottom-xs">
+            <div class="grey">Notes</div>
+            <div class="light-grey">{{inventoryRecord.notes }}</div>
+          </div>
+        </div>
+        <div class="listings">
+          <span class="grey margin-bottom-s small bold">{{inventoryRecord.activeListings.length}}/{{inventoryRecord.listings.length}} Active Listings</span>
+          <mat-progress-bar [mode]="'determinate'" class="listings-status" [ngClass]="{'success': inventoryRecord.activeListings.length == inventoryRecord.listings.length, 'error': inventoryRecord.activeListings.length == 0}" [value]="getActiveListingsRatio(inventoryRecord)" color="primary"></mat-progress-bar>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>

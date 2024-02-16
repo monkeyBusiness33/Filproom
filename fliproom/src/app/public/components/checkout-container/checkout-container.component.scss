@@ -1,0 +1,16 @@
+#checkout{
+  overflow-y: auto;
+  height: 100%;
+  background-color: white;
+}
+
+.light-mode{
+  background-color: white;
+  ion-title{
+    color: black;
+  }
+  #back-btn{
+    color: black !important;
+  }
+}
+

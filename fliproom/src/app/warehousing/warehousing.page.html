@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Warehousing</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-card (click)="onNavigate('inbound')" id="inbound" class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">download</span>
+        <span class="bold">Inbound</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card (click)="onNavigate('outbound')" id="outbound" class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">upload</span>
+        <span class="bold">Outbound</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card (click)="onNavigate('stock-take')" id="stock-take" class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">checklist</span>
+        <span class="bold">Stock Take</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card (click)="onNavigate('item-search')" id="item-search" class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">qr_code_scanner</span>
+        <span class="bold">Item Search</span>
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+</ion-content>

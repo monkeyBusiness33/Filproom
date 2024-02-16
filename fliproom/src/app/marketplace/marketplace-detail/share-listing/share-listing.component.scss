@@ -1,0 +1,37 @@
+.share-listing-modal {
+  height: 100%;
+  padding: 20px 0;
+  
+  .share-btn-con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      margin: 0 5px;
+    }
+  }
+    
+  #message-textbox {
+    border: none;
+    font-size: 12px;
+    outline: none;
+    padding: 5px;
+    width: 100%;
+    resize: none;
+    opacity: 0;
+  }
+
+  .fx-con {
+    display: flex;
+  }
+  .jc-sb {
+    justify-content: space-between;
+  }
+}
+
+.content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

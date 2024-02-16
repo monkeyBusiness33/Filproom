@@ -1,0 +1,36 @@
+ion-card {
+    margin-bottom: 1em;
+    border-radius: 0.75em;
+    overflow: hidden;
+    padding-right: 10px;
+
+    div.wrapper {
+        display: flex;
+        align-items: center;
+        background: white;
+
+        .product-card-image-wrapper-sm {
+            padding: 10px;
+        }
+
+        ion-card-content {
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+          width: 100%;
+
+            .title {
+                font-size: var(--ion-font-size-l);
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .value-listing {
+                font-size: 12px;
+                margin-top: 10px;
+            }
+        }
+    }
+}

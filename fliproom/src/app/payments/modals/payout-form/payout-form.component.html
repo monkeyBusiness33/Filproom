@@ -1,0 +1,194 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transaction?.type | titlecase}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button test-id="actions" (click)="onOpenActionSheet()">
+        <mat-icon>more_vert</mat-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<div class="loading-placeholder" *ngIf="isLoading">
+  <ion-spinner name="crescent"></ion-spinner>
+</div>
+
+<ion-content *ngIf="!isLoading">
+  <div class="order-section">
+    <div class="header">
+      <h2>Sale Order #{{transaction.order.ID}}</h2>
+      <a class="button" (click)="onViewOrder()" *ngIf="transaction.order.accountID == user.account.ID">View</a>
+    </div>
+    <ion-card>
+      <ion-card-content>
+        <div class="info-grid">
+          <span class="key">Order Reference</span> <span class="value">{{transaction.order?.reference1}}</span>
+          <span class="key">Order Status</span> <span class="value">{{transaction.order?.status.name | uppercase}}</span>
+          <span class="key">Sales Channel</span> <span class="value">{{transaction.order?.saleChannel.title | titlecase}}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="items-list" *ngIf="transaction.orderLineItemID">
+    <p class="bold">Item</p>
+    <ion-card class="margin-bottom-s template1">
+      <div class="container">
+        <div class="product-card-image-wrapper-sm">
+          <img [src]="transaction.orderLineItem.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <div class="section1">
+            <span class="bold">{{transaction.orderLineItem.product.code | uppercase}} ({{transaction.orderLineItem.variant | variant}})</span>
+            <span class="grey">{{transaction.orderLineItem.product.title | uppercase}}</span>
+            <span>{{transaction.grossAmount | currency}} • {{transaction.orderLineItem.status.name | uppercase}}</span>
+          </div>
+        </ion-card-content>
+      </div>
+    </ion-card>
+
+    <div class="item-status-wrapper margin-bottom-s" *ngIf="!transaction.orderLineItem.canceledAt">
+      <div class="item-statuses">
+        <div class="step" color="error" [ngClass]="{'inactive': !itemStatusLog['consignor-accepted'].completedAt}">
+          <span>{{itemStatusLog['consignor-accepted'].label}}</span>
+          <span class="date">{{itemStatusLog['consignor-accepted'].completedAt | date:'MMM d'}}</span>
+        </div>
+        <div class="step" color="warning" [ngClass]="{'inactive': !itemStatusLog['consignor-fulfilled'].completedAt}">
+          <span>{{itemStatusLog['consignor-fulfilled'].label}}</span>
+          <span class="date">{{itemStatusLog['consignor-fulfilled'].completedAt | date:'MMM d'}}</span>
+        </div>
+        <div class="step" color="success" [ngClass]="{'inactive': !itemStatusLog['authenticated'].completedAt}">
+          <span>{{itemStatusLog['authenticated'].label}}</span>
+          <span class="date">{{itemStatusLog['authenticated'].completedAt | date:'MMM d'}}</span>
+        </div>
+        <div class="step" color="success" [ngClass]="{'inactive': !itemStatusLog['dispatched'].completedAt}">
+          <span>{{itemStatusLog['dispatched'].label}}</span>
+          <span class="date">{{itemStatusLog['dispatched'].completedAt | date:'MMM d'}}</span>
+        </div>
+      </div>
+      <mat-hint color="warning" *ngIf="!itemStatusLog['consignor-accepted'].completedAt">{{itemStatusLog['consignor-accepted'].message | titlecase}}</mat-hint>
+      <mat-hint color="warning" *ngIf="itemStatusLog['consignor-accepted'].completedAt && !itemStatusLog['consignor-fulfilled'].completedAt">{{itemStatusLog['consignor-fulfilled'].message | titlecase}}</mat-hint>
+      <mat-hint color="warning" *ngIf="itemStatusLog['consignor-fulfilled'].completedAt && !itemStatusLog['authenticated'].completedAt">{{itemStatusLog['authenticated'].message | titlecase}}</mat-hint>
+    </div>
+  </div>
+
+  <div class="payment-section">
+    <div class="payment-status">
+      <p class="bold">Payment</p>
+      <span class="tag" [attr.color]="transaction.statusColor">{{transaction.status}}</span>
+    </div>
+    <div class="from-to-section margin-bottom-s">
+      <ion-card>
+        <ion-card-content class="info-grid">
+          <span class="key">From</span>
+          <span class="value">{{(transaction.fromAccount?.name | titlecase)|| 'N/A'}}</span>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-content class="info-grid">
+          <span class="key">To</span>
+          <span class="value">{{(transaction.toAccount?.name | titlecase) || 'N/A'}}</span>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <div class="view-payment" *ngIf="(transaction.status != 'unpaid' && transaction.status != 'reverted') || transaction.fromAccount?.ID != user.account.ID">
+    <ion-card class="margin-bottom-s">
+      <ion-card-content>
+        <div class="info-grid">
+          <span class="key">ID</span><span class="value">{{transaction.ID}}</span>
+          <span class="key">Gateway</span><span class="value">{{(transaction.gateway | titlecase) || 'N/A'}}</span>
+          <span class="key">Reference</span><span class="value">{{transaction.reference}}</span>
+          <span class="key">Fees</span><span class="value">{{transaction.feesAmount | currency }}</span>
+          <span class="key" *ngIf="transaction.revertedAt">Reverted At</span><span class="value" *ngIf="transaction.revertedAt">{{transaction.revertedAt | date:'EEE, MMM d y HH:mm:ss'}}</span>
+        </div>
+
+        <div class="info-grid tx-info margin-top-s margin-bottom-s" *ngIf="transaction.status != 'unpaid' && transaction.status != 'reverted'">
+          <span class="key">Processed At</span>
+          <span class="key">Processed By</span>
+          <span class="key">Amount</span>
+          <span class="value">{{transaction.updatedAt | date:'EEE, MMM d y HH:mm:ss'}}</span>
+          <span class="value">{{transaction.processedByUser?.fullName | titlecase}}</span>
+          <span class="value">{{transaction.actualAmount | currency}}</span>
+        </div>
+
+        <div class="tx-parent-wrapper" *ngIf="transaction.parentTx?.ID">
+          <span>Paid In</span>
+          <div class="info-grid tx-breakdown">
+            <span class="key">Tx ID</span>
+            <span class="key">Sale Order ID</span>
+            <span class="key">Type</span>
+            <span class="key">Amount</span>
+            <span class="value">{{transaction.parentTx.ID}}</span>
+            <span class="value">{{transaction.parentTx.orderID}}</span>
+            <span class="value">{{transaction.parentTx.type}}</span>
+            <span class="value">{{transaction.parentTx.grossAmount | currency}}</span>
+          </div>
+        </div>
+
+        <div class="tx-breakdown-wrapper" *ngIf="transaction.childTxs.length > 0">
+          <span>Transactions Breakdown</span>
+          <div class="info-grid tx-breakdown">
+            <span class="key">Tx ID</span>
+            <span class="key">Sale Order ID</span>
+            <span class="key">Type</span>
+            <span class="key">Amount</span>
+            <span class="value">{{transaction.ID}}</span>
+            <span class="value">{{transaction.orderID}}</span>
+            <span class="value">{{transaction.type}}</span>
+            <span class="value">{{transaction.grossAmount | currency}}</span>
+          </div>
+          <div class="info-grid tx-breakdown" *ngFor="let ctx of transaction.childTxs">
+            <span class="value">{{ctx.ID}}</span>
+            <span class="value">{{ctx.orderID}}</span>
+            <span class="value">{{ctx.type}}</span>
+            <span class="value">- {{ctx.grossAmount | currency}}</span>
+          </div>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="make-payment" *ngIf="user.iam.transaction.pay && transaction.type == 'payout' && (transaction.status == 'unpaid' || transaction.status == 'reverted') && transaction.fromAccount?.ID == user.account.ID">
+    <!--Different sections depending on the payment method selected-->
+    <form [formGroup]="payoutForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Payment Method</mat-label>
+        <mat-select formControlName="paymentMethod">
+          <mat-option [value]="paymentMethod" *ngFor="let paymentMethod of paymentMethodsAvailable">{{paymentMethod | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Payment Reference</mat-label>
+        <input matInput type="text" autocomplete="null" formControlName="reference" autocomplete="off">
+
+      </mat-form-field>
+    </form>
+
+    <ion-card class="margin-bottom">
+      <ion-card-content >
+        <div class="info-grid">
+          <span class="key" *ngIf="payoutFormData.paymentMethod == 'stripe'">Stripe Balance</span><span class="value" *ngIf="payoutFormData.paymentMethod == 'stripe'">{{stripeBalance?.availableBalance?.amount | currency}}</span>
+          <span class="key" *ngIf="payoutFormData.paymentMethod == 'revolut'">Revolut Balance</span><span class="value" *ngIf="payoutFormData.paymentMethod == 'revolut'">{{revolutBalance.balance | currency}}</span>
+          <span class="key">Payout Due</span><span class="value">{{transaction.grossAmount | currency}}</span>
+        </div>
+        <div class="info-grid" *ngFor="let uctx of unpaidCancellationFees">
+          <span class="key">Tx #{{uctx.ID}} (cancellation Fee)</span><span class="value">- {{uctx.grossAmount | currency}}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="user.iam.transaction.pay && !isLoading && transaction.type == 'payout' && (transaction.status == 'unpaid' || transaction.status == 'reverted')">
+  <button mat-flat-button color="primary" (click)="pay()" [class.loading]="isLoading" [disabled]="!payoutForm.valid" test-id="submit">Pay {{totalDuePayout | currency}}</button>
+</ion-footer>

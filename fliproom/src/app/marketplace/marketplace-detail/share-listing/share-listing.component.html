@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()"
+          >arrow_back</span
+        >
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Share Listing</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="share-listing-modal">
+    <div>
+      <ion-item
+        button
+        shareButton="whatsapp"
+        #whatsappBtn="shareButton"
+        [title]="list.product.title"
+        [description]="createText()"
+        [url]="url"
+      >
+        <ion-label class="white-space-unset grid-justify">
+          Whatsapp
+        </ion-label>
+        <ion-icon name="logo-whatsapp"></ion-icon>
+      </ion-item>
+      <ion-item
+        button
+        shareButton="facebook"
+        #fbBtn="shareButton"
+        [title]="list.product.title"
+        [description]="createText()"
+        [url]="url"
+      >
+        <ion-label class="white-space-unset grid-justify">
+          Facebook
+        </ion-label>
+        <ion-icon name="logo-facebook"></ion-icon>
+      </ion-item>
+      <ion-item button (click)="copyToClipboard()">
+        <ion-label class="white-space-unset grid-justify">
+          Copy to Clipboard
+        </ion-label>
+        <ion-icon name="copy"></ion-icon>
+      </ion-item>
+      <textarea
+        id="message-textbox"
+        [value]="createTextForCopy()"
+        readonly
+      ></textarea>
+    </div>
+  </div>
+</ion-content>

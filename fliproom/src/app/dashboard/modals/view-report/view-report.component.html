@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{reportName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngIf="data.metadata.type == 'disconnected-listings'">
+      <ion-card  *ngFor="let record of reportDataList" (click)="onReportDataRecordClick(data.metadata.type, record)">
+        <ion-card-content *ngIf="!record.ID">
+          <span class="message grey">This listing has been deleted</span>
+        </ion-card-content>
+        <div class="wrapper" *ngIf="record.ID">
+          <div class="product-card-image-wrapper-sm">
+            <img [src]="record.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <span class="title">{{record.product.title | titlecase}} ({{record.product.code | uppercase}})</span>
+            <span class="subtitle">{{record.variant.name | uppercase}}</span>
+            <span class="message small grey" *ngIf="record.variant.status == 'deleted'">This variant has been deleted on <b>{{record.saleChannel.title | titlecase}}</b> sale channel</span>
+            <span class="tag" [attr.color]="record.statusColor">{{record.status}}</span>
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ion-list>
+    <ion-list *ngIf="data.metadata.type == 'stock-levels'">
+      <ion-card *ngFor="let record of reportDataList" (click)="onReportDataRecordClick(data.metadata.type, record)">
+        <ion-card-content *ngIf="!record.productVariantID">
+          <span class="message grey">This variant has been deleted</span>
+        </ion-card-content>
+        <div class="wrapper" *ngIf="record.productVariantID">
+          <div class="product-card-image-wrapper-sm">
+            <img [src]="record.variant.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <span class="title">{{record.variant.product.title | titlecase}}</span>
+            <span class="subtitle grey">{{record.variant.product.code | uppercase}}</span>
+            <span class="subtitle">{{record.variant.name | uppercase}}</span>
+            <div class="three-cell-grid value-listing">
+              <div>
+                <div>Sold Last Week</div>
+                <div>{{record.numberOfSalesLastWeek}}</div>
+              </div>
+              <div>
+                <div>Avg Sale Value</div>
+                <div>{{record.averageSaleValue | currency}}</div>
+              </div>
+              <div>
+                <div>Current Stock</div>
+                <div>{{record.currentInventoryQuantity}}</div>
+              </div>
+            </div>
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ion-list>
+    <ion-list *ngIf="data.metadata.type == 'best-selling-products'">
+      <ion-card *ngFor="let record of reportDataList" (click)="onReportDataRecordClick(data.metadata.type, record)" [attr.test-product-id]="record.productID">
+        <ion-card-content *ngIf="!record.productID">
+          <span class="message grey">This product has been deleted</span>
+        </ion-card-content>
+        <div class="wrapper" *ngIf="record.productID">
+          <div class="product-card-image-wrapper-sm">
+            <img [src]="record.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <span class="title">{{record.product.title | titlecase}}</span>
+            <span class="subtitle grey">{{record.product.code | uppercase}}</span>
+            <span class="italics"><span class="light-grey">Most popular variant is</span> {{record.mostSoldVariant.name | uppercase}}</span>
+            <div class="three-cell-grid value-listing">
+              <div>
+                <div>Sold Last Week</div>
+                <div>{{record.numberOfSalesLastWeek}}</div>
+              </div>
+              <div>
+                <div>Average Sale Value</div>
+                <div>{{record.avgSaleValue}}</div>
+              </div>
+            </div>
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ion-list>
+    <ion-list *ngIf="data.metadata.type == 'new-product-uploads'">
+      <ion-card *ngFor="let record of reportDataList" (click)="onReportDataRecordClick(data.metadata.type, record)">
+        <ion-card-content *ngIf="!record.productID">
+          <span class="message grey">This product has been deleted</span>
+        </ion-card-content>
+        <div class="wrapper" *ngIf="record.productID">
+          <div class="product-card-image-wrapper-sm">
+            <img [src]="record.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <span class="title">{{record.product.title | titlecase}}</span>
+            <span class="subtitle grey">{{record.product.code | uppercase}}</span>
+            <span class="italics margin-top-s"><span class="light-grey">Created on</span> {{record.product.createdAt | date: 'dd/MM/yyyy'}}</span>
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </ion-list>
+</ion-content>

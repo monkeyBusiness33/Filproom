@@ -1,0 +1,111 @@
+div.wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img#text {
+        opacity: 0;
+        height: 2.5em;
+        animation: slideFadeIn ease 1s forwards;
+        animation-delay: 1.6s;
+    }
+
+    img#logo {
+        opacity: 0;
+        width: 5em;
+        animation: fadeIn ease 1s forwards;
+        animation-delay: 0.6s;
+    }
+
+    h2 {
+        opacity: 0;
+        animation: fadeIn ease 1s forwards;
+        animation-delay: 3s;
+    }
+
+    animation: blurOut ease 1s forwards;
+    animation-delay: 4.5s;
+}
+
+::ng-deep body:not(.dark-theme) div.wrapper img#text {
+    /* show fliproom logo in black if dark mode not used */
+    filter: invert(100%);
+}
+
+div.overlay {
+    position: absolute;
+    opacity: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(128 128 128 / 25%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    color: white;
+
+    animation: fadeIn ease 1s forwards;
+    animation-delay: 4.5s;
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        img {
+            height: 50px;
+        }
+
+        h1 {
+            font-size: 25px;
+
+        }
+    }
+
+    div.left {
+        background-image: linear-gradient(white 33%, rgba(255,255,255,0) 0%);
+        background-position: right;
+        background-size: 5px 50px;
+        background-repeat: repeat-y;
+    }
+}
+
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideFadeIn {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes blurOut {
+    from {
+        filter: blur(0);
+    }
+    to {
+        filter: blur(1.5rem);
+    }
+}

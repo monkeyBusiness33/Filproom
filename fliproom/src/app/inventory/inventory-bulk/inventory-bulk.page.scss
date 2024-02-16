@@ -1,0 +1,38 @@
+.inventory-product-overview-card{
+  .product-header{
+    display: flex;
+    //justify-content: left;
+    .product-card-image-wrapper{
+      border-radius: var(--ion-border-radius);
+      max-height: 5em!important;
+      max-width: 5em!important;
+      img{
+        max-height: 5em!important;
+        max-width: 5em!important;
+      }
+    }
+    .product-info{
+      display: block;
+      #title{
+
+      }
+      #code{
+
+      }
+    }
+  }
+}
+
+ion-header ion-toolbar ion-buttons .track-cost {
+  width: 10em!important;
+}
+
+ion-footer {
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  button {
+    width: 100%;
+    margin: 0;
+  }
+}

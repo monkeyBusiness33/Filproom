@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "deploy": "node deploy_app.js",
+    "start": "(cd microservices/api/ && npm run start) & (cd fliproom && ionic serve)",
+    "test": "(cd microservices/api/ && npm run db:seed && npm run start) & (cd fliproom && ionic serve) & (cd cypress && npm run start)"
+  },
+  "dependencies": {
+    "@angular/cli": "^13.3.4",
+    "@capacitor/app": "^5.0.6",
+    "minimist": "^1.2.6",
+    "plist": "^3.0.6",
+    "replace-in-file": "^7.0.2"
+  }
+}

@@ -1,0 +1,655 @@
+
+> api@1.0.0 test
+> mocha tests/
+
+{"message":"Service server started. Listening on port 11000","level":"info"}
+
+
+  Worker
+Adding Tasks to Queue
+>> Check for new Update tasks
+>> Tasks <update> to queue: 0
+Computing Tasks To Process
+>> Task to process: 1
+Processing 1 Batches
+>> Scraping
+>> Create/Update products
+{
+  stockxId: '469a4104-d19b-43c5-980b-d6bed2c04ffe',
+  url: 'adidas-yeezy-boost-350-turtle-dove-2022',
+  processedAt: Moment<2023-06-14T16:33:36+04:00>,
+  importedDate: Moment<2023-06-14T16:33:36+04:00>,
+  brand: 'adidas',
+  category: 'sneakers',
+  category2: 'adidas',
+  title: 'adidas yeezy boost 350 turtledove (2022)',
+  description: 'seven years following its 2015 debut, the iconic adidas yeezy boost 350 turtle dove made its return.\n' +
+    '<br>\n' +
+    '<br>\n' +
+    'while the adidas yeezy boost 350 turtle dove (2022) does arrive with the same brown and grey patterned primeknit upper, rope laces, and grooved boost sole as the original release, there are some minor differences. the 2022 iteration is packaged in an updated box and features an upgraded outsole, built for daily wear.\n' +
+    '<br>\n' +
+    '<br>\n' +
+    'the adidas yeezy boost 350 turtle dove (2022) released in august of 2022 and retailed for $230.\n' +
+    '<br>\n' +
+    '<br>\n' +
+    'to shop the original adidas yeezy boost 350 turtle dove, <a href="https://stockx.com/adidas-yeezy-boost-350-turtledove">click here.</a>',
+  styleId: 'AQ4832',
+  imageReferenceUrl: 'https://images.stockx.com/images/adidas-Yeezy-Boost-350-Turtle-Dove-2022-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1660072498',
+  price: 352,
+  releaseDate: Moment<2023-06-14T00:00:00+04:00>,
+  gender: 'men',
+  color: 'turtledove/blue graphite/chalk white',
+  retailPrice: '230'
+}
+convertStockxVariantToDBVariant {
+  id: 'e0355957-33c7-4d82-8aeb-7f7d86d5e3fe',
+  market: {
+    bidAskData: {
+      lowestAsk: 367,
+      numberOfAsks: 4,
+      highestBid: 164,
+      numberOfBids: 3
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 222, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '4' },
+  gtins: [
+    { type: 'UPC', identifier: '195747541722' },
+    { type: 'EAN-13', identifier: '4066748408672' }
+  ],
+  sizeChart: {
+    baseSize: '4',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '979f32cb-2cff-4035-b8d1-93c566265970',
+  market: {
+    bidAskData: {
+      lowestAsk: 233,
+      numberOfAsks: 13,
+      highestBid: 147,
+      numberOfBids: 5
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 174, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '4.5' },
+  gtins: [ { type: 'UPC', identifier: '195747538098' } ],
+  sizeChart: {
+    baseSize: '4.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'b2b16f23-7513-4428-95bd-fd1acef82352',
+  market: {
+    bidAskData: {
+      lowestAsk: 272,
+      numberOfAsks: 16,
+      highestBid: 183,
+      numberOfBids: 7
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 231, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '5' },
+  gtins: [ { type: 'UPC', identifier: '889133008851' } ],
+  sizeChart: {
+    baseSize: '5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '03ac7a36-7668-40b7-a09e-2bf9ae4255d0',
+  market: {
+    bidAskData: {
+      lowestAsk: 278,
+      numberOfAsks: 29,
+      highestBid: 175,
+      numberOfBids: 4
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 186, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '5.5' },
+  gtins: [
+    { type: 'EAN-13', identifier: '4066748408641' },
+    { type: 'UPC', identifier: '195747538104' }
+  ],
+  sizeChart: {
+    baseSize: '5.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'c75cfc98-a5ae-4e36-a45c-a1951a384db6',
+  market: {
+    bidAskData: {
+      lowestAsk: 267,
+      numberOfAsks: 30,
+      highestBid: 150,
+      numberOfBids: 8
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 157, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '6' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '6',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '6dffeaf2-0498-4c14-b5ce-c08b525226da',
+  market: {
+    bidAskData: {
+      lowestAsk: 286,
+      numberOfAsks: 30,
+      highestBid: 177,
+      numberOfBids: 12
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 208, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '6.5' },
+  gtins: [
+    { type: 'UPC', identifier: '195747541746' },
+    { type: 'EAN-13', identifier: '4066748408658' }
+  ],
+  sizeChart: {
+    baseSize: '6.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '50a0818b-d9d0-49fd-b7d9-83067bfda853',
+  market: {
+    bidAskData: {
+      lowestAsk: 294,
+      numberOfAsks: 18,
+      highestBid: 190,
+      numberOfBids: 20
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 214, salesLast72Hours: 1 }
+  },
+  hidden: false,
+  traits: { size: '7' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '7',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '185c2602-b9d8-4a39-a982-cf044bd23a78',
+  market: {
+    bidAskData: {
+      lowestAsk: 336,
+      numberOfAsks: 22,
+      highestBid: 230,
+      numberOfBids: 15
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 264, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '7.5' },
+  gtins: [
+    { type: 'EAN-13', identifier: '4066748408689' },
+    { type: 'UPC', identifier: '195747541739' }
+  ],
+  sizeChart: {
+    baseSize: '7.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '8070030b-dde2-4c51-bd34-ca95fd88da8a',
+  market: {
+    bidAskData: {
+      lowestAsk: 377,
+      numberOfAsks: 17,
+      highestBid: 280,
+      numberOfBids: 24
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 277, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '8' },
+  gtins: [ { type: 'UPC', identifier: '195747538036' } ],
+  sizeChart: {
+    baseSize: '8',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'e1a452e2-d6a2-4d64-a988-996f4b0c4115',
+  market: {
+    bidAskData: {
+      lowestAsk: 427,
+      numberOfAsks: 17,
+      highestBid: 298,
+      numberOfBids: 26
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 324, salesLast72Hours: 1 }
+  },
+  hidden: false,
+  traits: { size: '8.5' },
+  gtins: [
+    { type: 'UPC', identifier: '195747541760' },
+    { type: 'EAN-13', identifier: '4066748408702' }
+  ],
+  sizeChart: {
+    baseSize: '8.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '8080ec00-7f41-4fee-a7fb-f3106bd7b75f',
+  market: {
+    bidAskData: {
+      lowestAsk: 447,
+      numberOfAsks: 22,
+      highestBid: 330,
+      numberOfBids: 28
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 325, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '9' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '9',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'b9cf7ece-c897-449d-804b-a34b5fbece3d',
+  market: {
+    bidAskData: {
+      lowestAsk: 447,
+      numberOfAsks: 27,
+      highestBid: 322,
+      numberOfBids: 38
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 366, salesLast72Hours: 1 }
+  },
+  hidden: false,
+  traits: { size: '9.5' },
+  gtins: [
+    { type: 'UPC', identifier: '195747538067' },
+    { type: 'EAN-13', identifier: '2100001107819' }
+  ],
+  sizeChart: {
+    baseSize: '9.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '5d271ce9-b29b-47f2-9efd-cb5516a01c1a',
+  market: {
+    bidAskData: {
+      lowestAsk: 448,
+      numberOfAsks: 31,
+      highestBid: 397,
+      numberOfBids: 33
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 352, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '10' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '10',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'c07b9636-b8e1-45b0-8379-1231ca4c20e0',
+  market: {
+    bidAskData: {
+      lowestAsk: 474,
+      numberOfAsks: 35,
+      highestBid: 397,
+      numberOfBids: 37
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 362, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '10.5' },
+  gtins: [
+    { type: 'UPC', identifier: '195747538081' },
+    { type: 'EAN-13', identifier: '4066748408627' }
+  ],
+  sizeChart: {
+    baseSize: '10.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '7c0ac188-6137-4c5b-afbf-ecb454e927fd',
+  market: {
+    bidAskData: {
+      lowestAsk: 482,
+      numberOfAsks: 25,
+      highestBid: 318,
+      numberOfBids: 30
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 352, salesLast72Hours: 2 }
+  },
+  hidden: false,
+  traits: { size: '11' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '11',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'd2e6f053-2ae7-4ec9-9245-4da6c4a764f7',
+  market: {
+    bidAskData: {
+      lowestAsk: 479,
+      numberOfAsks: 13,
+      highestBid: 397,
+      numberOfBids: 27
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 341, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '11.5' },
+  gtins: [
+    { type: 'UPC', identifier: '195747541753' },
+    { type: 'EAN-13', identifier: '4066748408696' }
+  ],
+  sizeChart: {
+    baseSize: '11.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '783ee163-ec26-485c-a133-1594f5e2693c',
+  market: {
+    bidAskData: {
+      lowestAsk: 479,
+      numberOfAsks: 21,
+      highestBid: 304,
+      numberOfBids: 16
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 356, salesLast72Hours: 1 }
+  },
+  hidden: false,
+  traits: { size: '12' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '12',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'bc33dd33-4a23-4859-91c9-b27e5727794b',
+  market: {
+    bidAskData: {
+      lowestAsk: 493,
+      numberOfAsks: 13,
+      highestBid: 302,
+      numberOfBids: 10
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 352, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '12.5' },
+  gtins: [
+    { type: 'EAN-13', identifier: '4066748408665' },
+    { type: 'UPC', identifier: '195747541715' }
+  ],
+  sizeChart: {
+    baseSize: '12.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'dcd7c034-89a9-4792-b265-dd5d11acc3e2',
+  market: {
+    bidAskData: {
+      lowestAsk: 445,
+      numberOfAsks: 19,
+      highestBid: 317,
+      numberOfBids: 17
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 281, salesLast72Hours: 2 }
+  },
+  hidden: false,
+  traits: { size: '13' },
+  gtins: [ { type: 'EAN-13', identifier: '2100000209347' } ],
+  sizeChart: {
+    baseSize: '13',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '0a4c830b-f7a3-4047-a842-e9c092d39b34',
+  market: {
+    bidAskData: {
+      lowestAsk: 407,
+      numberOfAsks: 5,
+      highestBid: 268,
+      numberOfBids: 5
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 364, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '13.5' },
+  gtins: [
+    { type: 'EAN-13', identifier: '4066748408603' },
+    { type: 'UPC', identifier: '195747538074' }
+  ],
+  sizeChart: {
+    baseSize: '13.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'f699ea60-182d-4ddb-bdb7-24a36aed5166',
+  market: {
+    bidAskData: {
+      lowestAsk: 493,
+      numberOfAsks: 9,
+      highestBid: 283,
+      numberOfBids: 8
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 277, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '14' },
+  gtins: [ { type: 'UPC', identifier: '889133008844' } ],
+  sizeChart: {
+    baseSize: '14',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'f8470ba0-ab26-416f-8603-1e6980243e6b',
+  market: {
+    bidAskData: {
+      lowestAsk: 580,
+      numberOfAsks: 3,
+      highestBid: 264,
+      numberOfBids: 7
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 376, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '14.5' },
+  gtins: [
+    { type: 'UPC', identifier: '195747166406' },
+    { type: 'EAN-13', identifier: '4066746147320' }
+  ],
+  sizeChart: {
+    baseSize: '14.5',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: 'c3fcbd25-f3fc-40b6-8d92-a855fbb42d08',
+  market: {
+    bidAskData: {
+      lowestAsk: 570,
+      numberOfAsks: 4,
+      highestBid: 286,
+      numberOfBids: 3
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 432, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '15' },
+  gtins: [ { type: 'UPC', identifier: '889133052083' } ],
+  sizeChart: {
+    baseSize: '15',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '47a44a62-8011-4e32-9c72-4889838556f8',
+  market: {
+    bidAskData: {
+      lowestAsk: 644,
+      numberOfAsks: 6,
+      highestBid: 244,
+      numberOfBids: 4
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 380, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '16' },
+  gtins: [ { type: 'UPC', identifier: '889133052090' } ],
+  sizeChart: {
+    baseSize: '16',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '49c52ab8-8d48-4674-9406-026f77ce66e2',
+  market: {
+    bidAskData: {
+      lowestAsk: null,
+      numberOfAsks: 0,
+      highestBid: 68,
+      numberOfBids: 3
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 348, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '17' },
+  gtins: [ { type: 'UPC', identifier: '889133052151' } ],
+  sizeChart: {
+    baseSize: '17',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+convertStockxVariantToDBVariant {
+  id: '9db08dfa-b0e6-482b-bcec-c6117c1f24d3',
+  market: {
+    bidAskData: {
+      lowestAsk: null,
+      numberOfAsks: 0,
+      highestBid: 45,
+      numberOfBids: 1
+    },
+    statistics: { lastSale: [Object] },
+    salesInformation: { lastSale: 0, salesLast72Hours: 0 }
+  },
+  hidden: false,
+  traits: { size: '18' },
+  gtins: [],
+  sizeChart: {
+    baseSize: '18',
+    baseType: 'us m',
+    displayOptions: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+  },
+  group: null
+}
+>> Processing Task results
+adidas-yeezy-boost-350-turtle-dove-2022 (import) => 200 
+    ✓ Import New Product on Request (21788ms)
+
+
+  1 passing (22s)
+

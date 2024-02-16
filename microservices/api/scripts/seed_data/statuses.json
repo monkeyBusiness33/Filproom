@@ -1,0 +1,219 @@
+[
+		{
+			"ID": 1,
+			"name": "processing",
+			"description": "[order, invoice] Status for actions having started and being processed",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 2,
+			"name": "completed",
+			"description": "[order] Status for order completed",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 3,
+			"name": "deleted",
+			"description": "[item] : Marks entity as deleted",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 4,
+			"name": "refunded-restocked",
+			"description": "[item, orderLineItem] : Entity has been completely refunded but restocked too",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 5,
+			"name": "added",
+			"description": "[orderItem] Status for orderItems that have been added to an order",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 6,
+			"name": "created",
+			"description": "[order, orderItem, fulfillment, invoice] The entity has been created",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 7,
+			"name": "transit",
+			"description": "[fulfillment, inventory] The entity is in transit",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 8,
+			"name": "delivered",
+			"description": "[fulfillment] The entity has been delivered",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 9,
+			"name": "refunded",
+			"description": "[order, orderItem] The entity has been refunded",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 10,
+			"name": "pending",
+			"description": "[orderItem] The entity has been created but needs confirmation",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 11,
+			"name": "confirmed",
+			"description": "[orderItem] The entity has been accepted",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 12,
+			"name": "fulfilling",
+			"description": "[orderItem] The entity has been assigned to a fulfillment record",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 13,
+			"name": "dispatched",
+			"description": "[orderItem] The entity has been scanned out",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 14,
+			"name": "rejected",
+			"description": "[orderItem] Status of a rejected order line item",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 15,
+			"name": "partially-dispatched",
+			"description": "[order(outbound)] Some orderlineitems can still be dispatched",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 16,
+			"name": "partially-confirmed",
+			"description": "[order(outbound)]  Some orderlineitems can still be confirmed",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 17,
+			"name": "partially-rejected",
+			"description": "[order(outbound)] Some orderlineitems can still be rejected",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 18,
+			"name": "partially-refunded",
+			"description": "[order(outbound)] : Some orderlineitems can still be refunded",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 19,
+			"name": "partially-fulfilling",
+			"description": "[order(inbound)] : Some orderlineitems can still be fulfilled",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 20,
+			"name": "partially-arrived",
+			"description": "[order(inbound)] : Some orderlineitems can still be confirmed",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 21,
+			"name": "arrived",
+			"description": "[order(inbound)] : The entity is arrived",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 22,
+			"name": "active",
+			"description": "[inventory] : Active and selectable for action",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 23,
+			"name": "drafted",
+			"description": "[inventory] : Drafted and not selectable for action",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 24,
+			"name": "voided",
+			"description": "[invoice] : Not valid anymore",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 25,
+			"name": "settled",
+			"description": "[invoice] : Actions have been completed",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 26,
+			"name": "partially-delivered",
+			"description": null,
+			"createdAt": "2022-07-31 19:28:01",
+			"updatedAt": "2022-07-31 19:28:01"
+		},
+		{
+			"ID": 27,
+			"name": "awaits-transfer",
+			"description": "[jobLineItem] Job Line Item has wrong location and is awaiting transfer ",
+			"createdAt": "2022-09-28 21:36:55",
+			"updatedAt": "2022-09-28 21:36:55"
+		},
+		{
+			"ID": 28,
+			"name": "awaits-delete",
+			"description": "[jobLineItem] Job Line has npt been found and is awaiting deletion",
+			"createdAt": "2022-09-28 21:36:56",
+			"updatedAt": "2022-09-28 21:36:56"
+		},
+		{
+			"ID": 29,
+			"name": "claimed",
+			"description": "marketplace status to show that an entire listing has been claimed",
+			"createdAt": "2023-01-03 02:18:19",
+			"updatedAt": "2023-01-03 02:18:19"
+		},
+		{
+			"ID": 30,
+			"name": "declined",
+			"description": null,
+			"createdAt": "2023-01-06 03:10:58",
+			"updatedAt": "2023-01-06 03:10:58"
+		},
+		{
+			"ID": 31,
+			"name": "fulfill",
+			"description": null,
+			"createdAt": "2023-01-06 03:10:58",
+			"updatedAt": "2023-01-06 03:10:58"
+		}
+]

@@ -1,0 +1,8 @@
+*.log
+scripts/checksReports/*
+scripts/data/*
+scripts/reports/*
+production.env
+staging.env
+.env
+libs/privatecert_revolut.pem

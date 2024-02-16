@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Reports</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-card (click)="onReportClicked('items-flow')" id="items-flow"  class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">schema</span>
+        <span class="bold">Items Flow</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card (click)="onReportClicked('invoices')" id="invoices" class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">description</span>
+        <span class="bold">Invoices</span>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card (click)="onReportClicked('purchase-orders')" id="purchase-orders"  class="button">
+      <ion-card-content>
+        <span class="material-symbols-outlined icon">content_paste</span>
+        <span class="bold">Purchase Orders</span>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

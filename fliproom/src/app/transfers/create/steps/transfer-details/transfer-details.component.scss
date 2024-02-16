@@ -1,0 +1,36 @@
+div.page-wrapper {
+    div.content {
+        flex-grow: 1;
+        min-height: 0;
+    }
+
+    ion-list {
+        overflow-y: scroll;
+        height: 82vh;
+    }
+
+    div.buttons {
+        display: flex;
+        background: var(--ion-background-color);
+        z-index: 99999;
+
+        button {
+            flex-grow: 1;
+        }
+    }
+}
+
+ion-fab {
+    top: 70vh; // avoid overlay with next and back buttons
+}
+
+table-wrapper.shorten {
+  display: block;
+  height: 100% !important;
+  border-radius: var(--ion-border-radius) var(--ion-border-radius) 0 0 !important;
+  overflow-y: scroll;
+
+  .table-wrapper {
+    border-radius: 0 !important;
+  }
+}

@@ -1,0 +1,31 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button>
+          <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Orders</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="orders-list">
+        <div class="list-item margin-bottom padding-s button" *ngFor="let order of ordersList" (click)="onOrderSelected(order.ID)">
+            <div class="section1">
+                <span>{{order.createdAt | date:'d/M/yy'}}</span>
+                <span>{{order.createdAt | date:'hh:mm a'}}</span>
+            </div>
+            <div class="section2 padding-left-s">
+                <span class="bold">{{order.type.name | uppercase}}  #{{order.ID}}</span>
+                <span class="grey">{{order.reference1}}</span>
+                <span>From {{order.consignor ? (order.consignor.fullName | titlecase) : '-'}} to {{order.consignee ? (order.consignee.fullName | titlecase) : '-'}}</span>
+                <div class="chips-list margin-top-s">
+                  <span class="tag" color="primary" *ngFor="let tag of order.tags">{{tag}}</span>
+                </div>
+            </div>
+            <div class="section3 margin-left-s">
+                <span class="tag" color="primary">{{order.status.name | titlecase}}</span>
+            </div>
+        </div>
+    </div>
+</ion-content>

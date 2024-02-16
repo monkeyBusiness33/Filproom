@@ -1,0 +1,172 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="saleChannelFormData.ID">Edit {{saleChannelFormData.title | titlecase}}</ion-title>
+    <ion-title *ngIf="!saleChannelFormData.ID">New Sale Channel</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop' && buttons.length > 0">
+      <button mat-button (click)="onButtonClick(button.id)" [id]="button.id" color="primary" *ngFor="let button of buttons">
+      <mat-icon>{{button.icon}}</mat-icon>
+      {{button.label | titlecase}}</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="saleChannelForm">
+
+
+    <!--Laced sale channel  -->
+    <div class="shopify-section margin-bottom" *ngIf="saleChannelFormData.platform == 'laced'">
+      <p class="bold">Laced</p>
+      <mat-form-field appearance="fill">
+        <mat-label>{{(saleChannelFormData.platform | titlecase)+' Email'}}</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input matInput formControlName="email" autocomplete="off" placeholder="Email Number">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>{{(saleChannelFormData.platform | titlecase)+' Password'}}</mat-label>
+        <mat-icon matPrefix>lock_cosed</mat-icon>
+        <input matInput #passwordInput formControlName="password" placeholder="Password" type="password" autocomplete="off">
+        <mat-icon matSuffix (click)="passwordInput.type = 'text'"     *ngIf="passwordInput.type == 'password'" >visibility</mat-icon>
+        <mat-icon matSuffix (click)="passwordInput.type = 'password'" *ngIf="passwordInput.type == 'text'">visibility_off</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div  *ngIf="saleChannelFormData.platform != 'laced'">
+      <!-- Sale Channel Configuration as owner -->
+      <div class="edit-section" *ngIf="!saleChannelFormData.ID || saleChannelFormData.account?.ID == user.account.ID">
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" type="text">
+        </mat-form-field>
+
+
+        <div class="rich-text-container margin-bottom">
+          <span class="bold">Description</span>
+          <ckeditor [editor]="Editor" [config]="editorConfig" formControlName="description"></ckeditor>
+        </div>
+
+        <mat-hint class="info">Allow posting virtual inventory listings on this sale channel</mat-hint>
+        <mat-slide-toggle formControlName="allowVirtualInventory"  #allowVirtualInventory color="success" test-id="allowVirtualInventory-toggle" (change)="onAllowVirtualInventoryToggle(allowVirtualInventory.checked)">Allow Virtual Inventory</mat-slide-toggle>
+
+        <div class="listing">
+          <mat-form-field appearance="fill">
+            <mat-label>Markup (%)</mat-label>
+            <input matInput formControlName="markup" type="number">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Tax Rate (%)</mat-label>
+            <input matInput formControlName="taxRate" type="number">
+          </mat-form-field>
+
+          <mat-hint class="info col-span-2">Payout: {{100 | currency}} => Listing Price {{computeListingPrice() | currency}}</mat-hint>
+        </div>
+      </div>
+
+      <!-- Sale Channel Configuration as consignor -->
+      <div class="view-section" *ngIf="saleChannelFormData.account?.ID != user.account.ID">
+        <span class="bold">{{saleChannelFormData.title | titlecase}} - {{saleChannelFormData.account?.name | titlecase}}</span>
+        <span [innerHTML]="saleChannelFormData.description"></span>
+      </div>
+
+      <!-- Allow to edit consignment fees only in edit mode -->
+      <div class="consignment-rates margin-bottom" *ngIf="saleChannelFormData.ID">
+        <div class="header">
+          <p class="bold">Consignment Fees</p>
+          <a class="button" *ngIf="saleChannelFormData?.account.ID == user.account.ID && saleChannelFormData.fees.length != 0" (click)="onConsignmentFeesClick()" test-id="consignment-fees-edit">Edit</a>
+          <a class="button" *ngIf="saleChannelFormData?.account.ID == user.account.ID && saleChannelFormData.fees.length == 0" (click)="onConsignmentFeesClick()" test-id="consignment-fees-add">Add</a>
+          <span class="tag" color="primary" *ngIf="saleChannelFormData.account?.ID != user.account.ID">{{saleChannelFormData?.tier}}</span>
+        </div>
+        <div class="info-grid" *ngFor="let txRate of saleChannelFormData.fees">
+          <span class="key" >{{user.account.currencySymbol}} {{txRate.minPrice | number: '1.0-0'}} - {{txRate.maxPrice | number: '1.0-0'}}</span>
+          <span class="value">{{txRate.value}} %</span>
+        </div>
+      </div>
+
+      <div class="shopify-section margin-bottom" *ngIf="saleChannelFormData.platform == 'shopify' && saleChannelFormData.account?.ID == user.account.ID">
+        <p class="bold">Shopify</p>
+        <mat-form-field appearance="fill">
+          <mat-label>API Example URL</mat-label>
+          <input matInput formControlName="shopifyAPIAuth" type="text">
+          <mat-hint class="info">You find this in Shopify > apps > fliproom. Copy the example URL provided there and past it here. <a class="button">Show Me</a></mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- Allow to link stripe only in edit mode -->
+      <div class="stripe-section margin-bottom" *ngIf="saleChannelFormData.ID && saleChannelFormData.account?.stripeAccountID">
+        <div class="header">
+          <p class="bold">Stripe</p>
+          <a class="button" *ngIf="stripeAccount" (click)="onLinkStripeClick('dashboard')">Dashboard</a>
+        </div>
+        <div class="loading-placeholder" *ngIf="user.account.stripeAccountID && isLoading">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+        <div class="onboarding" *ngIf="!user.account.stripeAccountID">
+          <p>Getting paid today with Stripe!</p>
+          <button mat-flat-button color="primary" (click)="onLinkStripeClick('onboarding')">Link your Stripe</button>
+        </div>
+        <div class="onboarding-continue" *ngIf="!isLoading && stripeAccount && !stripeAccount.payouts_enabled">
+          <p>Your account is not fully verified. Please Complete the onboarding process to be paid with stripe!</p>
+          <button mat-flat-button color="primary" (click)="onLinkStripeClick('onboarding-continue')">Complete Onboarding</button>
+        </div>
+        <div class="account" *ngIf="stripeAccount && stripeAccount.payouts_enabled">
+          <ion-card>
+            <ion-card-content class="info-grid">
+              <span class="key">Payouts Enabled</span><span class="value">{{stripeAccount.payouts_enabled}}</span>
+              <span class="key">Balance</span><span class="value">{{stripeAccount.balance.available.amount | currency}}</span>
+              <span class="key col-span-2">Bank Accounts Linked</span>
+              <span class="value col-span-2" *ngFor="let bankAccount of stripeAccount.externalAccounts?.data">{{bankAccount.bank_name}} ({{bankAccount.last4}})</span>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+
+      <div class="shipping-section margin-bottom">
+        <div class="header">
+          <p class="bold">Shipping</p>
+        </div>
+        <mat-form-field appearance="fill" (click)="onAddressClick()">
+          <mat-label>Address</mat-label>
+          <input matInput [value]="getFulfillmentCentre().address.fullAddress" type="text" readonly>
+          <span matSuffix class="bold button" color="primary">{{getFulfillmentCentre().address.fullAddress ? 'Edit' : 'Add'}}</span>
+          <mat-hint *ngIf="!getFulfillmentCentre().address?.validated" class="warning">The address you inserted is invalid. Validate your address to access the UPS</mat-hint>
+          <mat-hint *ngIf="getFulfillmentCentre().address?.validated" class="success">Your address has been validated and access to UPS granted</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="policy-section margin-bottom">
+        <div class="header">
+          <p class="bold">Policy</p>
+        </div>
+        <mat-form-field appearance="fill">
+          <mat-label>Policy</mat-label>
+          <input matInput formControlName="policyUrl" type="text">
+          <mat-icon matSuffix (click)="onOpenPolicy()">link</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+
+
+  </form>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="environment.screenType == 'mobile' && buttons.length > 0">
+    <ion-fab-button>
+      <mat-icon>more_vert</mat-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button *ngFor="let button of buttons" (click)="onButtonClick(button.id)" [id]="button.id" color="primary">
+        <mat-icon>{{button.icon}}</mat-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
+
+<ion-footer>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!saleChannelForm.valid" [class.loading]="isLoading" test-id="submit">Save</button>
+</ion-footer>

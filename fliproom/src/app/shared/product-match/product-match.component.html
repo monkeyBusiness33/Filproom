@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Product Match Interface</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="products-wrapper">
+    <ion-card *ngIf="internalProductVariant">
+      <div class="wrapper">
+        <div class="product-card-image-wrapper-sm">
+          <img [src]="internalProductVariant.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <span class="title">{{internalProductVariant.product.title | titlecase}} ({{internalProductVariant.product.code | uppercase}})</span>
+          <span class="subtitle">{{internalProductVariant.name}}</span>
+        </ion-card-content>
+      </div>
+    </ion-card>
+
+    <span class="material-symbols-outlined" id="match-icon" [attr.color]="externalProductVariantSelected ? 'success' : 'error'">compare_arrows</span>
+  
+    <ion-card>
+      <div class="wrapper" *ngIf="externalProductSelected">
+        <div class="product-card-image-wrapper-sm">
+          <img [src]="externalProductSelected.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <span class="title">{{externalProductSelected.title | titlecase}} ({{externalProductSelected.code | uppercase}})</span>
+          <span class="subtitle" *ngIf="externalProductVariantSelected">{{externalProductVariantSelected.name}}</span>
+          <div class="placeholder" *ngIf="!externalProductVariantSelected"><a class="button" (click)="onSelectVariant()">Select Variant</a></div>
+        </ion-card-content>
+      </div>
+
+      <ion-card-content *ngIf="!externalProductSelected" class="placeholder">
+        <div><a class="button" (click)="onSelectProduct()">Search product</a></div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <button mat-flat-button color="primary"  (click)="onSave()" test-id="save" [class.loading]="isLoadingAction">Save</button>
+</ion-footer>

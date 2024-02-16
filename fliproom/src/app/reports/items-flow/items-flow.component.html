@@ -1,0 +1,174 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Items Flow</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <table-wrapper #tableWrapper [configs]=tableConfigs (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested"  (onRowClick)="onRowClick($event)" matSort>
+    <ng-container matColumnDef="product.imageReference">
+      <th mat-header-cell *matHeaderCellDef> Image </th>
+      <td mat-cell *matCellDef="let element">
+          <div class="img-wrapper">
+              <img [src]="element.product.imageReference" alt="" onerror="this.src = './assets/images/placeholder.png';">
+          </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="order.ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.order.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="order.type.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.order.type.name | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="order.reference1">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Reference </th>
+      <td mat-cell *matCellDef="let element"> {{element.order.reference1 | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="order.consignor.fullName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Origin </th>
+      <td mat-cell *matCellDef="let element"> {{(element.order.consignor ? element.order.consignor.fullName : '') | uppercase}} </td>
+    </ng-container>
+
+
+
+    <ng-container matColumnDef="order.consignee.email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Consignee Email </th>
+      <td mat-cell *matCellDef="let element"> {{(element.order.consignee ? element.order.consignee.email : '') }} </td>
+    </ng-container>
+    <ng-container matColumnDef="order.consignee.fullName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Destination </th>
+      <td mat-cell *matCellDef="let element"> {{(element.order.consignee ? element.order.consignee.fullName : '') | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fulfillment Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.status.name | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Price Stamp </th>
+      <td mat-cell *matCellDef="let element"> {{element.price | currency}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cost">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cost Stamp</th>
+      <td mat-cell *matCellDef="let element"> {{element.cost | currency}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.inventoryID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Inv ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.item.inventoryID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.inventory.cost">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Inv Cost</th>
+      <td mat-cell *matCellDef="let element"> {{element.item.inventory ? (element.item.inventory.cost | currency) : '' | currency}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.inventory.price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Inv Price</th>
+      <td mat-cell *matCellDef="let element"> {{element.item.inventory ? (element.item.inventory.price | currency) : '' | currency}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="product.title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+      <td mat-cell *matCellDef="let element"> {{(element.product.title) }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="product.category.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Origin </th>
+      <td mat-cell *matCellDef="let element"> {{(element.product.category.name) }} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes </th>
+      <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="order.tags">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Tags </th>
+      <td mat-cell *matCellDef="let element" test-id="test-tags">
+          <span *ngFor="let tag of element.order.tags" class="tag" color="primary">{{tag}}</span>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.warehouse.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Warehouse </th>
+      <td mat-cell *matCellDef="let element"> {{(element.item.warehouse ? element.item.warehouse.name : '') | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.account.ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.item.account.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.account.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner </th>
+      <td mat-cell *matCellDef="let element"> {{element.item.account.name | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.barcode">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Barcode </th>
+      <td mat-cell *matCellDef="let element"> {{element.item.barcode | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="item.ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Item ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.item.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="product.code">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code </th>
+      <td mat-cell *matCellDef="let element"> {{element.product.code | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="variant.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant </th>
+      <td mat-cell *matCellDef="let element"> {{element.variant | variant}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fulfillment.ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fulfillment ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.fulfillmentID}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Created At </th>
+      <td mat-cell *matCellDef="let element"> {{element.createdAt | date:'d/M/yy hh:mm a'}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="dispatchedAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Dispatched At </th>
+      <td mat-cell *matCellDef="let element"> {{element.dispatchedAt | date:'d/M/yy hh:mm a'}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="deliveredAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Delivered At </th>
+      <td mat-cell *matCellDef="let element"> {{element.deliveredAt | date:'d/M/yy hh:mm a'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="order.saleChannel.title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sale Channel </th>
+      <td mat-cell *matCellDef="let element"> {{element.order.saleChannel.title}} </td>
+    </ng-container>
+
+  </table-wrapper>
+</ion-content>

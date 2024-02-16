@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="label-container">
+        <img id="barcode" src="{{barcodeImgUrl}}" alt="">
+        <img id="logo" src="{{accountLogoUrl}}" alt="">
+        <span id="barcode-text" style="margin-top: 0.2cm;">{{barcodeValue}}</span>
+    </div>
+</body>
+<style>
+    body {
+        margin: 0;
+        width: 6.1cm;
+        height: 2.8cm;
+        margin-left: 2mm;
+    }
+    div.label-container {
+        display: grid;
+        height: 100%;
+        grid-template-columns: 40% 60%;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    img#barcode {
+        max-height: 99%;
+        max-width: 99%;
+        margin: auto;
+        grid-row: 1 / span 2;
+    }
+
+    img#logo {
+        max-width: 90%;
+        max-height: 3em;
+        margin: auto;
+        margin-bottom: 0;
+    }
+
+    span#barcode-text{
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 0.3cm;
+        font-family: 'Roboto', sans-serif;
+        color: black;
+        font-weight: 400;
+        margin: auto;
+    }
+</style>
+</html>

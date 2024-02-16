@@ -1,0 +1,26 @@
+[
+		{
+			"ID": 1,
+			"name": "transfer-in",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 2,
+			"name": "transfer-out",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 3,
+			"name": "inbound",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		},
+		{
+			"ID": 4,
+			"name": "outbound",
+			"createdAt": "2022-06-26 06:16:05",
+			"updatedAt": "2022-06-26 06:16:05"
+		}
+]

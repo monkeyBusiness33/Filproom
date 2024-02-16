@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Consignor</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="margin-bottom">
+    <ion-card-content class="info-grid">
+      <span class="key">Account</span><span class="value">{{consignorInfo.name | titlecase}}</span>
+      <span class="key">Email</span><span class="value">{{consignorInfo.email}}</span>
+      <span class="key">Phone</span><span class="value">{{consignorInfo.phoneNumber}}</span>
+      <span class="key">Last Sign In</span><span class="value">{{consignorInfo.lastVisitAt | date:'EEEE, MMMM d'}}</span>
+    </ion-card-content>
+  </ion-card>
+  <form [formGroup]="consignorConfigForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Tier</mat-label>
+      <mat-select formControlName="tier" test-id="tier-select">
+        <mat-option *ngFor="let tierName of tierNames" [value]="tierName">
+          {{tierName | titlecase}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" test-id="consignor-status">
+        <mat-option value="active">{{'active' | titlecase}}</mat-option>
+        <mat-option value="vacation">{{'vacation' | titlecase}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <button mat-flat-button color="primary" (click)="onSave()" [class.loading]="isLoading" test-id="submit">Save</button>
+</ion-footer>

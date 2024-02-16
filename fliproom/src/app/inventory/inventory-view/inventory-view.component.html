@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button #backButton></ion-back-button>
+    </ion-buttons>
+    <ion-title>Inventory</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop'">
+      <button mat-button (click)="onButtonClick(button.id)" color="primary" *ngFor="let button of buttons">
+        <mat-icon>{{button.icon}}</mat-icon>
+        {{button.label | titlecase}}</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="environment.screenType == 'mobile'&& buttons.length > 0">
+    <ion-fab-button>
+      <mat-icon>more_vert</mat-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button *ngFor="let button of buttons" (click)="onButtonClick(button.id)" [id]="button.id" color="primary">
+        <mat-icon>{{button.icon}}</mat-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <!--Mobile view-->
+  <ion-slides #componentSlider class="component-slider" [options]="slideOpts" *ngIf="environment.screenType == 'mobile'">
+    <ion-slide>
+      <div class="flex-centered" style="height: 100%" *ngIf="isLoading">
+        <ion-spinner  name="crescent"></ion-spinner>
+      </div>
+      <app-inventory-product *ngIf="!isLoading"
+                            [product]="product"
+                            [inventory]="inventory"
+                            [inventoryType]="inventoryType"
+                            [selectedVariant]="selectedVariant"
+                            (selectedVariantChange)="onVariantChange($event['variant']) "
+                            (inventoryTypeChange)="onInventoryTypeChange($event['value'])">
+      </app-inventory-product>
+    </ion-slide>
+
+    <ion-slide>
+      <div class="flex-centered" style="height: 100%" *ngIf="isLoading">
+        <ion-spinner  name="crescent"></ion-spinner>
+      </div>
+      <app-inventory-variant *ngIf="!isLoading && selectedVariant" style="width: 100%"
+                             [product]="product"
+                             [inventory]="inventory"
+                             [inventoryType]="inventoryType"
+                             [filteredInventory]="filteredInventory"
+                             [selectedVariant]="selectedVariant"
+                             (inventoryTypeChange)="onInventoryTypeChange($event['value'])"
+                             (inventorySelected)="onInventoryUpdate($event['inventoryRecord'])"
+                             (onCreateInventoryRecordBtnClick)="onButtonClick('add-inventory')"
+                             >
+      </app-inventory-variant>
+    </ion-slide>
+  </ion-slides>
+
+  <!--Web view-->
+  <div class="web-view" *ngIf="environment.screenType != 'mobile'">
+      <app-inventory-product  *ngIf="!isLoading"
+                              [product]="product"
+                              [inventory]="inventory"
+                              [inventoryType]="inventoryType"
+                              [selectedVariant]="selectedVariant"
+                              (selectedVariantChange)="onVariantChange($event['variant'])"
+                              (inventoryTypeChange)="onInventoryTypeChange($event['value'])">
+      </app-inventory-product>
+      <app-inventory-variant  *ngIf="!isLoading && selectedVariant"
+                             [product]="product"
+                             [inventory]="inventory"
+                             [inventoryType]="inventoryType"
+                             [filteredInventory]="filteredInventory"
+                             [selectedVariant]="selectedVariant"
+                             (inventoryTypeChange)="onInventoryTypeChange($event['value'])"
+                             (inventorySelected)="onInventoryUpdate($event['inventoryRecord'])"
+                             (onCreateInventoryRecordBtnClick)="onButtonClick('add-inventory')"
+                             >
+      </app-inventory-variant>
+  </div>
+</ion-content>

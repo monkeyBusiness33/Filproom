@@ -1,0 +1,48 @@
+<div class="page-wrapper">
+  <ion-card class="overview">
+    <ion-card-content>
+      <div class="info-grid margin-bottom-s" id="locations">
+        <span class="key">Origin</span>
+        <span class="key">Destination</span>
+        <span class="value large">{{transferHeader.origin.name | titlecase}}</span>
+        <span class="value large">{{transferHeader.destination.name | titlecase}}</span>
+      </div>
+
+      <div class="info-grid">
+        <span class="key">Reference</span> <span class="value">{{transferHeader.reference1}}</span>
+        <span class="key">Items</span> <span class="value">{{transferDetailsList.length}}</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <h2>Items</h2>
+  <ion-list class="margin-bottom-s">
+    <ion-card *ngFor="let item of transferDetailsList" [attr.test-id]="item.ID" class="margin-bottom item">
+      <div class="section1 product-card-image-wrapper-container">
+          <div class="product-card-image-wrapper-sm">
+            <img [src]="item.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+        <ion-card-content>
+          <span class="bold">{{item.product.code | uppercase}} ({{item.variant | variant}})</span>
+          <span class="grey">{{item.product.title | uppercase}}</span>
+
+          <div class="tags-list">
+            <span class="tag" color="primary">{{item.account.name}}</span>
+            <span class="tag" *ngIf="item.inventoryID" color="success">stock</span>
+            <span class="tag" *ngIf="!item.inventoryID" color="error">sold</span>
+          </div>
+        </ion-card-content>
+      </div>
+      <span class="suffix barcode" *ngIf="item.barcode">
+        {{item.barcode | uppercase}}
+      </span>
+    </ion-card>
+  </ion-list>
+
+
+  <div class="buttons">
+    <button mat-stroked-button color="primary" class="margin-right-s"  (click)="onBackButtonClicked()" test-id="back">Back</button>
+    <button mat-flat-button color="primary"  class="margin-left-s" (click)="onSubmit()" test-id="submit">Create Transfer</button>
+  </div>
+
+</div>

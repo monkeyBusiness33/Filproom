@@ -1,0 +1,10 @@
+div.view-section {
+    display: flex;
+    flex-direction: column;
+}
+
+div.onboarding, div.onboarding-continue {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

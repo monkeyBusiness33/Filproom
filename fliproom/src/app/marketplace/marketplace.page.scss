@@ -1,0 +1,30 @@
+.menu-wrapper{
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 1em;
+  column-gap: 1em;
+
+  ion-card-content{
+    color: var(--ion-color-primary-contrast);
+  }
+}
+
+.menu-card-title{
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.menu-card-subtitle{
+  font-weight: 700;
+  opacity: 90%;
+}
+
+@media screen and (min-width: 900px) {
+  .menu-wrapper{
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .menu-card-title{
+    font-size: 30px;
+  }
+}
+

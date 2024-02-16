@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="top-header">
+        <div class="single-column">
+            <div class="invoice">
+                <h1>INVOICE</h1>
+                <span class="bold">INVOICE NUMBER</span>
+                <span class="value">{{invoiceID}}</span>
+
+                <span class="bold" id="invoiceDate">INVOICE DATE</span>
+                <span class="value">{{invoiceDate}}</span>
+
+                <span class="bold" id="invoice-reference">REFERENCE</span>
+                <span class="value">{{reference}}</span>
+            </div>
+        </div>
+        <div class="single-column">
+            <div class="account-info">
+                <span class="uppercase">{{accountName}}</span>
+                <span>{{VATNumber}}</span>
+                <span class="uppercase">{{accountAddress}}</span>
+            </div>
+            <div class="customer">
+                <span class="bold">BILLED TO</span>
+                <p>
+                    <span class="uppercase">{{customerName}}</span>
+                    <br>
+                    <span class="uppercase">{{customerAddress}}</span>
+                </p>
+            </div>
+        </div>
+        <div class="single-column">
+            <img id="account-logo" src="{{accountLogo}}" alt="">
+        </div>
+    </div>
+    <div class="line-items-header">
+        <div class="header">DESCRIPTION</div>
+        <div class="header">AMOUNT</div>
+    </div>
+
+    <div class="line-items">
+        {{#each lineItems}}
+        <div class="row">
+            {{code}} - {{variant}}
+            <span class="item-detail">{{title}}</span>
+            <span class="item-detail">uid: {{itemId}}</span>
+        </div>
+        <div class="row" id="amount">{{amount}}</div>
+        {{/each}}
+    </div>
+
+    <div class="checkout-items">
+        <div>
+            <div class="checkout-item">
+                <span class="bold">SUBTOTAL</span>
+                <span class="value">{{currency}} {{subTotal}}</span>
+            </div>
+            <div class="checkout-item">
+                <span class="bold">VAT ({{VATRate}}%)</span>
+                <span class="value">{{currency}} {{VATAmount}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="summary">
+        <div class="date">
+            <span>ISSUE DATE:</span>
+            <span class="second-line">{{issueDate}}</span>
+        </div>
+        <div class="amount">
+            <span>AMOUNT DUE:</span>
+            <span id="total" class="second-line">{{currency}} {{totalAmount}}</span>
+        </div>
+    </div>
+    <div class="appendix">
+        <div class="notes">
+            <span style="font-style: bold;">Notes</span>
+            <br>
+            <br>
+            <span class="second-line">{{notes}}</span>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</body>
+<style>
+    body {
+        width: 80%;
+        margin: auto;
+        margin-top: 2em;
+        font-family: "Roboto", sans-serif;
+    }
+
+    div.top-header {
+        display: grid;
+        grid-template-columns: 3fr 3fr 1fr;
+        column-gap: 2em;
+    }
+
+    div.top-header.div.account-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.top-header div.account-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.top-header div.invoice h1 {
+        margin-top: 0;
+        margin-bottom: .5em;
+        font-weight: 400;
+        font-size: 2.5em;
+    }
+
+    div.top-header div.invoice {
+        display: grid;
+    }
+
+    span#invoiceDate {
+        margin-top: 1em;
+    }
+
+    span#invoice-reference {
+        margin-top: 1em;
+    }
+
+    div.top-header div.customer {
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.customer p {
+        margin: 0;
+    }
+
+    div.top-header div.single-column:nth-child(2) {
+        border-left: 1px solid black;
+        padding-left: 1em;
+        font-size: .8em;
+    }
+
+    div.summary {
+        padding: 1em;
+        margin: 2em 0;
+        border: 1px dotted black;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 2em;
+    }
+
+    div.summary div {
+        justify-content: space-around;
+        display: flex;
+        align-items: center;
+    }
+
+    div.summary div .second-line {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    img {
+        height: 10vh;
+        width: 10vh;
+        object-fit: contain;
+    }
+
+    div.line-items-header {
+        display: grid;
+        grid-template-columns: 9fr 1fr;
+        justify-content: end;
+        margin-top: 5em;
+    }
+
+    div.line-items-header div.header {
+        font-weight: bold;
+        padding-bottom: 2em;
+    }
+
+    div.line-items {
+        display: grid;
+        grid-template-columns: 9fr 1fr;
+        border-top: 2px solid black;
+        padding-top: 1em;
+    }
+
+    div.line-items div.header {
+        font-weight: bold;
+        padding-bottom: 2em;
+    }
+
+    div.line-items div.row {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        border-bottom: 1px solid grey;
+    }
+
+    div.line-items div.row span.item-detail {
+        display: block;
+        color: gray
+    }
+
+    div#amount {
+        text-align: center;
+    }
+
+    div.checkout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 25vw;
+        margin: auto;
+        margin-top: 5em;
+        margin-right: 0;
+    }
+
+    div.checkout span.value {
+        text-align: right;
+    }
+
+    div.checkout span#total {
+        font-size: 26px;
+        grid-column: 1 / span 2;
+        margin-top: 1.5em;
+        text-align: right;
+    }
+
+    div.checkout-items {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    div.checkout-items div {
+        width: 40vw;
+    }
+
+    div.checkout-items div.checkout-item {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 1.5em;
+        padding-bottom: 1.5em;
+    }
+
+    div.checkout-items div.checkout-item:first-child {
+        border-bottom: 1px solid black;
+    }
+
+    div.checkout-items div.checkout-item span {
+        margin-right: .7em;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .uppercase {
+        text-transform: uppercase;
+    }
+</style>
+
+</html>

@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="fulfillment">Fulfillment #{{fulfillment.ID}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="wrapper" *ngIf="fulfillment && !isLoading">
+    <div class="tracking-section">
+      <div class="header">
+        <h2>Tracking</h2>
+        <a class="button" (click)="onEditFulfillment()" test-id="edit-tracking">Edit</a>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid">
+            <span class="key">Created By</span>        <span class="value">{{fulfillment.createdByUser?.fullName | titlecase}}</span>
+            <span class="key">Reference</span>           <span class="value">{{fulfillment.reference1 | uppercase}}</span>
+            <span class="key">Service Provider</span>      <span class="value">{{(fulfillment.courier?.name || 'manual') | uppercase}}</span>
+            <span class="key">Tracking Ref.</span>       <span class="value" test-id="tracking-number">{{fulfillment.trackingNumber | uppercase}}</span>
+          </div>
+          <div class="chips-list margin-top-s">
+            <span class="tag" color="primary" (click)="onOpenOrder()" test-id="view-order">View Order</span>
+            <span class="tag" [attr.color]="fulfillment.completedAt ? 'success' : 'warning'">{{fulfillment.status.name | uppercase}}</span>
+            <span class="tag" color="primary">{{fulfillmentType}}</span>
+            <span class="tag" color="success" *ngIf="fulfillment.shippingLabelFilename" (click)="onPrintShippingLabel()" test-id="print-shipping-label">Print Shipping Label</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="source-section">
+      <div class="header">
+        <h2>Origin</h2>
+        <!--
+          <a class="button" *ngIf="!fulfillment.origin.ID"  (click)="onAddOriginOrDestination()" test-id="add-origin">Add</a>
+        -->
+        <a class="button" *ngIf="fulfillment.origin.ID && fulfillment.origin.canEdit(user)"  (click)="onEditOriginOrDestination(fulfillment.origin)" test-id="edit-origin">Edit</a>
+      </div>
+      <ion-card *ngIf="fulfillment.origin.ID">
+        <ion-card-content>
+              <ion-card-subtitle>{{fulfillment.origin.fullName | titlecase}}</ion-card-subtitle>
+              <p class="break-text-line">{{fulfillment.origin.fullAddress}}</p>
+              <div class="info-grid">
+                <span class="key">Email</span>      <span class="value">{{fulfillment.origin.email}}</span>
+                <span class="key">Phone</span>      <span class="value">{{fulfillment.origin.fullPhone}}</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+    </div>
+
+    <div class="destination-section">
+      <div class="header">
+        <h2>Destination</h2>
+        <!--
+          <a class="button" *ngIf="!fulfillment.destination.ID"  (click)="onAddOriginOrDestination()" test-id="add-destination">Add</a>
+        -->
+        <a class="button" *ngIf="fulfillment.destination.ID  && fulfillment.destination.canEdit(user)"  (click)="onEditOriginOrDestination(fulfillment.destination)" test-id="edit-destination">Edit</a>
+      </div>
+      <ion-card *ngIf="fulfillment.destination.ID">
+        <ion-card-content>
+          <ion-card-subtitle>{{fulfillment.destination.fullName | titlecase}}</ion-card-subtitle>
+          <p class="break-text-line">{{fulfillment.destination.fullAddress}}</p>
+          <div class="info-grid">
+            <span class="key">Email</span>      <span class="value">{{fulfillment.destination.email}}</span>
+            <span class="key">Phone</span>      <span class="value">{{fulfillment.destination.fullPhone}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="items-section">
+      <h2>Items</h2>
+      <div class="location-section" *ngFor="let locationType of ['origin', 'transit', 'destination']">
+        <p class="bold">({{itemsByLocation[locationType].items.length}} / {{uniqueOrderLineItems.length}}) - {{itemsByLocation[locationType].title | uppercase}}</p>
+        <ion-list *ngIf="itemsByLocation[locationType].items.length > 0">
+          <ion-card *ngFor="let oli of itemsByLocation[locationType].items" class="template1 margin-bottom-s" button (click)="onOrderLineItemSelected(oli)" [attr.test-id]="oli.ID">
+            <div class="container">
+              <div class="product-card-image-wrapper-sm">
+                <img [src]="oli.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+              </div>
+              <ion-card-content>
+                <div class="section1">
+                  <span class="bold">{{oli.product.code | uppercase}} ({{oli.variant | variant}})</span>
+                  <span class="grey small">{{oli.product.title | uppercase}}</span>
+                  <span class="small">{{oli.notes | titlecase}}</span>
+                  <div class="tags-list margin-top-s">
+                    <span class="tag" color="primary">{{oli.item.account.name | uppercase}}</span>
+                  </div>
+                </div>
+                <span class="tag" [attr.color]="oli.deliveredAt ? 'success' : 'warning'">{{oli.status.name | uppercase}}</span>
+              </ion-card-content>
+            </div>
+            <span class="suffix barcode" *ngIf="oli.item.barcode">
+              {{oli.item.barcode | uppercase}}
+            </span>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="barcodingAvailable">
+    <ion-fab-button (click)="onBarcodeStart()" test-id='scan-barcode'>
+      <span class="material-symbols-outlined" translate="no">qr_code_scanner</span>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

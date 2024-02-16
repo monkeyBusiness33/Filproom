@@ -1,0 +1,30 @@
+dispatch:
+  - url: "staging.wiredhub.io/*"
+    service: staging-web
+
+  - url: "demo.wiredhub.io/*"
+    service: staging-web
+
+  - url: "wiredhub.io/*"
+    service: default
+
+  - url: "www.wiredhub.io/*"
+    service: default
+
+  - url: "tramouk.wiredhub.io/*"
+    service: production-tramo-webapp
+
+  - url: "tramo.wiredhub.io/*"
+    service: production-tramo-webapp
+
+  - url: "*.wiredhub.io/*"
+    service: fliproom
+
+  - url: "app.fliproom.io/*"
+    service: fliproom
+
+  - url: "staging.fliproom.io/*"
+    service: staging-fliproom
+    
+  - url: "*.fliproom.io/*"
+    service: fliproom

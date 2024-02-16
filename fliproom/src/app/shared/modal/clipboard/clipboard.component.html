@@ -1,0 +1,17 @@
+<div class="flex-vertically-centered margin-top-s margin-bottom-xs">
+  <button mat-icon-button (click)="onBack()"><mat-icon>arrow_back</mat-icon></button>
+  <h1 mat-dialog-title class="no-margin">{{data.title | titlecase}}</h1>
+</div>
+<div mat-dialog-content>
+  <p [innerHTML]="data.subtitle"></p>
+
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>{{data.valueLabel}}</mat-label>
+      <input matInput [value]="data.value" readonly>
+    </mat-form-field>
+  </form>
+</div>
+<div>
+  <button mat-flat-button (click)="onCopy()" color="primary" class="full-width">{{ data.buttonText ?? 'Copy' }}</button>
+</div>

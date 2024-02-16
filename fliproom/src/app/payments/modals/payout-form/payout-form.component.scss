@@ -1,0 +1,52 @@
+div.payment-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+div.from-to-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2em;
+
+    ion-card ion-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+div.view-payment {
+
+
+    div.tx-info {
+        grid-template-columns: 2fr 2fr 1fr;
+    }
+
+    div.tx-breakdown {
+        display: grid;
+        grid-template-columns: 1fr 1fr 3fr 2fr !important;
+    }
+
+}
+
+div.item-statuses {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin: 2em 0em;
+
+    div.step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        span.date {
+            margin-top: 0.2em;
+            color: var(--ion-color-medium);
+        }
+
+        &.inactive {
+            color: var(--ion-color-grey) !important;
+        }
+    }
+}

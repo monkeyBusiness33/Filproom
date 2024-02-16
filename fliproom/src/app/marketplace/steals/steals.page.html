@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button  mode="md"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Steals</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <fliproom-list class="steals-list"  #fliproomList (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested" (onRowClick)="onRowClick($event)" [emptyListPlaceholder]="'No steals available right now, check back later!'">
+    <ng-template #itemList let-element>
+      <div class="product-card-image-wrapper">
+        <img [src]="element.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+      </div>
+      <ion-card-content [attr.test-id]="element.ID">
+        <span class="title">{{element.variant | variant | uppercase}}</span>
+        <div class="sub-title-small">
+          <span >{{element.product.title | titlecase}}</span>
+          <span *ngIf="element.product.code" class=" italics">{{' - '+element.product.code | uppercase}}</span>
+        </div>
+        <div class="steal-info-pair">
+          <div>
+            <span class="price">{{element.price | currency}}</span>
+            <span class="sub-title-small italics">{{' /UNIT '}}</span>
+          </div>
+          <span class="quantity">{{'X'+ (element.quantityRequested - element.quantityClaimed )}}</span>
+        </div>
+        <span class="sub-title-small italics" color="success">{{((element.variant.price -element.price )  | currency)+ ' below market' }}</span>
+
+
+      </ion-card-content>
+    </ng-template>
+  </fliproom-list>
+
+</ion-content>

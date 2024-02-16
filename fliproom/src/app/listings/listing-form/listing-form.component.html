@@ -1,0 +1,240 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button mat-button (click)="onBack()"  color="primary"> <mat-icon>arrow_back</mat-icon></button>
+    </ion-buttons>
+    <ion-title>{{inventoryListingFormData.ID ? 'Edit Listing #' + inventoryListingFormData.ID : 'Create Listing'}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <ion-card class="product-overview-card margin-bottom">
+      <ion-card-content>
+        <div class="product-header margin-bottom-s">
+          <div class="product-card-image-wrapper margin-right-s">
+            <img [src]="data.inventory.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <div class="product-info">
+            <div class="bold">{{data.inventory.product.title | titlecase}} </div>
+            <div class="bold grey">{{data.inventory.product.code | uppercase}} </div>
+            <div>{{data.inventory.variant | variant | uppercase}} </div>
+          </div>
+        </div>
+        <div class="three-cell-grid margin-bottom-s">
+          <div>
+            <div>Location</div>
+            <div class="bold">{{data.inventory.warehouse.name | uppercase}}</div>
+          </div>
+          <div>
+            <div>Location Qty</div>
+            <div class="bold">{{ data.inventory.quantityAtHand }}</div>
+          </div>
+          <div>
+            <div>Incoming Qty</div>
+            <div class="bold">{{ data.inventory.quantityIncoming }}</div>
+          </div>
+        </div>
+        <div class="tags-list">
+          <span class="tag" color="primary" *ngIf="data.inventory.account.ID !== user.account.ID">{{ data.inventory.account.name }} #{{ data.inventory.account.ID }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    <mat-expansion-panel class="margin-bottom-s" id="sale-channel-overview">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="bold">
+          {{inventoryListingFormData.saleChannel.title | uppercase}} | {{inventoryListingFormData.saleChannel.account?.name | uppercase}} ({{inventoryListingForm.value.saleChannel.getFeeRate(inventoryListingForm.value).value}}% fee)
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <p class="description margin-bottom-s" [innerHTML]="inventoryListingFormData.saleChannel.description"></p>
+        <div class="info-grid margin-bottom-s">
+          <span class="value" *ngIf="inventoryListingFormData.saleChannel.account.ID != user.account.ID">Tier</span><span class="tag" color="primary" *ngIf="inventoryListingFormData.saleChannel.account.ID != user.account.ID">{{inventoryListingFormData.saleChannel.tier}}</span>
+        </div>
+        <div class="info-grid">
+          <span class="key">Listing Price</span>
+          <span class="key">Fee</span>
+        </div>
+        <div class="info-grid margin-bottom-s" *ngFor="let fee of inventoryListingFormData.saleChannel.fees">
+          <span class="value">{{user.account.currencySymbol}} {{fee.minPrice | number: '1.0-0'}} - {{fee.maxPrice | number: '1.0-0'}}</span>
+          <span class="value">{{fee.value}} %</span>
+        </div>
+        <div class="info-grid">
+          <span class="key">Policy</span>
+        </div>
+        <div class="info-grid">
+          <span class="value">
+            <ng-container *ngIf="inventoryListingFormData.saleChannel.policyUrl; else noPolicy">
+              <a target="_blank" [href]="inventoryListingFormData.saleChannel.policyUrl">
+                {{ inventoryListingFormData.saleChannel.policyUrl }}
+              </a>
+            </ng-container>
+            <ng-template #noPolicy>No policy available</ng-template>
+          </span>
+        </div>
+      </div>
+
+    </mat-expansion-panel>
+    <!--    STANDARD PRODUCT MATCHING-->
+    <mat-expansion-panel class="product-matching-panel margin-bottom-s" *ngIf="user.account.ID != data.listing.saleChannel.account.ID" expanded="{{!connectionExternalList}}">
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
+        <span class="material-symbols-outlined warning-icon"  *ngIf="!inventoryListingForm.value.variant?.ID " translate="no">Warning</span>
+        <mat-panel-title class="bold">PRODUCT MATCH</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="margin-top-s">
+        <form [formGroup]="inventoryListingForm">
+          <div class=" connectProducts product-match-container"  *ngIf="inventoryListingFormData.saleChannel.platform != 'laced'">
+            <ion-card>
+              <ion-card-content class="flex-columns">
+                <span class="bold light-grey margin-bottom-xs">My Product:</span>
+                <span class="bold">{{data.inventory.product.title | titlecase}} </span>
+                <span class="bold light-grey" *ngIf="data.inventory.product.code">({{data.inventory.product.code | uppercase}})</span>
+                <span>{{data.inventory.variant.name | uppercase}}</span>
+              </ion-card-content>
+            </ion-card>
+            <div class="flex-vertically-centered centred-container">
+              <span class="material-symbols-outlined" translate="no">link</span>
+            </div>
+            <ion-card  *ngIf="inventoryListingForm.value.variant?.ID ">
+              <ion-card-content  class="flex-columns"  >
+                <span class="bold light-grey margin-bottom-xs">{{data.listing.saleChannel.account.name | uppercase }} Product:</span>
+                <span class="bold">{{inventoryListingFormData.product.title | titlecase}} </span>
+                <span class="bold light-grey" *ngIf="inventoryListingFormData.product.code">({{inventoryListingFormData.product.code | uppercase}})</span>
+                <span>{{inventoryListingFormData.variant.name | uppercase}}</span>
+              </ion-card-content>
+
+            </ion-card>
+            <ion-card button class="product-matching-container" (click)="matchProduct()" *ngIf="!inventoryListingForm.value.variant?.ID ">
+              <ion-card-content  class=" bold"  *ngIf="!inventoryListingForm.value.variant?.ID " >
+                <div color="primary" class="center"> Connect Product</div>
+              </ion-card-content>
+            </ion-card>
+
+          </div>
+
+        </form>
+      </div>
+    </mat-expansion-panel>
+
+    <!--    STANDARD PRODUCT MATCHING-->
+    <mat-expansion-panel class="product-matching-panel margin-bottom-s" *ngIf="inventoryListingFormData.saleChannel.platform == 'laced'" expanded="{{!connectionExternalList}}">
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
+        <span class="material-symbols-outlined warning-icon"  *ngIf="!connectionExternalList" translate="no">Warning</span>
+        <mat-panel-title class="bold">PRODUCT MATCH</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="margin-top-s">
+        <form [formGroup]="inventoryListingForm">
+          <div class=" connectProducts product-match-container">
+            <ion-card>
+              <ion-card-content class="flex-columns">
+                <span class="bold light-grey margin-bottom-xs">My Product:</span>
+                <span class="bold">{{data.inventory.product.title | titlecase}} </span>
+                <span class="bold light-grey" *ngIf="data.inventory.product.code">({{data.inventory.product.code | uppercase}})</span>
+                <span>{{data.inventory.variant.name | uppercase}}</span>
+              </ion-card-content>
+            </ion-card>
+            <div class="flex-vertically-centered centred-container">
+              <span class="material-symbols-outlined" translate="no">link</span>
+            </div>
+            <ion-card  *ngIf="inventoryListingForm.value.variant?.lacedID">
+              <ion-card-content  class="flex-columns"  >
+                <span class="bold light-grey margin-bottom-xs">Laced Product:</span>
+                <span class="bold">{{inventoryListingForm.value.product?.lacedTitle | titlecase}} </span>
+                <span class="bold light-grey">({{inventoryListingForm.value.product.lacedCode | uppercase}})</span>
+                <span>{{inventoryListingForm.value.variant.lacedName}}</span>
+              </ion-card-content>
+
+            </ion-card>
+            <ion-card button class="product-matching-container" (click)="matchProduct()" *ngIf="!inventoryListingForm.value.product?.lacedID">
+              <ion-card-content  class=" bold"  *ngIf="!inventoryListingForm.value.product?.lacedID" >
+                <div color="primary" class="center"> Connect Product</div>
+              </ion-card-content>
+            </ion-card>
+
+          </div>
+
+        </form>
+      </div>
+    </mat-expansion-panel>
+
+    <ion-card  class="margin-bottom listing-info" *ngIf="inventoryListingForm.value.variant">
+      <ion-card-content>
+        <div class="header margin-bottom-xs">
+          <span class="bold">{{(inventoryListingForm.value.saleChannel.accountID != user.account.ID ? inventoryListingForm.value.saleChannel.account.name + ' - ' : '') | uppercase}} {{inventoryListingForm.value.saleChannel.title | titlecase}}</span>
+        </div>
+        <div class="margin-bottom-xs">
+          <p class="italics bold " *ngIf="!connectionExternalList" color="warning">Connect products to continue to set up listing</p>
+        </div>
+        <div class="body info-grid margin-bottom-xs margin-top-xs" >
+          <span class="key">Market Price</span>
+          <span class="key">Fee</span>
+          <span class="key">Listing Price</span>
+          <span class="value">{{inventoryListingForm.value.variant?.sourceProductVariant?.price ? ((inventoryListingForm.value.variant?.sourceProductVariant?.price * utilsService.getExchangeRate('gbp', user.account.currency)) |
+            currency) : "N/A"}}</span>
+          <span class="value">{{inventoryListingForm.value.saleChannel.getFeeRate(inventoryListingForm.value).value}}%</span>
+          <span class="value">{{inventoryListingForm.value.price | currency}}</span>
+        </div>
+        <div class="tags-list" >
+          <span class="tag" color="warning" *ngIf="inventoryListingForm.value.status == 'drafted'">drafted</span>
+          <span class="tag" color="success" *ngIf="getListingBidSuggestionMessage().title === 'Best Price'">best price</span>
+          <span class="tag button" color="primary" *ngIf="inventoryListing.lacedID" (click)="navigateToLink('https://www.laced.com/account/selling/'+inventoryListing.lacedID+'/edit')">Laced Listing</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <h2 *ngIf="inventoryListingForm.value.variant">Details</h2>
+    <form [formGroup]="inventoryListingForm" autocomplete="off" *ngIf="inventoryListingForm.value.variant">
+      <div class="flex">
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="'active'" id="active">{{'active' | titlecase}}</mat-option>
+            <mat-option [value]="'drafted'"id="drafted">{{'drafted' | titlecase}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="margin-left-s" *ngIf="!inventoryListingFormData.priceSourceName && isMarketOracleDisabled">
+          <mat-label>Payout ({{user.account.currencySymbol}})</mat-label>
+          <input matInput type="number" autocomplete="null" formControlName="payout" autocomplete="off" >
+        </mat-form-field>
+      </div>
+
+      <div class="payout-section" *ngIf="!isMarketOracleDisabled">
+        <mat-slide-toggle
+          *ngIf="user.iam.service.marketOracle"
+          [checked]="inventoryListingFormData.priceSourceName != null"
+          [disabled]="isMarketOracleDisabled"
+          #marketOracle
+          class="margin-right-s"
+          color="success"
+          test-id="market-oracle-toggle"
+          (change)="onMarketOracleToggle(marketOracle.checked)"
+        >
+          Use Market Oracle
+        </mat-slide-toggle>
+
+        <mat-form-field appearance="fill" *ngIf="inventoryListingFormData.priceSourceName">
+          <mat-label>Margin on Market Price (%)</mat-label>
+          <input matInput type="number"  autocomplete="null" placeholder="Margin applied on top of market price" [max]="99" [min]="-99" formControlName="priceSourceMargin" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" *ngIf="!inventoryListingFormData.priceSourceName">
+          <mat-label>Payout ({{user.account.currencySymbol}})</mat-label>
+          <input matInput type="number" autocomplete="null" formControlName="payout" autocomplete="off" >
+        </mat-form-field>
+      </div>
+      <mat-hint class="error" *ngIf="user.iam.service.marketOracle && !inventoryListingFormData.variant">Select Variant first</mat-hint>
+      <mat-hint class="error" *ngIf="user.iam.service.marketOracle && inventoryListingFormData.variant && !inventoryListingFormData.variant.sourceProductVariantID">Variant Selected is not synced to a public product. Sync it in order to access the Market Oracle Feature</mat-hint>
+      <mat-hint class="error" *ngIf="user.iam.service.marketOracle && inventoryListingFormData.variant && (!!inventoryListingFormData.variant.sourceProductVariantID && !inventoryListingFormData.variant.sourceProductVariant?.price)">Variant Selected currently doesn't have a public price. Sync to another variant or try again later</mat-hint>
+    </form>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <button *ngIf="!inventoryListingFormData.ID" mat-flat-button color="primary" [disabled] = '!inventoryListingForm.valid || isLoadingAction' (click)="onSubmit()" test-id="submit" [class.loading]="isLoadingAction">Save</button>
+  <button *ngIf="inventoryListingFormData.ID" mat-flat-button color="primary"  [disabled] = '!inventoryListingForm.valid || isLoadingAction'  (click)="onSubmit()" test-id="save" [class.loading]="isLoadingAction">Save</button>
+</ion-footer>

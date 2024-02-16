@@ -1,0 +1,267 @@
+<form [formGroup]="inventoryForm" autocomplete="off">
+  <!--Compact form layout used in inventory bulk container-->
+  <div *ngIf="displayMode == 'compact'" class="compact-form">
+
+    <!--Compact form fields layout-->
+    <div class="form-field-container" [ngClass]="fieldsContainerCustomCssClass">
+      <!--VIRTUAL CHECKBOX - WEB-->
+      <div *ngIf="environment.screenType != 'mobile' && inventoryForm.value.virtual" class="flex-centered  padding-bottom" (click)="onVirtualToggle()">
+        <ion-checkbox labelPlacement="start"  [checked]="this.inventoryForm.get('quantity').value == 10"  ></ion-checkbox>
+      </div>
+
+      <!--VARIANT INFO-->
+      <div class="inventory-variant-header  " [ngClass]="variantInfoCustomCssClass" (click)="inventoryForm.value.virtual ?onVirtualToggle():null ">
+        <div class=" max-height " [ngClass]="{'padding-bottom flex-colums': environment.screenType == 'desktop' ,'flex-vertically-centered': environment.screenType != 'desktop'  }">
+          <div id="variant-name" class="block-display" >{{inventoryRecord.variant | variant | uppercase}}</div>
+          <span class="key medium " *ngIf="environment.screenType != 'mobile'" style="font-style: italic"  [attr.color]='inventoryBidSuggestionMessage.color'>{{inventoryBidSuggestionMessage.message}}</span>
+        </div>
+
+        <ion-chip color="primary" *ngIf="environment.screenType == 'mobile'" (click)="onInventoryRecordSelected()" test-id="view">
+          <ion-label>View</ion-label>
+        </ion-chip>
+      </div>
+
+      <!--MOBILE - PRICE UNDERCUTTING INFO-->
+
+      <div *ngIf="environment.screenType == 'mobile'" [ngClass]="variantInfoCustomCssClass" class="margin-bottom-xxs flex-pin-left">
+        <span class="key medium " style="font-style: italic" [attr.color]="inventoryBidSuggestionMessage.color">{{inventoryBidSuggestionMessage.message}}</span>
+      </div>
+
+      <!--MOBILE - INVENTORY RECORD EXTRA INFORMATION-->
+      <div  *ngIf="environment.screenType == 'mobile'" [ngClass]="variantInfoCustomCssClass" class="margin-bottom-xs flex-pin-left" >
+        <div class="margin-right-s" *ngIf="inventoryRecord.accountID == user.account.ID">
+          <span class="key medium" >Market Price: </span>
+          <span class="value medium">{{inventoryFormData.variant?.sourceProductVariant?.price ? ((inventoryFormData.variant?.sourceProductVariant?.price * utilsService.getExchangeRate('gbp', user.account.currency)) |
+            currency) : "N/A"}}</span>
+        </div>
+        <div class="margin-right-s" *ngIf="inventoryRecord.accountID != user.account.ID">
+          <span class="key medium" >Account: </span>
+          <span class="value medium">{{inventoryRecord.account.name | uppercase}}</span>
+        </div>
+        <div class="margin-right-s" >
+          <span class="key medium">Active Listings: </span>
+          <span class="value medium">{{activeListings.length}}/{{potentialListings.length}}</span>
+        </div>
+        <div  *ngIf="inventoryPrice !== null" class="margin-right-s">
+          <span class="key medium">Price: </span>
+          <span class="value amount medium" *ngIf="inventoryPrice?.length !== 2">{{inventoryPrice[0] | currency}}</span>
+          <span class="value amount medium" *ngIf="inventoryPrice?.length === 2">{{inventoryPrice[0] | currency}} - {{inventoryPrice[1] | currency}}</span>
+        </div>
+      </div>
+
+      <!--VIRTUAL CHECKBOX - MOBILE-->
+      <div *ngIf="environment.screenType == 'mobile' && inventoryForm.value.virtual"  class="flex-centered padding-bottom" (click)="onVirtualToggle()">
+        <ion-checkbox  labelPlacement="start"  [checked]="inventoryForm.get('quantity').value == 10"></ion-checkbox>
+      </div>
+
+
+
+      <!--QUANTITY-->
+      <mat-form-field *ngIf="!inventoryFormData.virtual && inventoryFormData.variant" appearance="fill" tourId='add-quantity'>
+        <mat-label test-id="quantity-label" *ngIf="environment.screenType == 'desktop'">Total Quantity</mat-label>
+        <div class="mobile-quantity" *ngIf="environment.screenType == 'mobile'">
+          <button mat-icon-button (click)="decrement()" class="quantity-button">
+            <mat-icon class="quantity-icon">remove</mat-icon>
+          </button>
+          <input matInput type="number" autocomplete="null" formControlName="quantity" placeholder="0" autocomplete="off" max="100" min="0" style="flex: 1; text-align: center;">
+          <button mat-icon-button (click)="increment()" class="quantity-button">
+            <mat-icon class="quantity-icon">add</mat-icon>
+          </button>
+        </div>
+        <input *ngIf="environment.screenType == 'desktop'" matInput type="number" autocomplete="null" formControlName="quantity" autocomplete="off" max="100" min="0" style="flex: 1;">
+        <!-- <mat-hint class="error" *ngIf="inventoryFormData.ID && inventoryFormData.warehouse?.accountID != user.account.ID">You can't change quantity for inventory at external location</mat-hint>-->
+      </mat-form-field>
+
+      <!--COST-->
+      <mat-form-field appearance="fill" *ngIf="trackCost">
+        <mat-label>Cost ({{user.account.currencySymbol}})</mat-label>
+        <input matInput type="number" autocomplete="null" formControlName="cost" autocomplete="off" >
+      </mat-form-field>
+
+      <!--PAYOUT-->
+      <mat-form-field appearance="fill" *ngIf="!inventoryFormData.priceSourceName" tourId='add-payout'>
+        <mat-label>Payout ({{user.account.currencySymbol}})</mat-label>
+        <input matInput type="number" autocomplete="null" formControlName="payout" autocomplete="off" >
+      </mat-form-field>
+
+      <!--PRICE SOURCE MARGIN-->
+      <mat-form-field appearance="fill" *ngIf="inventoryFormData.priceSourceName"  >
+        <mat-label>Margin on Market Price (%)</mat-label>
+        <input matInput type="number"  autocomplete="null" placeholder="Margin applied on top of market price" [max]="99" [min]="-99" formControlName="priceSourceMargin" autocomplete="off">
+      </mat-form-field>
+
+      <!--STATUS-->
+      <mat-form-field appearance="fill" *ngIf="environment.screenType == 'desktop'">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="'active'" test-id="active">{{'active' | titlecase}}</mat-option>
+          <mat-option [value]="'drafted'" test-id="drafted">{{'drafted' | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!--NOTES-->
+      <mat-form-field appearance="fill" test-id="notes"  *ngIf="environment.screenType == 'desktop'">
+        <mat-label>Notes</mat-label>
+        <input matInput type="text" autocomplete="null" formControlName="notes" autocomplete="off">
+      </mat-form-field>
+
+      <!-- SYNC BUTTON-->
+      <button test-id="sync-product" mat-icon-button color="accent" [disabled]="formValidationHeaderError == 'variant-missing-public-price'" class="sync-disabled"  [ngClass]="{'sync-active': inventoryFormData.priceSourceName != null}" *ngIf="virtualMarketSyncAvailable" (click)="onMarketOracleToggle(inventoryFormData.priceSourceName==null)">
+        <mat-icon>sync</mat-icon>
+      </button>
+
+      <!--WEB - INVENTORY RECORD EXTRA INFORMATION-->
+      <div  *ngIf="environment.screenType == 'desktop'" class="variant-info-web flex-pin-left margin-bottom">
+        <div class="vertical-grid margin-right-s" *ngIf="inventoryRecord.accountID == user.account.ID">
+          <span class="key">Market</span>
+          <span class="value">{{inventoryFormData.variant?.sourceProductVariant?.price ? ((inventoryFormData.variant?.sourceProductVariant?.price * utilsService.getExchangeRate('gbp', user.account.currency)) |
+            currency) : "N/A"}}</span>
+        </div>
+        <div class="vertical-grid margin-right-s" *ngIf="inventoryRecord.accountID != user.account.ID">
+          <span class="key " >Account: </span>
+          <span class="value small">{{inventoryRecord.account.name | uppercase}}</span>
+        </div>
+        <div class="vertical-grid margin-right-s">
+          <span class="key">Listings</span>
+          <span class="value">{{activeListings.length}}/{{potentialListings.length}}</span>
+        </div>
+        <div class="vertical-grid" *ngIf="inventoryPrice !== null">
+          <span class="key">Price</span>
+          <span class="value amount" *ngIf="inventoryPrice?.length !== 2">{{inventoryPrice[0] | currency}}</span>
+          <span class="value amount" *ngIf="inventoryPrice?.length === 2">{{inventoryPrice[0] | currency}} - {{inventoryPrice[1] | currency}}</span>
+        </div>
+
+      </div>
+
+      <!--VIEW INVENTORY RECORD-->
+      <div class="flex-pin-right margin-bottom" *ngIf="environment.screenType == 'desktop'">
+        <ion-chip color="primary"  (click)="onInventoryRecordSelected()" >
+          <ion-label>View</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Standard form layout used in inventory bulk container-->
+  <div *ngIf="displayMode != 'compact'">
+    <div class="flex">
+      <div class="stock-type-section padding-bottom-xs full-width" *ngIf="inventoryFormData.variant && inventoryFormData.virtual">
+        <mat-slide-toggle #virtual color="success"  test-id="virtual-toggle" class="virtual-toggle" (toggleChange)="onVirtualToggle()" [checked]="inventoryForm.get('quantity').value == 10">Virtually Available</mat-slide-toggle>
+      </div>
+
+      <mat-form-field *ngIf="!inventoryFormData.virtual && inventoryFormData.variant" appearance="fill">
+        <mat-label test-id="quantity-label">Total Quantity</mat-label>
+        <input matInput type="number" autocomplete="null" formControlName="quantity" autocomplete="off" max="100"
+               min="0">
+      </mat-form-field>
+
+      <mat-form-field *ngIf="inventoryFormData.variant" appearance="fill" class="margin-left-s">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="'active'" id="active">{{'active' | titlecase}}</mat-option>
+          <mat-option [value]="'drafted'"id="drafted">{{'drafted' | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-hint class="error block-display margin-bottom-s" *ngIf="inventoryFormData.ID && (inventoryFormData.warehouse?.accountID != user.account.ID || user.iam.service.warehousing)">
+      You can't change quantity for inventory at external location
+    </mat-hint>
+
+    <div class="payout-section" *ngIf="inventoryFormData.variant">
+
+      <!--TODO: enable for consignors once discussed-->
+      <div class="flex">
+        <div class="padding-bottom-xs full-width">
+          <mat-slide-toggle *ngIf="!user.account.isConsignor" [checked]="inventoryFormData.priceSourceName != null"  [disabled]="!user.iam.service.marketOracle || !inventoryFormData.variant || !inventoryFormData.variant.sourceProductVariantID || !inventoryFormData.variant.sourceProductVariant.price" #marketOracle color="success" test-id="market-oracle-toggle" (change)="onMarketOracleToggle(marketOracle.checked)">Use Market Oracle</mat-slide-toggle>
+        </div>
+        <mat-form-field appearance="fill" class="margin-left-s" *ngIf="inventoryFormData.priceSourceName"  >
+          <mat-label>Margin on Market Price (%)</mat-label>
+          <input matInput type="number"  autocomplete="null" placeholder="Margin applied on top of market price" [max]="99" [min]="-99" formControlName="priceSourceMargin" autocomplete="off">
+        </mat-form-field>
+      </div>
+      <div class="flex">
+        <mat-form-field appearance="fill" [class.margin-right-s]="!inventoryFormData.priceSourceName" *ngIf="trackCost">
+          <mat-label>Cost Price ({{user.account.currencySymbol}})</mat-label>
+          <input matInput type="number" autocomplete="null" placeholder="Amount that this item was purchased for" formControlName="cost" autocomplete="off" >
+        </mat-form-field>
+        <!--TODO: change hardcoded styling consignors once discussed-->
+        <mat-form-field appearance="fill" *ngIf="!inventoryFormData.priceSourceName">
+          <mat-label>Payout ({{user.account.currencySymbol}})</mat-label>
+          <input matInput type="number" autocomplete="null" formControlName="payout" autocomplete="off" >
+        </mat-form-field>
+      </div>
+    </div>
+    <!--TODO: enable for consignors once discussed-->
+<!--    <mat-hint class="error" *ngIf="inventoryFormData.variant && !user.iam.service.marketOracle ">You don't have access to the Market Oracle Feature</mat-hint>-->
+    <mat-hint class="error" *ngIf="formValidationHeaderError == 'variant-not-synced'">Variant Selected is not synced to a public product. Sync it in order to access the Market Oracle Feature</mat-hint>
+    <mat-hint class="error" *ngIf="formValidationHeaderError == 'variant-missing-public-price'">Variant Selected currently doesn't have a public price. Sync to another variant or try again later</mat-hint>
+    <div class="details-section" *ngIf="inventoryFormData.variant" [ngClass]="{'margin-top-s': formValidationHeaderError}">
+
+      <mat-form-field appearance="fill" id="notes">
+        <mat-label>Notes</mat-label>
+        <input matInput type="text" autocomplete="null" formControlName="notes" autocomplete="off">
+      </mat-form-field>
+    </div>
+
+
+    <div class="listings-section" *ngIf="inventoryFormData.variant">
+<!--      <div class="header">-->
+<!--        <h2>Listings</h2>-->
+<!--      </div>-->
+      <div class="form-section-toolbar">
+        <h2 class="margin-bottom-xs">{{'Listings' | titlecase}}</h2>
+        <div class="centred-container display-right">
+          <a class="button" (click)="addSaleChannel()" test-id="add-sale-channel">Add</a>
+        </div>
+      </div>
+      <ion-list *ngIf="!isLoadingListings">
+        <ion-card *ngFor="let listingForm of listingsFormArray['controls']; let i = index;" [formGroup]="getFormGroup(listingForm)" class="margin-bottom" button (click)="onListingClick(getFormGroup(listingForm))">
+          <ion-card-content>
+            <div class="flex">
+              <div class="flex-1">
+                <div class="header margin-bottom-xs">
+                  <span class="bold">{{(listingForm.value.saleChannel.accountID != user.account.ID ? listingForm.value.saleChannel.account.name + ' - ' : '') | uppercase}} {{listingForm.value.saleChannel.title | titlecase}}</span>
+                </div>
+                <div class="margin-bottom-xs">
+                  <span class="key medium bold" style="font-style: italic" [attr.color]="getListingBidSuggestionMessage(listingForm.value).color">{{getListingBidSuggestionMessage(listingForm.value).message}}</span>
+                </div>
+                <div class="body margin-bottom-xs" id="setup-listing" *ngIf="getListingErrors(listingForm).requiresSetup">
+                  <a class="button" test-id="setup-listing">Setup Listing</a>
+                </div>
+                <div class="body margin-bottom-xs" id="add-listing" *ngIf="getListingErrors(listingForm).missingRequiredFields && !getListingErrors(listingForm).requiresSetup">
+                  <a class="button" test-id="add-listing">Add Listing</a>
+                </div>
+                <div class="body info-grid margin-bottom-xs margin-top-xs" *ngIf="!getListingErrors(listingForm).missingRequiredFields && !getListingErrors(listingForm).requiresSetup && !getListingErrors(listingForm).virtualInventoryNotAllowedOnExternalSaleChannel && !getListingErrors(listingForm).virtualInventoryNotAllowed && !getListingErrors(listingForm).requiresReconnect">
+                  <span class="key">Payout</span>
+                  <span class="key">Fee</span>
+                  <span class="key">Listing Price</span>
+                  <span class="value">{{listingForm.value.payout | currency}}</span>
+                  <span class="value">{{listingForm.value.saleChannel.getFeeRate(listingForm.value).value}}%</span>
+                  <span class="value">{{listingForm.value.price | currency}}</span>
+                </div>
+                <div class="tags-list" *ngIf="!getListingErrors(listingForm).missingRequiredFields && !getListingErrors(listingForm).requiresSetup && !getListingErrors(listingForm).virtualInventoryNotAllowedOnExternalSaleChannel && !getListingErrors(listingForm).virtualInventoryNotAllowed">
+                  <span class="tag" color="warning" *ngIf="listingForm.value.status == 'drafted'">drafted</span>
+                  <span class="tag" color="success" *ngIf="getListingBidSuggestionMessage(listingForm.value).title === 'Best Price'">best price</span>
+                </div>
+                <mat-hint class="error" *ngIf="getListingErrors(listingForm).virtualInventoryNotAllowedOnExternalSaleChannel">Virtual Stock is not permitted on external sale channels</mat-hint>
+                <mat-hint class="error" *ngIf="getListingErrors(listingForm).virtualInventoryNotAllowed">Virtual Stock is disabled for this sale channel</mat-hint>
+                <mat-hint class="error" *ngIf="getListingErrors(listingForm).marketOracleDisabled">Market Oracle Pricing is disabled for external sale channels. You can still list your stock but the payout will not be automatically updated</mat-hint>
+                <mat-hint class="error" *ngIf="getListingErrors(listingForm).requiresSetup && !listingForm.value.variant">We couldn't match your product with product on {{listingForm.value.saleChannel.account.name | uppercase}} catalogue. Please link it manually</mat-hint>
+                <mat-hint class="error" *ngIf="getListingErrors(listingForm).requiresReconnect">Product variant on {{listingForm.value.saleChannel.account.name | uppercase}} catalogue has been deleted. Please reconnect the listing or delete it through the biweekly reports</mat-hint>
+              </div>
+              <span class="sync-container flex-centered">
+                <span id="sync" class="material-symbols-outlined" translate="no" [ngClass]="{'sync-disabled': !user.iam.service.marketOracle, 'sync-active': listingForm.value.priceSourceName}">sync</span>
+              </span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-list>
+
+      <div class="loading-placeholder" *ngIf="isLoadingListings">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    </div>
+  </div>
+
+</form>

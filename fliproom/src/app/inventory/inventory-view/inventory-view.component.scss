@@ -1,0 +1,9 @@
+app-inventory-product {
+  width: 100%;
+}
+
+.web-view{
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  column-gap: 1em;
+}

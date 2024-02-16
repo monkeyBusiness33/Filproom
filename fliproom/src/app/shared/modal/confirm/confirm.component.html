@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{data.title ? data.title:'Confirm' }}</h1>
+<div mat-dialog-content>
+  <p>{{data.message }}</p>
+</div>
+<div  class="two-cell-grid margin-top-s">
+  <button mat-stroked-button (click)="onSubmit(false)" test-id="cancel">{{data.title ? data.cancelButtonText:'Cancel' }}</button>
+  <button mat-flat-button    (click)="onSubmit(true)"  test-id="confirm" color="primary" cdkFocusInitial>{{data.title ? data.confirmButtonText:'Confirm' }}</button>
+</div>

@@ -1,0 +1,25 @@
+steps:
+- name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'gs://$_BUCKET/$_ENV_FILENAME', 'microservices/api/$_ENV_FILENAME']
+
+- name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'gs://$_BUCKET/$_REVOLUT_KEY', 'microservices/api/libs/$_REVOLUT_KEY']
+  
+- name: gcr.io/cloud-builders/gsutil
+  args: ['mv', 'microservices/api/production.dockerfile', 'Dockerfile']
+
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/wiredhub/production-api', '.']
+
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/wiredhub/production-api']
+
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'production-api', '--image', 'gcr.io/wiredhub/production-api', '--region', 'europe-west2', '--platform', 'managed', '--timeout', '899']
+
+images:
+- gcr.io/wiredhub/production-api

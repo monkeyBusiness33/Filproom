@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onClose()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Create Listing</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="marketListingForm" test-id="list-item" autocomplete="off" *ngIf="!isLoadingForm">
+    <div *ngIf="selectedProduct">
+      <ion-card class="margin-bottom" id="product-card">
+        <div class="container">
+          <div class="product-card-image-wrapper">
+            <img [src]="selectedProduct.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <span class="bold ">{{selectedProduct.code | uppercase}}</span>
+            <span class="grey">{{selectedProduct.title | uppercase}}</span>
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </div>
+
+      <div class="field-wrapper">
+        <ion-buttons class="margin-bottom-s">
+          <ion-button class="type-btn" [ngClass]="{'selected-type-btn': formVal.type === 'wts'}" (click)="selectType('wts')">WTS</ion-button>
+          <ion-button class="type-btn" [ngClass]="{'selected-type-btn': formVal.type === 'wtb'}" (click)="selectType('wtb')">WTB</ion-button>
+        </ion-buttons>
+        <mat-form-field appearance="fill">
+          <mat-label>Variant</mat-label>
+          <mat-select formControlName="variant"  test-id="variant-select"  [compareWith]="compareObjectsByIDFn">
+            <mat-option [value]="variant" *ngFor="let variant of selectedProduct.variants">{{variant | variant}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="two-cell-grid">
+          <mat-form-field appearance="fill" matTooltipClass="mat-tooltip" [matTooltip]="'Available quantity for this item'" matTooltipPosition="above" [matTooltipDisabled]="false">
+            <mat-label>Quantity</mat-label>
+            <input matInput #quantity type="number" min="1" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" autocomplete="off" formControlName="quantity"/>
+          </mat-form-field>
+          <mat-form-field appearance="fill" matTooltipClass="mat-tooltip" [matTooltip]="'Price for the variant'" matTooltipPosition="above" [matTooltipDisabled]="false">
+            <mat-label>Unit Price</mat-label>
+            <input matInput #price type="number"  autocomplete="off" formControlName="price"/>
+          </mat-form-field>
+        </div>
+        <divn [ngClass]="{'two-cell-grid': formVal.type == 'wts' && formVal.receipt}" >
+          <mat-slide-toggle formControlName="receipt" #sync>{{formVal.type == 'wtb' ? 'Request Receipt' : 'Receipt Available'}}</mat-slide-toggle>
+          <mat-form-field  appearance="fill" matTooltipClass="mat-tooltip" [matTooltip]="'Specify where you purchased this item'" matTooltipPosition="above" [matTooltipDisabled]="false" *ngIf="formVal.type == 'wts' && formVal.receipt">
+            <mat-label>Purchased From</mat-label>
+            <input matInput #purchasedFrom type="text"  autocomplete="off" formControlName="purchasedFrom"/>
+          </mat-form-field>
+        </divn>
+
+        <mat-form-field  appearance="fill" matTooltipClass="mat-tooltip" [matTooltip]="'Add a note for this variant'" matTooltipPosition="above" [matTooltipDisabled]="false">
+          <mat-label>Notes</mat-label>
+          <input matInput #notes type="text"  autocomplete="off" formControlName="notes"/>
+        </mat-form-field>
+      </div>
+    <mat-form-field class="listing-tags" appearance="fill">
+      <mat-label>Tags</mat-label>
+      <mat-chip-list #chipList aria-label="tag selection">
+        <mat-chip *ngFor="let tag of marketListingForm.get('tags').value" (removed)="removeTag(tag)">
+          {{tag}}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <mat-chip  (click)="openTagInput()">
+          <mat-icon>add</mat-icon>
+          {{'Add Tag'}}
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <button mat-flat-button (click)="onSubmit()" [class.loading]="isLoading" color="primary" test-id="submit" [ngClass]="{'loading': isLoadingUpdate}">Save</button>
+</ion-footer>

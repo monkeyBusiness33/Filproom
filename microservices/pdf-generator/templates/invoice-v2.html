@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<style>
+    body {
+        background-color: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0px;
+
+    }
+    .invoice{
+        zoom: 4;
+        height: 842px;
+        width: 595px;
+    }
+    img{
+        width: 100% ;
+    }
+    .card {
+        background-color: #e4e4e4;
+        border-radius: 8px;
+        border: 1px solid #e4e4e4;
+        padding: 1em;
+        font-size: 10px;
+        color: #2a2a2a;
+    }
+    .card-title{
+        font-weight: bold;
+        color: #989898;
+    }
+    .bold{
+        font-weight: bold;
+    }
+
+    .banner-container {
+        margin-bottom: 2em;
+    }
+
+    #banner{
+        object-fit: contain;
+        width: 100%;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+    }
+    #logo{
+        object-fit: contain;
+        width: 10em ;
+    }
+    #title{
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    #sub-title{
+          text-align: center;
+          font-size: 12px;
+
+      }
+    .invoice-header{
+        width: 100%;
+    }
+    .powered-by-logo-container{
+        display: flex;
+        justify-content: center;
+
+    }
+    #powered-by-logo{
+        object-fit: contain;
+        width: 7em;
+    }
+    .invoice-body{
+        /*width: 100%;*/
+        margin-left: 2em;
+        margin-right: 2em;
+        /*margin: 0 2em;*/
+    }
+    .margin-bottom-2{
+        margin-bottom: 2em;
+    }
+    .margin-bottom-1{
+        margin-bottom: 1em;
+    }
+    .margin-bottom-0-5{
+        margin-bottom: 0.5em;
+    }
+    .flex-split{
+        display: flex;
+        justify-content: space-between;
+    }
+    .split-grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 1em;
+    }
+    .light-grey{
+        color: #6e6e6e;
+    }
+    .vertically-centered{
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    hr{
+        height: 1px;
+        background-color: #ababab;
+        border:none;
+        border-radius: 1px; /* Rounds the corners of the line */
+    }
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+            rel="stylesheet">
+</head>
+<body>
+    <div class="invoice">
+        <!-- Banner -->
+        {{#ifExists bannerImage}}
+        <div class="banner-container margin-bottom-1">
+            <img id="banner" src="{{bannerImage}}"
+                 onerror="this.src='https://storage.googleapis.com/production-wiredhub/company_assets/head_banner_primary.png';"
+            >
+        </div>
+        {{/ifExists}}
+        <!-- Invoice Header -->
+        <div class="invoice-header margin-bottom-2">
+            <div class="logo-container margin-bottom-1">
+                <img id="logo" src="{{accountLogo}}"
+                     onerror="this.src='https://storage.googleapis.com/production-wiredhub/company_assets/fliproom_logo.png';"
+                >
+            </div>
+            {{#ifExists invoiceTitle}}
+            <div id="title" class="margin-bottom-0-5">{{invoiceTitle}}</div>
+            {{/ifExists}}
+            {{#ifExists invoiceSubTitle}}
+            <div id="sub-title">{{invoiceSubTitle}}</div>
+            {{/ifExists}}
+        </div>
+        <!-- Invoice Body -->
+        <div class="invoice-body">
+            <!-- Invoice Details -->
+            <div class="card margin-bottom-1">
+                <div class="flex-split margin-bottom-0-5">
+                    <div>Invoice Number</div>
+                    <div class="bold">{{invoiceID}}</div>
+                </div>
+                <div class="flex-split margin-bottom-0-5">
+                    <div>Invoice Date</div>
+                    <div class="bold">{{invoiceDate}}</div>
+                </div>
+                {{#ifExists invoiceReference}}
+                <div class="flex-split">
+                    <div>Reference</div>
+                    <div class="bold">{{invoiceReference}}</div>
+                </div>
+                {{/ifExists}}
+            </div>
+            <!-- Billed From and Billed To -->
+            <div class="split-grid margin-bottom-1">
+                <div class="card">
+                    <div class="card-title margin-bottom-0-5">Billed From</div>
+                    {{#ifExists senderAccountName}}
+                    <div class="bold margin-bottom-0-5">
+                        {{senderAccountName}}
+                        {{#ifExists senderVATNumber}}
+                        ({{senderVATNumber}})
+                        {{/ifExists}}
+                    </div>
+                    {{/ifExists}}
+                    {{#ifExists senderName}}
+                    <div class="margin-bottom-0-5">{{senderName}}</div>
+                    {{/ifExists}}
+                    <div class="margin-bottom-0-5">{{senderAddressLine1}}</div>
+                    <div class="margin-bottom-0-5">{{senderPostcode}}</div>
+                    <div>{{senderCityAndCountry}}</div>
+                </div>
+                <div class="card">
+                    <div class="card-title margin-bottom-0-5">Billed To</div>
+                    <div class="bold margin-bottom-0-5">{{recipientName}}</div>
+                    <div class="margin-bottom-0-5">{{recipientAddressLine1}}</div>
+                    <div class="margin-bottom-0-5">{{recipientPostcode}}</div>
+                    <div>{{recipientCityAndCountry}}</div>
+
+                </div>
+            </div>
+            <div class="bold margin-bottom-1" style="font-size: 12px">SUMMARY</div>
+            <!-- Line Items -->
+            <div class="card margin-bottom-1">
+                {{#each lineItems}}
+                <div class="flex-split margin-bottom-0-5">
+                    <div>
+                        <div>
+                            {{title}}
+                            {{#ifExists code}}
+                            ({{code}})
+                            {{/ifExists}}
+                        </div>
+
+                        {{#ifExists variant}}
+                        <div class="light-grey">{{variant}}</div>
+                        {{/ifExists}}
+                    </div>
+                    <div class="vertically-centered">{{currency}} {{amount}}</div>
+                </div>
+
+                {{/each}}
+
+
+                <hr class="margin-bottom-0-5">
+                <!-- Subtotal -->
+                <div class="flex-split margin-bottom-0-5">
+                    <div>Subtotal</div>
+                    <div>{{currency}} {{subTotal}}</div>
+                </div>
+<!-- VAT -->
+                {{#ifExists VATRate}}
+                <div class="flex-split margin-bottom-0-5">
+                    <div> VAT (%{{VATRate}})</div>
+                    <div>{{currency}} {{VATAmount}}</div>
+                </div>
+                {{/ifExists}}
+
+                <!-- Total Amount -->
+                <hr class="margin-bottom-0-5">
+                <div class="flex-split">
+                    <div class="bold">Total Amount</div>
+                    <div class="bold">{{currency}} {{totalAmount}}</div>
+                </div>
+            </div>
+            <!-- Notes -->
+            {{#ifExists notes}}
+            <div class="card margin-bottom-1">
+                <div class="card-title margin-bottom-0-5">Notes</div>
+                <div>{{notes}}</div>
+            </div>
+            {{/ifExists}}
+
+            <!-- Powered By -->
+            <div class="powered-by-logo-container">
+                <img id="powered-by-logo"
+                     src="https://storage.googleapis.com/production-wiredhub/company_assets/powered_by_logo_color.png">
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
+

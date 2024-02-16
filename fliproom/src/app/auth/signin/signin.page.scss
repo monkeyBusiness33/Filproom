@@ -1,0 +1,132 @@
+
+ion-content {
+    --padding-start: 0;
+    --padding-end: 0;
+}
+
+div.wrapper {
+  display: grid;
+  height: 100%;
+
+  div#section1 {
+    display: none;
+    background-color: var(--ion-color-primary);
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: space-between;
+    color: var(--ion-color-primary-contrast);
+
+    img {
+      height: 2em;
+    }
+
+    div#section1-body {
+      width: 100%;
+      flex-grow: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+
+      div.partners-section {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        img#edit-ldn {
+          height: 1.5em;
+          width: fit-content;
+        }
+      }
+
+    }
+
+    div#feedbacks-section {
+      max-width: 20em;
+      display: flex;
+      margin: 0 auto;
+
+      ion-card {
+        color: white;
+        background-color: var(--ion-color-primary-dark);
+
+        p#message {
+          margin-bottom: 2em;
+          font-style: italic;
+        }
+
+        p#author {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  div#section2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    div#wrapper-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      max-width: 550px;
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      span#line-break {
+        position: relative;
+        display: block;
+        text-align: center;
+      }
+
+      span#line-break:before {
+        content: "";
+        display: block;
+        width: 40%;
+        height: 1px;
+        background: var(--ion-text-color);
+        left: 0;
+        top: 50%;
+        position: absolute;
+      }
+
+      span#line-break:after {
+        content: "";
+        display: block;
+        width: 40%;
+        height: 1px;
+        background: var(--ion-text-color);
+        right: 0;
+        top: 50%;
+        position: absolute;
+      }
+
+      button.social-btn {
+        background-color: var(--ion-color-dark);
+        color: var(--ion-color-dark-contrast);
+      }
+
+      div.forgot-password-wrapper {
+        text-align: right;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+  div.wrapper {
+    grid-template-columns: 1fr 3fr;
+
+    div#section1 {
+      display: flex;
+    }
+  }
+}
+

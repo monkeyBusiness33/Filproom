@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onClose()"
+          >arrow_back</span
+        >
+      </ion-button>
+    </ion-buttons>
+    <ion-title
+      >{{formMode === 'create' ? 'Place an ' : 'Update your '}}Offer</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="offer-form">
+  <ion-card id="product-card">
+    <div class="container">
+      <img [src]="listing.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+      <ion-card-content>
+        <span class="title">{{listing.variant | variant | uppercase}}</span>
+        <div class="flex">
+          <span >{{listing.product.title | uppercase}}</span>
+          <span *ngIf="listing.product.code" class=" italics">{{' - '+listing.product.code | uppercase}}</span>
+        </div>
+      </ion-card-content>
+    </div>
+  </ion-card>
+
+  <form [formGroup]="listOfferForm" test-id="list-offer" autocomplete="off" *ngIf="!isLoadingForm">
+    <div class="margin-top-s">
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid">
+            <span class="key">{{'Claimable Quantity' | uppercase}}</span>
+            <span class="key">{{'requested price / unit' | uppercase}}</span>
+            <span class="value">{{listing.claimableQuantity}}</span>
+            <span class="value">{{listing.price | currency}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+
+      <h2>Your offer</h2>
+      <div class="two-cell-grid offer-form-fields">
+        <mat-form-field class="w-100" appearance="fill" matTooltipClass="mat-tooltip" [matTooltip]="'Quantity you want to offer'" matTooltipPosition="above" [matTooltipDisabled]="false" >
+          <mat-label>Quantity</mat-label>
+          <input matInput #quantity type="number" autocomplete="off" formControlName="quantity"/>
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="fill" matTooltipClass="mat-tooltip" [matTooltip]="'Price to offer'" matTooltipPosition="above" [matTooltipDisabled]="false">
+          <mat-label>Offer Price / Unit</mat-label>
+          <input matInput #price min="1" type="number" autocomplete="off" formControlName="price"/>
+        </mat-form-field>
+        <div class="col-span-2 form-section-suffix">
+          <p class="sub-total-hint" *ngIf="listOfferForm.value.quantity && listOfferForm.value.price">{{'SUBTOTAL '+ ((listOfferForm.value.price * listOfferForm.value.quantity) | currency )}}</p>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</ion-content>
+<ion-footer>
+  <button mat-flat-button (click)="onSubmit()" id="submit" [class.loading]="isLoading" color="primary" test-id="submit">
+    {{formMode == 'create' ? 'Create' : 'Save'}}
+  </button>
+</ion-footer>

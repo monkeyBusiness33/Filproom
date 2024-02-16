@@ -1,0 +1,7 @@
+runtime: nodejs14
+service: fliproom
+
+handlers:
+  - url: .*
+    script: auto
+    secure: always

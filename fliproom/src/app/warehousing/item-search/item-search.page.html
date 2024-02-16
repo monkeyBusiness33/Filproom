@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="flex-centered" *ngIf="isLoading">
+    <ion-spinner  name="crescent"></ion-spinner>
+  </div>
+
+  <div class="placeholder" *ngIf="!isLoading && !itemsSearchResults">
+    <p>Scan Item or Search Item</p>
+  </div>
+
+  <div class="placeholder" *ngIf="!isLoading && itemsSearchResults && itemsSearchResults.length == 0">
+    <p>No Items Matching Search</p>
+  </div>
+
+  <ion-list *ngIf="!isLoading && itemsSearchResults">
+    <ion-card *ngFor="let item of itemsSearchResults" button (click)="onItemSelected(item)" [attr.test-id]="item.ID">
+      <div class="container">
+        <div class="img-con">
+          <img [src]="item.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <span class="bold">{{item.product.code | uppercase}} ({{item.variant  | variant}})</span>
+          <span class="small">{{item.product.title | uppercase}}</span>
+          <div class="info-grid">
+            <span class="key">Warehouse</span> <span class="value">{{(item.warehouse ? item.warehouse.name : '') | titlecase}}</span>
+          </div>
+          <div class="tag-list">
+            <span class="tag" color="primary">{{item.account.name}}</span>
+            <span class="tag" color="success" *ngIf="item.inventoryID">in stock</span>
+            <span class="tag" color="error" *ngIf="!item.inventoryID">sold</span>
+          </div>
+        </ion-card-content>
+      </div>
+      <span class="suffix barcode" *ngIf="item.barcode">
+        {{item.barcode | uppercase}}
+      </span>
+    </ion-card>
+  </ion-list>
+
+  <!-- Scan fab button-->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isLoading">
+    <ion-fab-button test-id='scan-barcode' (click)="onStartBarcodeScanner()">
+      <span class="material-symbols-outlined icon">qr_code_scanner</span>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="!isLoading">
+    <ion-fab-button test-id='search-item' (click)="onSearchItemClick()">
+      <span class="material-symbols-outlined icon">search</span>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button mat-button (click)="onClose()"  color="primary"> <mat-icon>arrow_back</mat-icon></button>
+    </ion-buttons>
+    <ion-title>Inventory Items</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div>
+    <ion-card *ngFor="let item of inventoryItems" class="template1 margin-bottom-s" button
+              (click)="onOpenActionSheet(item)">
+      <div class="container">
+        <div class="product-card-image-wrapper-sm">
+          <img [src]="item.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <div class="section1">
+            <span class="bold">{{item.product.code | uppercase}} ({{item.variant | variant}})</span>
+            <span class="grey small">{{item.product.title | uppercase}}</span>
+            <div class="tags-list margin-top-s">
+              <span class="tag" color="primary">{{item.account.name | uppercase}}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </div>
+      <span class="suffix barcode" *ngIf="item.barcode">
+              {{item.barcode | uppercase}}
+            </span>
+    </ion-card>
+  </div>
+
+
+</ion-content>

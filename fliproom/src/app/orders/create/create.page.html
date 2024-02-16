@@ -1,0 +1,276 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="help" (click)="onOpenHelp()">Create Order</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="mobile" *ngIf="environment.screenType == 'mobile' && !isLoading">
+    <div class="details-section">
+      <div class="header">
+        <h2>Details</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid" [ngClass]="{'margin-bottom-xs':!orderForm.value.saleChannel && environment.screenType == 'mobile'}">
+            <span class="key">Location</span>
+
+            <a class="button" (click)="onSelectSaleChannel()">Change</a>
+            <span class="value">{{(orderForm.value.saleChannel?.title || '') | titlecase}}</span>
+          </div>
+          <div class="info-grid" [ngClass]="{'margin-bottom-xs': !orderForm.value.reference && environment.screenType == 'mobile'}">
+            <span class="key">Reference</span>
+            <a class="button" (click)="onEditReference()" test-id="reference-btn">{{orderForm.value.reference ? 'Edit' : 'Add'}}</a>
+            <span class="value">{{orderForm.value.reference | uppercase}}</span>
+          </div>
+
+          <div class="info-grid" [ngClass]="{'margin-bottom-xs': !orderForm.value.shippingCost && environment.screenType == 'mobile'}">
+            <span class="key">Shipping</span>
+            <a class="button" (click)="onEditShipping()" test-id="shipping-btn">{{orderForm.value.shippingCost ? 'Edit' : 'Add'}}</a>
+          </div>
+          <div class="info-grid" [ngClass]="{'margin-bottom-xs':!orderForm.value.customer && environment.screenType == 'mobile'}">
+            <span class="key">Customer</span>
+            <a class="button" (click)="onEditCustomer()" test-id="customer-btn">{{orderForm.value.customer ? 'Edit' : 'Add'}}</a>
+          </div>
+
+          <div *ngIf="!user.isPersonalShopper" class="info-grid" [ngClass]="{'margin-bottom-xs':!orderForm.value.discount && environment.screenType == 'mobile'}">
+            <span class="key">Discount</span>
+            <a class="button" (click)="onEditDiscount()" test-id="discount-btn">{{orderForm.value.discount ? 'Edit' : 'Add'}}</a>
+          </div>
+
+          <div *ngIf="orderForm.value.discount">
+            <p>Discount Applied: {{orderForm.value.discount | currency}}</p>
+          </div>
+
+            <div *ngIf="orderForm.value.customer">
+              <p>{{orderForm.value.customer.fullName | titlecase}}</p>
+              <p class="break-text-line">{{orderForm.value.customer.fullAddress}}</p>
+            </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="items-section">
+      <div class="header">
+        <h2>Items</h2>
+      </div>
+      <ion-list>
+        <ion-card button *ngFor="let itemControl of orderItems['controls']; let idx = index" class="template1 margin-bottom-s" (click)="onItemClicked(idx)" [attr.test-id]="itemControl.value.item.ID">
+          <div class="container">
+            <img [src]="itemControl.value.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+            <ion-card-content>
+              <div class="section1">
+                <span class="bold">{{itemControl.value.product.code | uppercase}} ({{itemControl.value.variant | variant}}) {{itemControl.value.item.ID}}</span>
+                <span class="grey small">{{itemControl.value.product.title | uppercase}}</span>
+                <div class="tags-list margin-top-s">
+                  <span class="tag" color="primary">{{itemControl.value.account.name | uppercase}}</span>
+                </div>
+              </div>
+              <span class="bold" style="white-space: nowrap;" *ngIf="itemControl.value.price">{{itemControl.value.price | currency}}</span>
+              <span class="bold" style="white-space: nowrap;" color="error" *ngIf="!itemControl.value.price">Set Price</span>
+            </ion-card-content>
+          </div>
+        </ion-card>
+      </ion-list>
+    </div>
+
+    <div class="buttons">
+      <button mat-button mat-flat-button color="primary" (click)="onSearch()" test-id="product-search">
+        <span class="material-symbols-outlined" translate="no">search</span>
+        Search
+      </button>
+      <button mat-button mat-flat-button color="primary" (click)="onScan()" test-id="scan-barcode" >
+        <span class="material-symbols-outlined" translate="no">qr_code_scanner</span>
+        Scan
+      </button>
+    </div>
+
+    <div class="section-go-to-payment margin-top margin-bottom">
+      <button mat-button mat-flat-button color="primary" (click)="onPayClicked()" test-id="pay">Pay {{computeSalesFiguresTotal().saleTotalAmount | currency}}</button>
+    </div>
+  </div>
+
+  <div class="desktop" *ngIf="environment.screenType == 'desktop' && !isLoading">
+    <div class="item-selection">
+      <div class="toolsbar">
+        <fliproom-searchbar (click)="onWebSearch()"></fliproom-searchbar>
+
+        <button mat-button mat-flat-button color="primary" (click)="onScan()" >
+          <mat-icon>qr_code_scanner</mat-icon>
+          Scan
+        </button>
+      </div>
+
+      <div class="selection" *ngIf="productSelected">
+        <h2>Product</h2>
+        <ion-card button (click)="onWebSearch()" id="product-selected">
+          <div class="img-wrapper">
+            <img [src]="productSelected.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <span class="bold">{{productSelected.code | uppercase}}</span>
+            <span>{{productSelected.title | titlecase}}</span>
+          </ion-card-content>
+        </ion-card>
+
+        <h2>Variants</h2>
+        <div id="variants-list" class="tags-list">
+          <span class="tag" *ngFor="let variant of productSelected.variants" [attr.color]="(variantSelected && variantSelected.ID == variant.ID) ? 'primary' : 'grey'" (click)="onWebVariantSelect(variant)">{{variant | variant}}</span>
+        </div>
+
+        <div class="form-section-toolbar">
+          <h2>{{'Stock' | titlecase}}</h2>
+          <div class="centred-container display-right" *ngIf="variantSelected">
+            <a class="button" (click)="onWebSourceItem()" >Source Item</a>
+          </div>
+        </div>
+        <ion-list id="items-list" *ngIf="variantSelected && itemsInStock.length > 0 && !isLoadingVariantItems">
+          <ion-card button *ngFor="let item of itemsInStock" (click)="onItemSelected(item)" class="margin-right margin-bottom">
+            <ion-card-content>
+              <div class="info-grid">
+                <span class="key">Location</span> <span class="value">{{(item.warehouse?.name || 'transit') | uppercase}}</span>
+                <span class="key">Price</span> <span class="value">{{item.inventory.listings[0].price | currency}}</span>
+                <!-- <span class="key">Notes</span><span class="value" >{{item.inventory.notes}}</span> -->
+              </div>
+              <div class="notes-wrapper">
+                <p class="notes margin-top-s">
+                  {{item.inventory.notes}}
+                </p>
+              </div>
+              <div class="tags-list margin-top-s">
+                <span class="tag" color="primary">{{item.account.name | titlecase}}</span>
+              </div>
+            </ion-card-content>
+            <span class="suffix barcode" *ngIf="item.barcode">
+              {{item.barcode | uppercase}}
+            </span>
+          </ion-card>
+        </ion-list>
+
+        <p *ngIf="variantSelected && itemsInStock.length == 0 && !isLoadingVariantItems" id="source-item-text">
+          <span>No Items in the inventory</span>
+          <br>
+        </p>
+
+        <div class="loading-placeholder" *ngIf="isLoadingVariantItems">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <ion-card>
+        <ion-card-content>
+          <div class="overview-text margin-bottom-s">
+            <p> Overview {{orderForm.value.items.length}} items </p>
+          </div>
+
+          <div class="info-grid">
+            <span class="key">Sale Channel</span>
+            <a class="button" (click)="onSelectSaleChannel()">Change</a>
+            <span class="value">{{(orderForm.value.saleChannel?.title || '') | titlecase}}</span>
+          </div>
+          <div class="info-grid">
+            <span class="key">Reference</span>
+            <a class="button" (click)="onEditReference()">{{orderForm.value.reference ? 'Edit' : 'Add'}}</a>
+            <span class="value">{{orderForm.value.reference}}</span>
+          </div>
+
+          <div class="info-grid">
+            <span class="key">Shipping</span>
+            <a class="button" (click)="onEditShipping()">{{orderForm.value.shippingCost ? 'Edit' : 'Add'}}</a>
+          </div>
+          <div class="info-grid">
+            <span class="key">Customer</span>
+            <a class="button" (click)="onEditCustomer()">{{orderForm.value.customer ? 'Edit' : 'Add'}}</a>
+          </div>
+          <!-- TODO: "Implement once designed for personal shopper" -->
+          <div *ngIf="!user.isPersonalShopper" class="info-grid">
+            <span class="key">Discount</span>
+            <a class="button" (click)="onEditDiscount()">{{orderForm.value.discount ? 'Edit' : 'Add'}}</a>
+          </div>
+
+            <div *ngIf="orderForm.value.discount">
+              <p>Discount Applied: {{orderForm.value.discount | currency}}</p>
+            </div>
+
+          <div *ngIf="orderForm.value.customer">
+            <p>{{orderForm.value.customer.fullName | titlecase}}</p>
+            <p class="break-text-line">{{orderForm.value.customer.fullAddress}}</p>
+          </div>
+
+          <div class="basket-content">
+            <p class="italic grey placeholder" *ngIf="orderForm.value.items.length == 0">Basket is empty</p>
+            <div *ngFor="let itemControl of orderItems['controls']; let idx = index" class="basket-items margin-bottom"  (click)="onItemClicked(idx)">
+              <div class="info">
+                <span class="bold">{{itemControl.value.product.code | uppercase}} ({{itemControl.value.variant | variant}})</span>
+                <span class="grey">{{itemControl.value.product.title | titlecase}}</span>
+                <div class="tags-list margin-top-s">
+                  <span class="tag" color="primary">{{itemControl.value.account.name | titlecase}}</span>
+                </div>
+              </div>
+              <span class="bold" style="white-space: nowrap;"               *ngIf="itemControl.value.price">{{itemControl.value.price | currency}}</span>
+              <span class="bold" style="white-space: nowrap;" color="error" *ngIf="!itemControl.value.price">Set Price</span>
+              <mat-icon class="margin-left">more_vert</mat-icon>
+            </div>
+          </div>
+
+          <div class="payment-summary-section margin-bottom-s">
+            <p class="bold">Payment Summary</p>
+            <div class="info-grid">
+              <span class="key">Subtotal (x{{orderForm.value.items.length}} items)</span> <span class="value">{{computeSalesFiguresTotal().subTotalAmount | currency}}</span>
+              <span class="key">Tax ({{orderForm.value?.saleChannel?.taxRate || 0}} %)</span> <span class="value">{{computeSalesFiguresTotal().taxAmount | currency}}</span>
+              <span class="key">Shipping</span> <span class="value">{{computeSalesFiguresTotal().shippingCost | currency}}</span>
+              <span class="key">Discount</span> <span class="value">{{computeSalesFiguresTotal().discountAmount | currency}}</span>
+              <span class="key">Total</span> <span class="value">{{computeSalesFiguresTotal().saleTotalAmount | currency}}</span>
+              <span class="key">Payment Status</span> <span class="value" [attr.color]="( orderForm.value.paymentMethod == 'unpaid' || ! orderForm.value.paymentMethod ) ?  'warning':'success'">{{( orderForm.value.paymentMethod == 'unpaid' || ! orderForm.value.paymentMethod ) ? 'UNPAID' : 'PAID' }}</span>
+            </div>
+          </div>
+
+          <div class="payment-method-section" >
+            <p class="bold">Payment Method</p>
+            <div class="payment-methods-grid">
+              <ion-card button (click)="onPaymentMethodSelected('card')" [ngClass]="{'selected': orderForm.value.paymentMethod == 'card'}" class="margin-right">
+                <ion-card-content>
+                  <span class="material-symbols-outlined margin-right-xs">credit_card</span>
+                  <span>Card</span>
+                </ion-card-content>
+              </ion-card>
+
+              <ion-card button (click)="onPaymentMethodSelected('cash')" [ngClass]="{'selected': orderForm.value.paymentMethod == 'cash'}">
+                <ion-card-content>
+                  <span class="material-symbols-outlined margin-right-xs">attach_money</span>
+                  <span>Cash</span>
+                </ion-card-content>
+              </ion-card>
+
+              <ion-card button (click)="onPaymentMethodSelected('unpaid')" *ngIf="user.isPersonalShopper" [ngClass]="{'selected': orderForm.value.paymentMethod == 'unpaid'}" class="margin-left">
+                <ion-card-content>
+                  <span class="material-symbols-outlined margin-right-xs">money_off</span>
+                  Unpaid
+                </ion-card-content>
+              </ion-card>
+            </div>
+          </div>
+
+          <p class="bold margin-bottom-s">Delivery</p>
+          <div class="margin-bottom-s">
+            <mat-checkbox  (change)="setAsDeliveredChange($event.checked)" [checked]="orderForm.value.setAsDelivered" test-id="skip">
+              Set As Delivered </mat-checkbox>
+          </div>
+
+          <div class="pay-button margin-top margin-bottom-s">
+            <button mat-button mat-flat-button color="primary" (click)="onPayClicked()"> {{( orderForm.value.paymentMethod == 'unpaid' || ! orderForm.value.paymentMethod ) ?  'Create Order':'Paid ' + (computeSalesFiguresTotal().saleTotalAmount | currency)}}</button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

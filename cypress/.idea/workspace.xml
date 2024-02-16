@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8a8bc29e-239a-460d-90fc-2c395966e7e6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/e2e/plugins/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/e2e/plugins/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/e2e/webapp/00-api.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/e2e/webapp/00-api.spec.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/e2e/webapp/10-webhooks.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/e2e/webapp/10-webhooks.spec.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/api-routes/e-shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/api-routes/e-shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/services/fulfillment.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/services/fulfillment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/services/inventory.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/services/inventory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/services/invoice.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/services/invoice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/services/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/services/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/services/order-line-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/services/order-line-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservices/api/services/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/../microservices/api/services/order.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2AoSBWZed7X6O4m2fZHAKMu35rb" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/rubensauchelli/Desktop/Wiredhub/wms/cypress",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8a8bc29e-239a-460d-90fc-2c395966e7e6" name="Changes" comment="" />
+      <created>1655674309531</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1655674309531</updated>
+      <workItem from="1655674310652" duration="94000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

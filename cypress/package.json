@@ -1,0 +1,22 @@
+{
+  "name": "cypress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx cypress open --config-file configs/fliproom.cypress.config.js ",
+    "start:record": "npx cypress run --config-file configs/fliproom.cypress.config.js --record --key fe36b898-a38d-4ed7-a036-7ab50e940ce3 --browser chrome"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "cypress": "^12.12.0",
+    "cypress-file-upload": "^5.0.3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dayjs": "^1.10.7",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1"
+  }
+}

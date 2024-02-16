@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="formMode=='select'">Select Address</ion-title>
+    <ion-title *ngIf="formMode=='edit'">Update Address</ion-title>
+    <ion-title *ngIf="formMode=='create'">Create Address</ion-title>
+    <ion-buttons slot="end" >
+      <a class="button" (click)="onAddressSelectMode()" *ngIf="!data.disableSelect && formMode != 'select' && !this.data.formOnly">Select Existing</a>
+      <button mat-button  id="create-address" color="primary" (click)="onAddressCreateSelected()" *ngIf="!data.disableCreate && environment.screenType == 'desktop' && formMode == 'select'">
+        <mat-icon>add</mat-icon>
+        {{'create'| titlecase}}</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!data.disableCreate && environment.screenType == 'mobile' && formMode == 'select'">
+    <ion-fab-button (click)="onAddressCreateSelected()" >
+      <mat-icon>add</mat-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <fliproom-list class="address-list"  #fliproomList
+                 (onDataRequest)="onDataRequest($event)"
+                 [dataRequested]="dataRequested"
+                 (onRowClick)="onRowClick($event)"
+                 [emptyListPlaceholder]="'No Address Found'" *ngIf="formMode == 'select'">
+    <ng-template #itemList let-element>
+      <ion-card-content [attr.test-id]="element.ID" class="address-container">
+        <div>
+          <ion-card-subtitle>{{element.fullName | titlecase}}</ion-card-subtitle>
+          <p *ngIf="element.email">{{element.email | lowercase}}</p>
+          <span *ngIf="element.phoneCountryCode && element.phoneNumber">{{element.fullPhone | lowercase}}</span>
+          <p class="break-text-line">{{element.fullAddress}}</p>
+        </div>
+        <div class="tags-list centred-container">
+          <span class="tag" *ngIf="element.validated " [attr.color]="'success'">{{'validated'| uppercase}}</span>
+          <span class="tag" *ngIf="!element.validated " [attr.color]="'warning'">{{'validate'| uppercase}}</span>
+        </div>
+
+      </ion-card-content>
+    </ng-template>
+  </fliproom-list>
+
+  <form [formGroup]="addressForm" *ngIf="formMode != 'select'">
+    <div id="full-name">
+      <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('name')">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="name" type="text" #inputEl>
+        <mat-hint *ngIf="addressForm.get('name').invalid && addressForm.get('name').touched">Name is required</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('surname')">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="surname" type="text">
+      </mat-form-field>
+    </div>
+
+
+    <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('email')">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="text">
+      <mat-hint *ngIf="addressForm.get('email').invalid && addressForm.get('email').touched">Invalid email</mat-hint>
+    </mat-form-field>
+
+    <div id="phone-number"  *ngIf="!fieldsMasked.includes('phoneNumber')">
+      <mat-form-field appearance="fill">
+        <mat-label>Area Code</mat-label>
+        <mat-select formControlName="phoneCountryCode">
+          <mat-select-trigger>+ {{addressForm.get('phoneCountryCode').value}}</mat-select-trigger>
+          <mat-option [value]="country.code"  *ngFor="let country of countriesList">{{country.country | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Phone Number</mat-label>
+        <input matInput type="tel" formControlName="phoneNumber">
+        <mat-icon matSuffix *ngIf="addressForm.get('phoneNumber').value" (click)="addressForm.get('phoneNumber').reset()">close</mat-icon>
+        <mat-hint *ngIf="addressForm.get('phoneNumber').invalid && addressForm.get('phoneNumber').touched">Phone Number Invalid</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('address')">
+      <mat-label>Country</mat-label>
+      <mat-select formControlName="countryCode" (selectionChange)="onCountryChanged($event.value)">
+        <mat-option [value]="country.iso" *ngFor="let country of countriesList" >{{country.country | titlecase}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('address') && !addressForm.get('address').disabled">
+      <mat-label>Address</mat-label>
+      <input matInput type="search" formControlName="address" [matAutocomplete]="autoCompleteAddressSearch">
+      <mat-icon matSuffix *ngIf="addressForm.get('address').value" (click)="addressForm.get('address').reset()">close</mat-icon>
+      <mat-autocomplete #autoCompleteAddressSearch="matAutocomplete" (optionSelected)="onAddressSelected($event.option.value.place_id)">
+        <mat-option *ngFor="let addressObject of filteredAddressObjects" [value]="addressObject" test-id="address-suggestion">{{addressObject.description}}</mat-option>
+      </mat-autocomplete>
+      <mat-hint *ngIf="addressForm.get('address').invalid && addressForm.get('address').touched">{{ !addressForm.get('address').value && 'Address is required' }}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('address') && !addressForm.get('address').disabled">
+      <mat-label>Flat/Building Number</mat-label>
+      <input matInput type="text" formControlName="addressExtra">
+      <mat-icon matSuffix *ngIf="addressForm.get('addressExtra').value" (click)="addressForm.get('addressExtra').reset()">close</mat-icon>
+    </mat-form-field>
+
+    <div class="two-cell-grid" *ngIf="!addressForm.get('address').disabled">
+      <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('address')">
+        <mat-label>Postcode</mat-label>
+        <input matInput type="text" formControlName="postcode">
+        <mat-icon matSuffix *ngIf="addressForm.get('postcode').value" (click)="addressForm.get('postcode').reset()">close</mat-icon>
+        <mat-hint *ngIf="addressForm.get('postcode').invalid && addressForm.get('postcode').touched">{{ !addressForm.get('postcode').value && 'Postcode is required' }}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" *ngIf="!fieldsMasked.includes('address')">
+        <mat-label>City</mat-label>
+        <input matInput type="text" formControlName="city">
+        <mat-icon matSuffix *ngIf="addressForm.get('city').value" (click)="addressForm.get('city').reset()">close</mat-icon>
+        <mat-hint *ngIf="addressForm.get('city').invalid && addressForm.get('city').touched">{{ !addressForm.get('city').value && 'City is required' }}</mat-hint>
+      </mat-form-field>
+    </div>
+    <ng-container *ngIf="!data.disableDisplayValidationTag">
+      <span class="tag" *ngIf="addressForm.get('validated').value " [attr.color]="'success'">{{'validated'| uppercase}}</span>
+      <span class="tag" *ngIf="!addressForm.get('validated').value " [attr.color]="'warning'">{{'validate'| uppercase}}</span>
+    </ng-container>
+
+
+  </form>
+
+</ion-content>
+
+<ion-footer *ngIf="formMode != 'select'">
+  <button mat-stroked-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="isValidating || isAddressValidationNeeded" (click)="onSubmit()" [class.loading]="isLoading" test-id="submit">Confirm</button>
+</ion-footer>

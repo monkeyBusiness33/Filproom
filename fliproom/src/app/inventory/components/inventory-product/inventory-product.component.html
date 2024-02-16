@@ -1,0 +1,57 @@
+<div>
+  <ion-card class="margin-bottom-s title-image-card">
+    <div class="product-card-image-wrapper-container">
+      <div class="product-card-image-wrapper">
+        <img [src]="product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+      </div>
+    </div>
+    <ion-card-content class="ion-text-left">
+      <div class="bold grey">{{(product.code ? product.code : 'NO SKU')| uppercase}}</div>
+      <div class="bold margin-bottom-s">{{product.title | uppercase}}</div>
+      <div class="three-cell-grid">
+        <div>
+          <div class="grey">Total Qty</div>
+          <div class="bold">{{getTotalQty()}}</div>
+        </div>
+        <div>
+          <div class="grey">Total Value</div>
+          <div class="bold">
+            {{getTotalCosts() | currency}}
+          </div>
+        </div>
+        <div>
+          <div class="grey">Variants</div>
+          <div class="bold">{{filteredInventory.length}}/{{product.variants.length}}</div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  <div class="margin-bottom-s" >
+    <ion-segment   mode="ios" (ionChange)="onSegmentChanged($event)" [value]="inventoryType"  *ngIf="tabs.length > 1">
+      <ion-segment-button *ngFor="let tab of tabs" [value]="tab">
+        <ion-label>{{tab | titlecase}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <ion-card class="margin-bottom">
+    <ion-list>
+      <ion-item button *ngFor="let variant of product.variants" (click)="onVariantSelected(variant)">
+        <ion-label class="break-text-line" [ngClass]="{'bold': selectedVariant && variant.ID == selectedVariant.ID }">
+          {{variant | variant}}
+        </ion-label>
+        <span class="tag" *ngIf="inventoryType != 'virtual'" [attr.color]="getVariantQty(variant) == 0 ? 'grey' : 'primary'">
+          {{getVariantQty(variant)}}
+        </span>
+        <mat-icon *ngIf="inventoryType == 'virtual' && getVariantQty(variant) == 0" >
+          radio_button_unchecked
+        </mat-icon>
+        <mat-icon *ngIf="inventoryType == 'virtual' && getVariantQty(variant) != 0" color="primary">
+          check_circle
+        </mat-icon>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
+
+</div>

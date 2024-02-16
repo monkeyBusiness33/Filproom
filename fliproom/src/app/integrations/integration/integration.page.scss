@@ -1,0 +1,51 @@
+div.details-section {
+    div.data-table {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+div.analytics-section {
+    grid-column: 1 / span 2;
+    ion-card-content {
+        height: 30vh;
+    }
+}
+div.shipping-details-section {
+    div.data-standalone {
+        grid-template-columns: 1fr;
+        span {
+            color: white
+        }
+    }
+}
+div.payout-section {
+    div.payout-account {
+        img {
+            max-width: 5em;
+        }
+        span.stripe-verify-message {
+            display: block;
+            font-size: .8em;
+            color: var(--ion-color-warning);
+        }
+    }
+}
+div.faq-section {
+    div.faq-content {
+        margin-bottom: .5em;
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    div.wrapper {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        column-gap: 2em;
+
+        div.analytics-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 2em;
+        }
+    }
+}

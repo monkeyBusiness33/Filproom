@@ -1,0 +1,178 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{mode == 'edit' ? 'Update Fulfillment' : 'Create Fulfillment'}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <form [formGroup]="fulfillmentForm" autocomplete="off" test-id="fulfillment" *ngIf="!isLoading">
+    <h2>Ship From</h2>
+    <mat-form-field appearance="fill" *ngIf="!fulfillmentFormData.shipFromAddress">
+      <mat-label>{{'ship from' | titlecase}}</mat-label>
+      <mat-select formControlName="shipFromAddress" test-id="shipFromAddress-select" (selectionChange)="updateOrderLineItemsState()">
+        <mat-option *ngFor="let address of shipFromAddresses" [value]="address">
+          {{(address.warehouse?.name || address.fullName) | titlecase}}
+        </mat-option>
+      </mat-select>
+      <mat-hint class="info" *ngIf="shipFromAddresses.length == 0" test-id="missing-shipFrom-address">Ship From addresses not available. Add Supplier on the Order</mat-hint>
+    </mat-form-field>
+
+    <ion-card *ngIf="fulfillmentFormData.shipFromAddress?.ID" class="origin-info-card button" test-id="shipFrom" (click)="onAddressSelected(shipFromAddress)">
+      <ion-card-content>
+        <div class="flex-split">
+          <ion-card-subtitle>
+            <!-- When warehouse is present show only warehouse name -->
+            {{ fulfillmentFormData.shipFromAddress?.warehouses.length ? (fulfillmentFormData.shipFromAddress?.warehouses[0]?.name | titlecase) : (fulfillmentFormData.shipFromAddress.fullName | titlecase)}}
+          </ion-card-subtitle>
+          <a class="button"  (click)="onChangeShipFrom()" *ngIf="shipFromAddresses.length > 1">Change</a>
+        </div>
+
+        <div class="address-container">
+          <div>
+            <p class="break-text-line" *ngIf="!fulfillmentFormData.shipFromAddress?.warehouses.length">{{fulfillmentFormData.shipFromAddress.fullAddress}}</p>
+            <div class="info-grid">
+              <span class="key">Email</span>
+              <span class="key">Phone</span>
+            </div>
+            <div class="info-grid">
+              <span class="value">{{fulfillmentFormData.shipFromAddress.email ? fulfillmentFormData.shipFromAddress.email : 'Not Available'}}</span>
+              <span class="value">{{fulfillmentFormData.shipFromAddress.fullPhone ? fulfillmentFormData.shipFromAddress.fullPhone : 'Not Available'}}</span>
+            </div>
+
+          </div>
+          <div class="tags-list centred-container">
+            <span class="tag" *ngIf="fulfillmentFormData.shipFromAddress.validated " [attr.color]="'success'">{{'validated'| uppercase}}</span>
+            <span class="tag" *ngIf="!fulfillmentFormData.shipFromAddress.validated " [attr.color]="'warning'" (click)="onAddressSelected(fulfillmentFormData.shipFromAddress )">{{'validate'| uppercase}}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <h2>Ship To</h2>
+    <mat-form-field appearance="fill" *ngIf="!fulfillmentFormData.shipToAddress">
+      <mat-label>{{'ship to' | titlecase}}</mat-label>
+      <mat-select formControlName="shipToAddress" test-id="shipToAddress-select" (selectionChange)="updateOrderLineItemsState()">
+        <mat-option *ngFor="let address of shipToAddresses" [value]="address">
+          {{(address.warehouse?.name || address.fullName) | titlecase}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ion-card *ngIf="fulfillmentFormData.shipToAddress?.ID" class="origin-info-card button" test-id="shipTo" (click)="onAddressSelected(shipToAddress)">
+      <ion-card-content>
+        <div class="flex-split">
+          <!-- When warehouse is present show only warehouse name -->
+          <ion-card-subtitle>{{ fulfillmentFormData.shipToAddress?.warehouses.length ? (fulfillmentFormData.shipToAddress?.warehouses[0]?.name | titlecase) : (fulfillmentFormData.shipToAddress.fullName | titlecase)}}</ion-card-subtitle>
+          <a class="button"  (click)="onChangeShipTo()" *ngIf="shipToAddresses.length > 1">Change</a>
+        </div>
+
+        <div class="address-container">
+          <div>
+            <p class="break-text-line" *ngIf="!fulfillmentFormData.shipToAddress?.warehouses.length">{{fulfillmentFormData.shipToAddress.fullAddress}}</p>
+            <div class="info-grid">
+              <span class="key">Email</span>
+              <span class="key">Phone</span>
+            </div>
+            <div class="info-grid">
+              <span class="value">{{fulfillmentFormData.shipToAddress.email ? fulfillmentFormData.shipToAddress.email : 'Not Available'}}</span>
+              <span class="value">{{fulfillmentFormData.shipToAddress.fullPhone ? fulfillmentFormData.shipToAddress.fullPhone : 'Not Available'}}</span>
+            </div>
+          </div>
+          <div class="tags-list centred-container">
+            <span class="tag" *ngIf="fulfillmentFormData.shipToAddress.validated " [attr.color]="'success'">{{'validated'| uppercase}}</span>
+            <span class="tag" *ngIf="!fulfillmentFormData.shipToAddress.validated " [attr.color]="'warning'">{{'validate'| uppercase}}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="form-fields-grid">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'courier' | titlecase}}</mat-label>
+        <mat-select formControlName="courier" test-id="select-service-provider">
+          <mat-option value="manual" (click)="onCourierChange(null)">{{'manual' | uppercase}}</mat-option>
+          <mat-option [value]="courier.code" test-id="ups" *ngFor="let courier of availableCouriers"
+            [disabled]="canUseCourierService(courier).status == 'disabled'"
+            [matTooltipDisabled]="canUseCourierService(courier).status != 'disabled'"
+            [matTooltip]="canUseCourierService(courier).message"
+            (click)="onCourierChange(courier)">{{courier.name | uppercase}}</mat-option>
+        </mat-select>
+        <mat-hint class="warning margin-bottom-s" style="white-space: break-spaces;" *ngIf="canUseCouriers().status == 'disabled'">{{canUseCouriers().message}}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>{{'reference' | titlecase}}</mat-label>
+        <input matInput formControlName="reference1" placeholder="Reference">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tracking number' | titlecase}}</mat-label>
+        <input matInput formControlName="trackingNumber" placeholder="Tracking Number">
+      </mat-form-field>
+    </div>
+
+    <div class="margin-bottom">
+      <mat-checkbox (click)="$event.stopPropagation()" formControlName="skip" test-id="skip">
+        {{this.order.type.name == 'inbound' ? 'Set As Delivered' : 'Set As Dispatched'}}</mat-checkbox>
+    </div>
+
+    <div class="items-section" *ngIf="mode == 'create'">
+      <div class="form-section-toolbar">
+        <h2>{{'Items' | titlecase}}</h2>
+        <div class="centred-container display-right">
+          <a class="button" [ngClass]="{'disabled': olisAvailableForFulfillment == 0}" test-id="select-all-toggle" (click)="onMasterToggle()">
+            {{olisAvailableForFulfillment == olisSelectedForFulfillment && olisAvailableForFulfillment > 0 ? 'Unselect all' : 'Select all'}}
+          </a>
+        </div>
+      </div>
+
+      <div class="list-wrapper">
+        <ion-list formArrayName="orderLineItems" test-id="oli-list">
+          <ion-card *ngFor="let oliControl of orderLineItems['controls']; index as i" class="template1 margin-bottom" [formGroupName]="i" [attr.test-id]="oliControl.value.ID">
+            <div class="container">
+              <div class="product-card-image-wrapper-sm">
+                <img [src]="oliControl.value.product.imageReference" alt="" onerror="this.src = './assets/images/placeholder.png';">
+              </div>
+              <ion-card-content>
+                <div class="section1">
+                  <span class="bold">{{oliControl.value.product.code | uppercase}} ({{oliControl.value.variant | variant}})</span>
+                  <span>{{oliControl.value.product.title | titlecase}}</span>
+                  <span class="grey">{{(oliControl.value.item.warehouse.name || 'in-transit') | uppercase}}</span>
+                  <div class="tags-list">
+                    <span class="tag" color="primary">{{oliControl.value.item.account.name  | uppercase}}</span>
+                    <span class="tag" color="primary">{{oliControl.value.status.name  | uppercase}}</span>
+                  </div>
+                </div>
+                <mat-checkbox formControlName="selected" [disabled]="oliControl.value.disabled"> </mat-checkbox>
+              </ion-card-content>
+            </div>
+              <span class="suffix bold" color="error" *ngIf="oliControl.value.disabledMessage">{{oliControl.value.disabledMessage | titlecase}}</span>
+              <span class="suffix barcode bold" *ngIf="oliControl.value.item.barcode" [attr.barcode]="oliControl.value.item.barcode" >{{oliControl.value.item.barcode | uppercase}}</span>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
+
+  </form>
+
+</ion-content>
+
+<ion-footer>
+  <button (click)="onCancel()" mat-stroked-button test-id="cancel">Cancel</button>
+
+  <button *ngIf="mode == 'create'" (click)="onCreateSubmit()" color="primary" mat-flat-button
+  [class.loading]="buttonLoading" [disabled]="buttonLoading || !isFulfillmentFormValid()"
+  test-id="submit">Save</button>
+
+  <button *ngIf="mode == 'edit'" (click)="onEditSubmit()" color="primary" mat-flat-button
+  [class.loading]="buttonLoading" [disabled]="buttonLoading || !fulfillmentForm.valid"
+  test-id="submit">Save</button>
+</ion-footer>

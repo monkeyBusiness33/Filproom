@@ -1,0 +1,218 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button mode="md"></ion-back-button>
+    </ion-buttons>
+    <ion-title>The Edit LDN</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop'">
+      <button mat-button (click)="onShowTerms()" color="primary">
+        <mat-icon>article</mat-icon>
+        Terms & Conditions
+      </button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'mobile'">
+      <ion-button (click)="onIntegrationOptionsClick()" test-id="options">
+        <mat-icon>more_vert</mat-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-segment (ionChange)="integrationTabsChanged($event)" [value]="currentSelectedTab" [scrollable]="true" mode="ios">
+    <ion-segment-button [value]="tabName" *ngFor="let tabName of integrationTabsList" [id]="tabName">
+      <ion-label>{{(tabName) | titlecase}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- General Tab -->
+  <div class="wrapper" *ngIf="currentSelectedTab === 'general' && !isLoading">
+    <div class="details-section">
+      <div class="header">
+        <h2>Details</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid ion-align-items-center">
+            <span class="key">Tier</span>
+            <span class="value tag"
+              [attr.color]="consignmentTier === 'gold' ? 'gold' : (consignmentTier === 'silver' ? 'medium' : 'warning')">{{consignmentTier}}</span>
+          </div>
+          <div class="info-grid data-table">
+            <span class="key">Sale Price</span>
+            <span class="key"></span>
+            <span class="key">Fee</span>
+            <span class="value">0</span>
+            <span class="value">300</span>
+            <span class="value">10%</span>
+            <span class="value">300</span>
+            <span class="value">1000</span>
+            <span class="value">9%</span>
+            <span class="value">1000</span>
+            <span class="value"></span>
+            <span class="value">7%</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="sale-channel-section">
+      <h2>Sale Channels</h2>
+      <div slot="content">
+        <mat-slide-toggle *ngFor="let saleChannel of saleChannelsAvailable"
+          [checked]="saleChannel.status === 'active'"
+          (change)="onToggleSaleChannelStatus(saleChannel,$event)">{{saleChannel.title | titlecase}}</mat-slide-toggle>
+      </div>
+    </div>
+    <div class="analytics-section margin-bottom">
+      <div class="graph-wrapper">
+        <h2>Sales</h2>
+        <ion-card>
+          <ion-card-content>
+            <canvas #salesCanvas></canvas>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="graph-wrapper">
+        <h2>Listings Last Updates</h2>
+        <ion-card>
+          <ion-card-content>
+            <canvas #listingsAgeCanvas></canvas>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Shipping Tab -->
+
+  <div class="wrapper" *ngIf="currentSelectedTab === 'shipping' && !isLoading">
+    <div class="shipping-details-section">
+      <div class="header">
+        <h2>Shipping</h2>
+        <a class="button" (click)="onEditShipping()">Edit</a>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div>
+            <div class="info-grid data-standalone">
+              <span class="key break-text-line margin-bottom-s">{{accountFulfillmentCentre.address.fullAddress}}</span>
+            </div>
+            <div class="info-grid">
+              <span class="key">Email</span>
+              <span class="key">Phone</span>
+              <span class="value">{{accountFulfillmentCentre.address.email}}</span>
+              <span class="value">{{accountFulfillmentCentre.address.fullPhone}}</span>
+              <span class="tag" color="success" *ngIf="accountFulfillmentCentre.address.validated">Validated</span>
+              <span class="tag" color="warning" *ngIf="!accountFulfillmentCentre.address.validated">Invalid</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="faq-section">
+      <h2>Shipping FAQ</h2>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid faq-content" *ngFor="let faq of shippingFaqs">
+            <span class="key margin-bottom-xs">{{faq.question}}</span>
+            <span class="value">{{faq.answer}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+
+  <!-- Payout Tab -->
+  <div class="wrapper" *ngIf="currentSelectedTab === 'payouts' && !isLoading">
+    <div class="payout-section">
+      <div class="payout-account margin-top" [hidden]="consignmentInfo.stripeAccountID && stripeAccount?.payouts_enabled">
+        <ion-card *ngIf="!consignmentInfo.stripeAccountID">
+          <ion-card-content>
+            <div class="flex-split">
+              <img src="assets/images/logo_stripe.svg">
+              <a class="button" (click)="onLinkStripeClick('onboarding')">Connect</a>
+            </div>
+          </ion-card-content>
+        </ion-card>
+        <ion-card *ngIf="consignmentInfo.stripeAccountID && !stripeAccount?.payouts_enabled">
+          <ion-card-content>
+            <div class="flex-split">
+              <img src="assets/images/logo_stripe.svg">
+              <a class="button" (click)="onLinkStripeClick('onboarding-continue')">Dashboard</a>
+            </div>
+            <span class="stripe-verify-message">Your account is not fully verified. Please Complete the onboarding
+              process to be paid with stripe!</span>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="payout-account" *ngIf="consignmentInfo.stripeAccountID && stripeAccount?.payouts_enabled">
+        <div class="header">
+          <h2>Stripe</h2>
+          <a class="button"></a>
+        </div>
+        <ion-card>
+          <ion-card-content>
+            <div class="info-grid">
+              <span class="key">Payouts</span>
+              <span class="value">{{stripeAccount.payouts_enabled ? 'Enabled' : 'Disabled'}}</span>
+              <span class="key">Balance</span>
+              <span class="value">{{stripeAccount.balance.available[0].amount | currency}}</span>
+              <span class="key col-span-2">Bank Account Linked</span>
+              <span class="value col-span-2" *ngFor="let bankAccount of stripeAccount.externalAccounts?.data">
+                {{bankAccount.bank_name}}({{bankAccount.last4}})</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="payout-account margin-top" *ngIf=!bankAccount>
+        <ion-card>
+          <ion-card-content>
+            <div class="flex-split">
+              <h2>Bank Account</h2>
+              <a class="button" (click)="onBankAccountConnect()" test-id="connect-bank-account">Connect</a>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="payout-account" *ngIf=bankAccount>
+        <div class="header">
+          <h2>Bank Account</h2>
+          <a class="button" (click)="onBankAccountDisconnect()" test-id="disconnect-bank-account">Disconnect</a>
+        </div>
+        <ion-card>
+          <ion-card-content>
+            <div class="info-grid payout-table" test-id="bank-account-details">
+              <span class="key">Company Name</span>
+              <span class="value" test-id="bank-account-name">{{bankAccount.name}}</span>
+              <span class="key">Account Nº</span>
+              <span class="value" test-id="bank-account-number">{{bankAccount.accounts[0].account_no}}</span>
+              <span class="key">Sort Code</span>
+              <span class="value" test-id="bank-account-sort-code">{{bankAccount.accounts[0].sort_code}}</span>
+            </div>
+            <div class="flex-split">
+              <span></span>
+              <span class="key">Powered by Revolut</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+    <div class="faq-section">
+      <h2>Payout FAQ</h2>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid faq-content" *ngFor="let faq of payoutFaqs">
+            <span class="key margin-bottom-xs">{{faq.question}}</span>
+            <span class="value">{{faq.answer}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+</ion-content>

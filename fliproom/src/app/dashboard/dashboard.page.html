@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<!--  PLATFORM FEEDBACK -->
+  <div *ngFor=" let notification of notificationCards">
+    <ion-card class="notification-card button margin-bottom">
+      <ion-card-content>
+        <span class="material-symbols-outlined notification-icon" translate="no" >{{notification.icon}}</span>
+        <div class="body">
+          <span class="title">{{notification.title}}</span>
+          <span class="subtitle">{{notification.subtitle}}</span>
+          <a color="primary" class="margin-top-xs">{{notification.buttonText}}</a>
+        </div>
+        <span class="material-symbols-outlined close-icon" translate="no">close</span>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+
+
+
+  <div class="analytics margin-bottom">
+    <div class="two-cell-grid">
+      <ion-card (click)="onAnalayticsCardClick(analytic)" *ngFor="let analytic of analytics" [ngClass]="{'success': analytic.valueChange > 0, 'error': analytic.valueChange < 0}">
+        <ion-card-content>
+          <p>
+            <span>{{analytic.title}}</span>
+            <span [ngClass]="{'neutral': analytic.valueChange == 0}" class="change-value">{{analytic.valueChange | percent}}</span>
+          </p>
+          <ng-container *ngIf="analytic.value !== null; else loading">
+            <span class="value" *ngIf="analytic.valueType == 'currency'">{{analytic.value | currency}}</span>
+            <span class="value" *ngIf="analytic.valueType == 'number'">{{analytic.value}}</span>
+          </ng-container>
+          <ng-template #loading>
+            <div class="loading-placeholder">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+          </ng-template>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+  </div>
+
+  <div class="insights">
+    <h2>Insights</h2>
+    <ion-card class="report-item margin-bottom-xs button" *ngFor="let report of reports" (click)="onReportClick(report)" [attr.test-id]="report.ID" [attr.test-report-type]="report.type">
+      <ion-card-content>
+        <span *ngIf="!report.viewedAt" class="tag" color="success">NEW!</span>
+        <span class="report-name" *ngIf="report.type == 'disconnected-listings'">REPORT - Disconnected Listings</span>
+        <span class="report-name" *ngIf="report.type == 'best-selling-products'">REPORT - Best Products To Consign</span>
+        <span class="report-name" *ngIf="report.type == 'stock-levels'">REPORT - Restock Suggestions</span>
+        <span class="report-name" *ngIf="report.type == 'new-product-uploads'">REPORT - New Consignment Products</span>
+        <span class="from-now small">{{report.fromNow}}</span>
+        <span class="material-symbols-outlined" translate="no">chevron_right</span>
+      </ion-card-content>
+    </ion-card>
+    <span *ngIf="reports.length == 0" class="no-insights-placeholder">No insights available just yet, coming weekly!</span>
+  </div>
+
+</ion-content>

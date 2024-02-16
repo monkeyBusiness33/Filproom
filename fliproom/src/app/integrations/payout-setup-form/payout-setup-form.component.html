@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button mat-button (click)="onBack()"> <mat-icon>arrow_back</mat-icon></button>
+    </ion-buttons>
+    <ion-title>Setup Payout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <form [formGroup]="payoutSetupForm" autocomplete="off" test-id="payout-form">
+        <mat-form-field appearance="fill">
+          <mat-label test-id="name-label">Company Name</mat-label>
+          <input matInput type="text" autocomplete="null" formControlName="companyName" autocomplete="off">
+          <mat-hint class="error" *ngIf="payoutSetupForm.get('companyName').invalid && payoutSetupForm.get('companyName').touched">You have to enter a Company name</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label test-id="account-label">Account Number</mat-label>
+          <input matInput type="text" autocomplete="null" formControlName="accountNumber" autocomplete="off" min="0" max="8">
+          <mat-hint class="error" *ngIf="payoutSetupForm.get('accountNumber').invalid && payoutSetupForm.get('accountNumber').touched">You have to enter an 8-digits account number</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label test-id="sort-code-label">Sort Code</mat-label>
+          <input matInput type="text" autocomplete="null" formControlName="sortCode" autocomplete="off" min="0" max="6">
+          <mat-hint class="error"*ngIf="payoutSetupForm.get('sortCode').invalid && payoutSetupForm.get('sortCode').touched">You have to enter 6-digits sort code</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label test-id="sort-code-label">Address</mat-label>
+          <input matInput type="text" autocomplete="null" formControlName="address" autocomplete="off" readonly>
+            <span matSuffix class="bold button" color="primary" (click)="onCreateAddress()" test-id="bank-account-address">{{payoutSetupForm.get('address').value ? 'Edit' : 'Add'}}</span>
+            <mat-hint class="error" *ngIf="payoutSetupForm.get('address').invalid && payoutSetupForm.get('address').touched">You have to enter an address</mat-hint>
+        </mat-form-field>
+    </form>
+  </div>
+</ion-content>
+<ion-footer>
+  <button mat-flat-button color="primary" [disabled]='!payoutSetupForm.valid || isLoadingAction' (click)="onSubmit()" test-id="submit" [class.loading]="isLoadingAction">Submit</button>
+</ion-footer>
+
+

@@ -1,0 +1,28 @@
+div.mobile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  div.details-section {
+    a.button { // fix them on the right
+      margin: auto;
+      margin-right: 0;
+    }
+  }
+  .full-width{
+    width: 100%;
+  }
+
+  div.items-section {
+    flex-grow: 1;
+  }
+
+  div.buttons {
+    width: 100%;
+  }
+
+  div.section-go-to-payment button{
+    width: 100%;
+  }
+
+}

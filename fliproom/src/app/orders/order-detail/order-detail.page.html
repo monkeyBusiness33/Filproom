@@ -1,0 +1,283 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button ></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="order">{{order.type.name === 'outbound' ? 'Sale Order' : order.type.name | titlecase}}</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop' && buttons.length > 0">
+      <button mat-button (click)="onButtonClick(button.id)" [id]="button.id" color="primary" *ngFor="let button of buttons">
+        <mat-icon>{{button.icon}}</mat-icon>
+        {{button.label | titlecase}}
+      </button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'mobile'">
+      <ion-button test-id="actions" (click)="onButtonClick('open-action-sheet')">
+        <mat-icon>more_vert</mat-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="wrapper" *ngIf="order && !isLoading">
+    <div class="details-section">
+      <div class="header">
+        <h2>Details</h2>
+        <a class="button" *ngIf="order.reference1 && user.iam.order.update" (click)="onEditReference()">Edit Reference</a>
+        <a class="button" *ngIf="!order.reference1 && user.iam.order.update" (click)="onEditReference()">Add Reference</a>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid">
+            <span class="key">Order ID</span>      <span class="value">{{order.ID}}</span>
+            <span class="key">Reference</span>      <span class="value">{{order.reference1 | uppercase}}</span>
+            <span class="key">Date</span>           <span class="value">{{order.createdAt | date:'EEE, MMM d y, h:mm:ss a'}}</span>
+            <span class="key">Created By</span>     <span class="value">{{order.user.fullName | titlecase}}</span>
+            <span class="key">Quantity</span>       <span class="value">{{order.quantity}}</span>
+            <span class="key" *ngIf="order.type.name == 'outbound'">Total Amount</span>       <span class="value"  *ngIf="order.type.name == 'outbound'">{{order.totalAmount | currency}}</span>
+            <span class="key"   *ngIf="order.type.name == 'outbound' || order.type.name == 'transfer-out'">Origin</span>
+            <span class="value" *ngIf="order.type.name == 'outbound' || order.type.name == 'transfer-out'">{{order.consignor.fullName | uppercase}}</span>
+            <span class="key"   *ngIf="order.type.name == 'inbound' || order.type.name == 'transfer-in'">Destination</span>
+            <span class="value" *ngIf="order.type.name == 'inbound' || order.type.name == 'transfer-in'">{{order.consignee.fullName | uppercase}}</span>
+          </div>
+          <div class="vertical-grid" *ngIf="order.notes">
+            <span class="key">Customer Notes</span> <span class="value italics">{{order.notes}}</span>
+          </div>
+          <div class="chips-list margin-top-s">
+            <span class="tag" [attr.color]="order.status.name == 'delivered' ? 'success' : order.status.name == 'deleted' ? 'error' : 'warning'" test-id="order-status">{{order.status.name}}</span>
+            <span class="tag" color="primary" *ngFor="let tag of order.tags">{{tag}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="customer-section" *ngIf="order.type.name == 'outbound' || order.type.name == 'transfer-out'"> <!--outbound and transfer out-->
+      <div class="header">
+        <h2 >Customer</h2>
+        <a class="button" *ngIf="order.consignee.ID && user.iam.order.update"  (click)="onCustomerAddEdit(order.consignee)">Edit</a>
+        <a class="button" *ngIf="!order.consignee.ID && user.iam.order.update" (click)="onCustomerAddEdit(null)">Add</a>
+      </div>
+      <ion-card *ngIf="order.consignee.ID">
+        <ion-card-content>
+          <ion-card-subtitle>{{order.consignee.fullName | titlecase}}</ion-card-subtitle>
+          <p class="break-text-line">{{order.consignee.fullAddress}}</p>
+          <div class="info-grid">
+            <span class="key">Email</span>      <span class="value">{{order.consignee.email}}</span>
+            <span class="key">Phone</span>      <span class="value">{{order.consignee.fullPhone}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="customer-section" *ngIf="order.type.name == 'inbound' || order.type.name == 'transfer-in'"> <!--outbound and transfer out-->
+      <div class="header">
+        <h2>Supplier</h2>
+        <a class="button" *ngIf="order.consignor.ID && user.iam.order.update"  (click)="onSupplierAddEdit(order.consignor)">Edit</a>
+        <a class="button" *ngIf="!order.consignor.ID && user.iam.order.update" (click)="onSupplierAddEdit(null)" id="add-supplier">Add</a>
+      </div>
+      <ion-card *ngIf="order.consignor.ID">
+        <ion-card-content>
+          <ion-card-subtitle>{{order.consignor.fullName | titlecase}}</ion-card-subtitle>
+          <p class="break-text-line">{{order.consignor.fullAddress}}</p>
+          <div class="info-grid">
+            <span class="key">Email</span>      <span class="value">{{order.consignor.email}}</span>
+            <span class="key">Phone</span>      <span class="value">{{order.consignor.fullPhone}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="payments-section">
+      <div class="header">
+        <h2>Transactions</h2>
+        <a class="button" *ngIf="order.type.name == 'inbound' && !order.siblingOrderID" (click)="onAddTransaction()" test-id="add-transaction">Add</a>
+      </div>
+      <ion-card>
+        <table mat-table [dataSource]="transactionsDataSource" test-id="tx-list">
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef> Amount </th>
+            <td mat-cell *matCellDef="let element" [attr.color]="element.toAccountID == order.accountID ? 'success' : 'error'"  class="amount">
+              {{element.toAccountID == order.accountID ? '' : '-'}} {{element.grossAmount | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="feesAmount">
+            <th mat-header-cell *matHeaderCellDef> Fees </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.feesAmount | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.type | titlecase}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fromAccount.name">
+            <th mat-header-cell *matHeaderCellDef> From Account </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.fromAccount.name | titlecase}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="toAccount.name">
+            <th mat-header-cell *matHeaderCellDef> To Account </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.toAccount.name | titlecase}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="tag" [attr.color]="element.statusColor">{{element.status}}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" style="padding: 0;">
+              <span class="material-symbols-outlined" translate="no">chevron_right</span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="transactionsDataSourceColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: transactionsDataSourceColumns;" [attr.test-id]="'tx-' + row.ID" (click)="onViewTransactionDetails(row)"></tr>
+        </table>
+      </ion-card>
+    </div>
+
+    <div class="items-section mobile" *ngIf="environment.screenType == 'mobile'">
+      <h2>Items</h2>
+      <ion-list>
+        <ion-card *ngFor="let oli of order.orderLineItems" button (click)="onRowClick(oli)" class="margin-bottom template1" test-id="oli" id="{{oli.ID}}">
+          <div class="container">
+            <div class="product-card-image-wrapper-sm">
+              <img [src]="oli.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+            </div>
+            <ion-card-content>
+              <div class="section1">
+                <span class="bold">{{oli.product.code | uppercase}} ({{oli.variant | variant}})</span>
+                <span class="grey">{{oli.product.title | uppercase}}</span>
+                <span>{{oli.price | currency}} • {{(oli.item.warehouse.name || 'in-transit') | uppercase}}</span>
+                <span class="grey small">{{oli.notes | titlecase}}</span>
+                <div class="tags-list margin-top-s">
+                  <span class="tag" color="primary">{{oli.item.account.name | uppercase}}</span>
+                  <span class="tag" *ngIf="oli.deliveredAt"                     test-id="oli-status" color="success">{{oli.status.name}}</span>
+                  <span class="tag" *ngIf="oli.canceledAt"                      test-id="oli-status" color="error">{{oli.status.name}}</span>
+                  <span class="tag" *ngIf="!oli.canceledAt && !oli.deliveredAt" test-id="oli-status" [attr.color]="oli.status.name === 'deleted' ? 'error' : 'warning'">{{oli.status.name}}</span>
+                  <span class="tag" color="error" *ngIf="oli.replacePending">ACTION PENDING</span>
+                  <span class="tag" color="primary" *ngIf="oli.restocked" test-id="restocked">RESTOCKED</span>
+                </div>
+              </div>
+            </ion-card-content>
+          </div>
+        </ion-card>
+      </ion-list>
+    </div>
+
+    <div class="items-section desktop" *ngIf="environment.screenType == 'desktop'">
+      <h2>Items</h2>
+      <ion-card>
+
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef> Image </th>
+            <td mat-cell *matCellDef="let element" class="image">
+              <img [src]="element.product.imageReference ? element.product.imageReference : ''" alt="" onerror="this.src = './assets/images/placeholder.png';">
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="product.code">
+            <th mat-header-cell *matHeaderCellDef> Code </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.product.code | uppercase}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="product.title">
+            <th mat-header-cell *matHeaderCellDef> Title </th>
+            <td mat-cell *matCellDef="let element"> {{element.product.title | uppercase}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="productVariant.name">
+            <th mat-header-cell *matHeaderCellDef> Variant </th>
+            <td mat-cell *matCellDef="let element"> {{element.variant | variant}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let element" class="amount">
+              {{element.price | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fees">
+            <th mat-header-cell *matHeaderCellDef> Fees </th>
+            <td mat-cell *matCellDef="let element" class="amount">
+              {{element.fees | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="payout">
+            <th mat-header-cell *matHeaderCellDef> Payout </th>
+            <td mat-cell *matCellDef="let element" class="amount">
+              {{element.payout | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cost">
+            <th mat-header-cell *matHeaderCellDef> Cost </th>
+            <td mat-cell *matCellDef="let element" class="amount">
+              {{element.cost | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="profit">
+            <th mat-header-cell *matHeaderCellDef> Profit </th>
+            <td mat-cell *matCellDef="let element"  class="amount">
+              {{element.profit | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="warehouse.name">
+            <th mat-header-cell *matHeaderCellDef> Location </th>
+            <td mat-cell *matCellDef="let element">
+              {{((element.canceledAt && !element.restocked) ? '' : (element.item.warehouseID ? element.item.warehouse.name  : 'In-Transit')) | uppercase}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="account.name">
+            <th mat-header-cell *matHeaderCellDef> Account </th>
+            <td mat-cell *matCellDef="let element"> {{(element.item.account.name) | titlecase}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="account.ID">
+            <th mat-header-cell *matHeaderCellDef> Acc. ID </th>
+            <td mat-cell *matCellDef="let element"> {{(element.item.accountID)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status.name">
+            <th mat-header-cell *matHeaderCellDef>Status </th>
+            <td mat-cell *matCellDef="let element" test-id="oli-status" [matTooltip]="element.canceledReason">
+              <span class="tag" *ngIf="element.deliveredAt" color="success">{{element.status.name}}</span>
+              <span class="tag" *ngIf="element.canceledAt" color="error" matBadge="!" [matBadgeHidden]="!element.replacePending">{{element.status.name}} {{element.restocked ? ' (restocked)' : ''}}</span>
+              <span class="tag" *ngIf="!element.canceledAt && !element.deliveredAt" color="warning">{{element.status.name}}</span>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="iconColumn">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <mat-icon>chevron_right</mat-icon>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.test-id]="'oli-' + row.ID" (click)="onRowClick(row)" [ngClass]="{'deleted': row.canceledAt != null}"></tr>
+        </table>
+      </ion-card>
+    </div>
+
+  </div>
+
+</ion-content>

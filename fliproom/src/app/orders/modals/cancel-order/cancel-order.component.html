@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button>
+          <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Cancel</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="orderCancelForm" test-id="order-cancel" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Reason</mat-label>
+            <input matInput type="text" autocomplete="null" formControlName="reason" autocomplete="off">
+            <mat-icon matSuffix *ngIf="orderCancelForm.get('reason').value" (click)="orderCancelForm.get('reason').reset()"></mat-icon>
+            <mat-hint class="info">Add optional comment about the reason of why this item has been canceled</mat-hint>
+        </mat-form-field>
+
+        <div class="mat-checkbox margin-bottom-s" *ngIf="!orderCancelForm.get('restock').disabled">
+            <mat-checkbox formControlName="restock" (change)="onRestockInventoryChange($event)">
+                Restock the item in the inventory
+            </mat-checkbox>
+        </div>
+      <mat-form-field appearance="fill" *ngIf="orderCancelForm.get('warehouse').enabled">
+        <mat-label>Location</mat-label>
+        <mat-select formControlName="warehouse" [compareWith]="compareObjectsByIDFn">
+          <mat-option [value]="warehouse" *ngFor="let warehouse of availableWarehouses">{{warehouse.name | titlecase}}</mat-option>
+        </mat-select>
+        <mat-hint class="info">Select warehouse where item will be restocked</mat-hint>
+      </mat-form-field>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <button mat-stroked-button (click)="onCancel()" test-id="cancel">Cancel</button>
+    <button mat-flat-button color="primary" [disabled]="!orderCancelForm.valid" (click)="onSubmit()" test-id="submit">Submit</button>
+</ion-footer>

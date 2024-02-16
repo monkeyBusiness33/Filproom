@@ -1,0 +1,42 @@
+<div>
+  <ion-segment   mode="ios" (ionChange)="onSegmentChanged($event)" [value]="offersType"  *ngIf="tabs.length > 1">
+    <ion-segment-button *ngFor="let tab of tabs" [value]="tab">
+      <ion-label>{{tab | titlecase}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <fliproom-list class="offers-list"  #fliproomList (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested" (onRowClick)="onOfferSelected($event)" [emptyListPlaceholder]="'No Offers '+ offersType">
+    <ng-template #itemList let-element>
+      <div class="card-content-grid">
+        <div class="product-card-image-wrapper">
+          <img class="vertically-centered" [src]="element.marketplaceListing.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content [ngClass]="{'selected': selectedOffer && selectedOffer['ID'] == element.ID}">
+          <div class="message-info-grid">
+            <!--if sent show owner of listing as name -->
+            <!--if receiived show name of account making the offer-->
+            <div class="sub-title-small" >{{offersType == 'sent' ? element.marketplaceListing.user.account.name : element.user.account.name}}</div>
+            <!--TODO: show message time-stamp-->
+            <div></div>
+          </div>
+          <div class="offer-info">
+            <div class="product-info">
+              <div class="title">{{element.marketplaceListing.variant | variant}}</div>
+              <div class="alt-title">{{element.marketplaceListing.product.title}}</div>
+              <div class="sub-title-small" *ngIf="element.marketplaceListing.product.code">{{element.marketplaceListing.product.code}}</div>
+            </div>
+            <div class="offer-price flex-centered">
+              <div class="vertically-centered bold">{{(element.price | currency)+ ' X'+ element.quantity}}</div>
+            </div>
+          </div>
+          <div class="tags-list">
+            <span class="tag" color="primary">{{getOfferType(element)}}</span>
+            <span class="tag" id="status" [attr.color]="getOfferStatusTagColour(element.status.name)">{{ element.status.name }}</span>
+            <span class="tag" color="primary" *ngFor="let tag of element.marketplaceListing.tags">{{ tag }}</span>
+          </div>
+        </ion-card-content>
+      </div>
+
+    </ng-template>
+  </fliproom-list>
+</div>
+

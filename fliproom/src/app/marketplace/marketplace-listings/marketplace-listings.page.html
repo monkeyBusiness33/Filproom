@@ -1,0 +1,144 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button  mode="md"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{myListings ? 'My Listings' : 'Buy & Sell'}}</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop'" >
+      <button mat-button (click)="onButtonClick(button.id)" color="primary" *ngFor="let button of buttons">
+        <mat-icon>{{button.icon}}</mat-icon>
+        {{button.label | titlecase}}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-segment (ionChange)="onSegmentChanged($event)" [value]="tabSelected" [scrollable]="true" mode="ios">
+    <ion-segment-button *ngFor="let tab of tabs" [value]="tab" >
+      <ion-label>{{tab | uppercase}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="environment.screenType == 'mobile'">
+    <ion-fab-button>
+      <mat-icon>more_vert</mat-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button *ngFor="let button of buttons" (click)="onButtonClick(button.id)" color="primary">
+        <mat-icon>{{button.icon}}</mat-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <div class="mobile" *ngIf="environment.screenType == 'mobile'">
+    <fliproom-list #fliproomList class="marketplace-listings" (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested" [emptyListPlaceholder]="emptyListPlaceholder" (onRowClick)="onRowClick($event)">
+      <ng-template #itemList let-element>
+
+        <div class="card-content-grid">
+          <div class="product-card-image-wrapper-sm">
+            <img class="vertically-centered" [src]="element.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+<!--            <div class="sub-title-small" *ngIf="!myListings">{{element.user.account.name}}</div>-->
+            <div class="offer-info">
+              <div class="product-info">
+                <div class="title">{{element.variant | variant}}</div>
+                <div class="alt-title">{{element.product.title}}</div>
+                <div class="sub-title-small" *ngIf="element.product.code">{{element.product.code}}</div>
+              </div>
+              <div class="offer-price flex-centered">
+                <div class="vertically-centered bold">{{(element.price | currency)+ ' X'+ element.quantityRequested}}</div>
+              </div>
+            </div>
+
+
+            <div class="tags-list">
+              <span class="tag" id="status" [attr.color]="element.status.name === 'claimed' ? 'success' : element.status.name === 'deleted' ? 'error' : 'warning'">{{ element.status.name }}</span>
+              <span class="tag" color="primary" *ngFor="let tag of element.tags">{{ tag }}</span>
+            </div>
+          </ion-card-content>
+        </div>
+      </ng-template>
+    </fliproom-list>
+  </div>
+  <div class="desktop page-content" *ngIf="environment.screenType == 'desktop'">
+    <table-wrapper #tableWrapper [configs]=tableConfigs (onDataRequest)="onDataRequest($event)" (onRowClick)="onRowClick($event)" [dataRequested]="dataRequested" matSort>
+      <ng-container matColumnDef="product.imageReference">
+        <th mat-header-cell *matHeaderCellDef>Image</th>
+        <td mat-cell *matCellDef="let element" class="image">
+          <img [src]="element.product.imageReference" alt="" onerror="this.src = './assets/images/placeholder.png';"/>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="product.code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.product.code | uppercase}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="product.title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.product.title | uppercase}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="variant.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Variant</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.variant | variant}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="user.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.user.name | titlecase}} {{element.user.surname | titlecase}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantityRequested">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Quantity Requested
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.quantityRequested}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantityClaimed">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Quantity Claimed
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.quantityClaimed}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+        <td mat-cell *matCellDef="let element">{{element.price | currency}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let element">{{element.type | uppercase}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Notes</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.notes | uppercase}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="tag" [attr.color]="getStatusClass(element.status.name)"
+          >{{element.status.name | uppercase}}</span
+          >
+        </td>
+      </ng-container>
+    </table-wrapper>
+  </div>
+</ion-content>

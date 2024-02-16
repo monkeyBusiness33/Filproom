@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Outbound</ion-title>
+  </ion-toolbar>
+  <ion-button id="warehouse-selection" expand="full" (click)="onWarehouseSelection()" test-id="warehouseButton" class="margin-bottom-s" *ngIf="user.account.warehouses.length > 1">
+    <p test-id="warehouseName">{{('Current warehouse | ' + selectedWarehouse.name) | titlecase }}</p>
+    <ion-icon name="caret-down-outline"></ion-icon>
+  </ion-button>
+</ion-header>
+
+<ion-content>
+  <fliproom-list id="outbound" #fliproomList (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested"  (onRowClick)="onItemSelected($event)" [emptyListPlaceholder]="'No Fulfillments to Outbound'">
+    <ng-template #itemList let-element >
+      <ion-card-content>
+        <div class="header">
+          <span class="bold">#{{element.ID}}</span>
+          <span class="grey">{{element.createdAt| date:'EEE, MMM d y'}}</span>
+        </div>
+        <div class="main-text margin-top-xs">
+          <div class="section1">
+            <span>Order #{{element.outboundOrder.ID}} - {{element.outboundOrder.reference1}}</span>
+            <span class="grey small">{{element.reference1}}</span>
+          </div>
+          <span class="bold large quantity">x {{element.orderLineItems.length}}</span>
+        </div>
+        <div class="tags-list">
+          <span class="tag" color="primary">{{element.outboundOrder.type.name}}</span>
+          <span class="tag" color="primary" *ngIf="element.courier?.ID">{{element.courier.name}}</span>
+        </div>
+        <mat-progress-bar [mode]="getProgress(element) > 0 ? 'indeterminate' : 'determinate'" [value]="0" color="primary" class="margin-top-s"></mat-progress-bar>
+
+      </ion-card-content>
+    </ng-template>
+  </fliproom-list>
+</ion-content>

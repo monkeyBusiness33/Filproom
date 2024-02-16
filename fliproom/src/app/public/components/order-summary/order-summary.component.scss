@@ -1,0 +1,101 @@
+
+
+
+.order-summary{
+
+  .logo-container{
+    .custom-logo{
+      height: 4.5em;
+    }
+    .powered-by{
+      height: 1em;
+    }
+  }
+
+
+  //Hardcoded styling
+  background-color: white;
+
+  #payment-redirect-btn{
+    width: 100%;
+  }
+
+  //MOBILE MODE
+  @media screen and (max-width: 900px) {
+    padding: 1em;
+  }
+
+  //Card Styling
+  ion-card{
+    box-shadow: none !important;
+    //--background: var(--ion-field-font-color)
+
+    .no-margin-bottom{
+      margin-bottom: 0!important;
+    }
+
+    ion-card-content{
+      display: flex;
+
+
+      .card-header-title{
+        margin-bottom: 0.5em;
+        font-weight: bold;
+        color: var(--ion-color-grey-light);
+      }
+
+      .content-suffix{
+        margin-left: auto;
+        display: flex;
+        align-content: end;
+
+        a{
+          padding-right: 0.5em;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 900px) {
+    height: 100%;
+    padding-right: 5em;
+    padding-left: 5em;
+  }
+
+
+
+  .order-summary-content{
+    //web mode
+    @media screen and (min-width: 900px) {
+      padding-top: 30%;
+    }
+
+    .contact-details{
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .payment-details{
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 1em;
+      //Web mode
+      @media screen and (min-width: 900px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 1em;
+      }
+    }
+  }
+
+  .terms-container{
+    a{
+      color: var(--ion-color-grey-light);
+      font-weight: normal;
+    }
+    //MOBILE MODE
+    @media screen and (max-width: 900px) {
+      padding-bottom: 1em;
+    }
+  }
+}

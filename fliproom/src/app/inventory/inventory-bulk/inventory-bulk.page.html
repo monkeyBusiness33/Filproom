@@ -1,0 +1,116 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inventory"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Bulk Inventory</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop'">
+      <button mat-button (click)="onTrackCostToggle()" color="primary" class="track-cost" #toggleRef test-id="track-cost">
+        <mat-icon>attach_money</mat-icon>
+        {{trackCost == true ? 'Hide Cost' : 'Show Cost'}}
+      </button>
+      <button mat-button (click)="openAddBulkPage()" color="primary" *ngFor="let button of buttons">
+        <mat-icon>{{button.icon}}</mat-icon>
+        {{button.label | titlecase}}</button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <button mat-button *ngIf="this.user.iam.inventory.create && environment.screenType == 'desktop' && this.formInventory.length > 1 && this.inventoryType != 'consignment'" test-id="bulkEdit"
+              [class.loading]="isLoadingAction" [disabled]="isLoading" (click)="openBulkEditForm()" color="primary">
+        <mat-icon>edit_note</mat-icon>
+        Bulk Edit
+     </button>
+      <button mat-button *ngIf="this.user.iam.inventory.create && environment.screenType == 'desktop'" test-id="save"
+              [class.loading]="isLoadingAction" [disabled]="isLoading" (click)="onSubmit()" color="primary">
+        <mat-icon>done</mat-icon>
+        {{formType == 'create' && inventoryType == 'stock'? 'Create' : 'Save'}}
+      </button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'mobile' && this.user.iam.inventory.create">
+      <ion-button (click)="onInventoryOptionsClick()" test-id="options">
+        <mat-icon>more_vert</mat-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading">
+    <!--Inventory Product Overview Card-->
+    <ion-card class="inventory-product-overview-card margin-bottom-s">
+      <ion-card-content>
+        <div class="product-header">
+          <div class="product-card-image-wrapper margin-right-s">
+            <img [src]="product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <div class="product-info">
+            <span id="title" class="value block-display">{{(product.title | titlecase)}} </span>
+            <span class="key block-display" >{{product.code? ((product.code) | uppercase): 'No Code' | uppercase}} </span>
+          </div>
+        </div>
+        <div class="tags-list margin-top-s">
+          <span class="tag" color="primary">{{inventoryType | uppercase}}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!--Tab selection available when bulk editing inventory to change inventory type selected-->
+
+    <div class="margin-bottom-s" *ngIf="formType=='edit'">
+      <ion-segment mode="ios" (ionChange)="onSegmentChanged($event)" [value]="inventoryType"
+                   *ngIf="inventoryTypes.length > 1">
+        <ion-segment-button *ngFor="let tab of inventoryTypes" [value]="tab">
+          <ion-label>{{tab | titlecase}}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!--    Select all option for virtual inventory-->
+    <div class="flex-split padding-bottom" *ngIf="inventoryType=='virtual' && formsInitialized">
+      <div class="flex-centered margin-left-xxs" (click)="onVirtualRecordsToggle(unavailableInventoryRecords> 0)">
+        <ion-checkbox labelPlacement="start" [checked]="!(unavailableInventoryRecords> 0)"  ></ion-checkbox>
+        <a class="button" test-id="select-all-toggle" >
+          {{ unavailableInventoryRecords> 0 ? 'Select all' : 'Unselect all'}}
+        </a>
+      </div>
+    </div>
+
+    <!-- BULK OVERVIEW FORM -->
+    <form [formGroup]="bulkOverviewForm" autocomplete="off" class="warehouse-track-cost">
+      <!--WAREHOUSE SELECTION-->
+      <mat-form-field appearance="fill" *ngIf="inventoryType!='virtual' && formType == 'create' && availableWarehouses.length > 1">
+        <mat-label>Location</mat-label>
+        <mat-select formControlName="warehouse" [compareWith]="compareObjectsByIDFn" (selectionChange)="refreshBidSuggestions()">
+          <mat-option [value]="warehouse" *ngFor="let warehouse of availableWarehouses">{{warehouse.name | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" *ngIf="inventoryType!='virtual' && formType != 'create' && viewableWarehouses.length > 1">
+        <mat-label>Location</mat-label>
+        <mat-select formControlName="warehouseFilter" [compareWith]="compareObjectsByIDFn" (selectionChange)="filterFormInventoryByWarehouse($event.value)">
+          <mat-option [value]="warehouse" *ngFor="let warehouse of viewableWarehouses">{{warehouse.name | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+
+    <!--No inventory place holder-->
+    <div *ngIf="formInventory.length == 0" class="margin-top center">
+      <span class="grey">No inventory records available</span>
+      <br>
+      <a class="button" (click)="createInventoryRecords()"  *ngIf="inventoryType == 'stock'">Create Inventory Records</a>
+    </div>
+
+    <!--Form Component Container-->
+    <div *ngFor="let inventoryRecord of formInventory" id="inventory-record-form-wrapper">
+      <app-inventory-record-form [displayMode]="'compact'" [inventoryRecord]="inventoryRecord" [product]="product" (inventoryRecordSelected)="onOpenInventoryRecord($event)" ></app-inventory-record-form>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="environment.screenType == 'mobile'">
+  <button   mat-flat-button color="primary" [disabled]="isLoading" (click)="onSubmit()" test-id="save" [class.loading]="isLoadingAction">{{formType == 'create' && inventoryType == 'stock'? 'Create' : 'Save'}}</button>
+</ion-footer>

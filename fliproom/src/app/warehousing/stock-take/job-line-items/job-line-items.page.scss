@@ -1,0 +1,28 @@
+::ng-deep fliproom-list.job-line-items {
+  ion-card {
+    ion-card-content {
+      width: 100%;
+    }
+
+    ion-card-content.selected {
+      opacity: 50%;
+    }
+
+    .card-content-grid {
+      display: flex;
+    }
+
+    .product-info {
+      text-align: start;
+      font-size: 13px;
+    }
+  }
+
+  @media screen and (min-width: 900px) {
+    ion-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 2em;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+.form-field-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+  gap: 0.5em;
+}
+
+.form-field-item {
+  box-sizing: border-box;
+}
+
+ion-subtitle {
+  padding: 0 1.3em;
+}

@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{checkType == 'confirm' ? 'Confirmation Checks' : 'Anomaly Checks'}}</ion-title>
+  </ion-toolbar>
+
+<!--  Alter between to-do and completed lists-->
+  <ion-segment (ionChange)="onTabChanged($event)" [(ngModel)]="selectedTab" [scrollable]="true" mode="ios">
+    <ion-segment-button value="todo" test-id="todo">
+      <ion-label class="primary-contrast">TODO</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="done" test-id="done">
+      <ion-label class="primary-contrast">DONE</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <fliproom-list #fliproomList class="job-line-items" (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested" [emptyListPlaceholder]="emptyListPlaceholder" (onRowClick)="openJobLineItemOptions($event)">
+    <ng-template #itemList let-element >
+
+      <div class="card-content-grid" test-id="jli-card" [attr.itemID]="element.item.ID">
+        <div class="product-card-image-wrapper-sm">
+          <img class="vertically-centered" [src]="element.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <!--            <div class="sub-title-small" *ngIf="!myListings">{{element.user.account.name}}</div>-->
+          <div class="offer-info">
+            <div class="product-info">
+              <div class="title">{{element.variant | variant}}</div>
+              <div class="alt-title">{{element.product.title}}</div>
+              <div class="sub-title-small" *ngIf="element.product.code">{{element.product.code}}</div>
+            </div>
+          </div>
+          <div class="icon-info-list">
+            <div class="icon-info">
+              <mat-icon>account_circle</mat-icon>
+              <span>{{element.item.account.name}}</span>
+            </div>
+            <div class="icon-info">
+              <mat-icon>pin_drop</mat-icon>
+              <span >{{element.item.warehouseID? element.item.warehouse.name : 'transit'}}</span>
+            </div>
+          </div>
+          <div class="tags-list" >
+            <span class="tag" id="status" [attr.color]="element.status.name === 'claimed' ? 'success' : element.status.name === 'confirmed' ? 'success' : 'warning'">{{ element.status.name }}</span>
+            <span class="tag" id="action" [attr.action]="element.action" *ngIf="element.action" color="primary">{{ element.action }}</span>
+          </div>
+        </ion-card-content>
+      </div>
+      <span class="suffix barcode bold" *ngIf="element.item.barcode" [attr.barcode]="element.item.barcode" [attr.color]="element.item.completedAt ? 'success' : null">{{element.item.barcode | uppercase}}</span>
+    </ng-template>
+  </fliproom-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed"  *ngIf="checkType=='confirm'">
+    <ion-fab-button (click)="onBarcodeStart()" test-id='scan-barcode'>
+      <span class="material-symbols-outlined" translate="no" >qr_code_scanner</span>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

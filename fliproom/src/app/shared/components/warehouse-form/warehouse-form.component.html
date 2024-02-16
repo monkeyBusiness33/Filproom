@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="formMode == 'edit'">Edit {{warehouseForm.value.name | titlecase}}</ion-title>
+    <ion-title *ngIf="formMode == 'create'">New Warehouse</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="warehouseForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" type="text" #inputEl>
+    </mat-form-field>
+
+    <mat-slide-toggle class="custom-toggle" formControlName="fulfillmentCentre">Fulfillment Centre</mat-slide-toggle>
+    <mat-hint class="info custom-toggle-hint">Turn this on if this location is used to handle fulfillment for online orders and consignors drop-offs. Inventory sold online and at a different location, will need to be transferred to this location before being fulfilled</mat-hint>
+
+    <mat-form-field appearance="fill" (click)="onAddressClick(warehouseForm.value.address ? 'edit' : 'add')" >
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="address" type="text" readonly>
+      <span matSuffix class="bold button" color="primary">{{warehouseForm.value.address ? 'Edit' : 'Add'}}</span>
+      <mat-hint *ngIf="formMode == 'edit' && !data.warehouse.address.validated" class="warning">The address you inserted is invalid. You will not be able to use Carriers services on this warehouse</mat-hint>
+    </mat-form-field>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <button mat-stroked-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [class.loading]="isLoading" test-id="submit">Confirm</button>
+</ion-footer>

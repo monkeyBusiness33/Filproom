@@ -1,0 +1,36 @@
+ion-button#warehouse-selection {
+    --box-shadow: none;
+}
+
+div.card-wrapper.oli-inbound {
+    display: flex;
+    flex-direction: row;
+
+        ion-card-content {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (min-width: 900px) {
+        ::ng-deep fliproom-list#inbound {
+            ion-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                column-gap: 1em;
+                row-gap: 1em;
+
+                .product-card-image-wrapper-sm {
+                  max-height: none;
+                }
+
+                ion-card-content {
+                    min-height: 10.36em;
+
+                    span.notes {
+                        flex-grow: 1;
+                    }
+                }
+            }
+        }
+    }

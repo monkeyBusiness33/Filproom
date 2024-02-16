@@ -1,0 +1,41 @@
+::ng-deep fliproom-list.steals-list ion-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2em;
+
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.img-wrapper {
+    height: 100px;
+
+    img {
+      height: 100%;
+      width: auto;
+      margin: auto;
+      display: block;
+    }
+  }
+
+}
+.steal-info-pair{
+  display: flex;
+  justify-content: space-between;
+  .price{
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 16px;
+  }
+  .quantity{
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  ::ng-deep fliproom-list.steals-list ion-list{
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  }
+}

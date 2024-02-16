@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+</head>
+<html>
+    <body>
+        <div class="barcode-box">
+            <div class="box" id="logo">
+                <img id="company-logo" src="{{companyLogoUrl}}" alt="">
+            </div>
+
+            <div class="box" id="barcode-img">
+                <img src="{{barcodeImgUrl}}" alt="">
+            </div>
+
+            <div class="box" id="barcode-text">
+                <span>{{barcodeValue}}</span>
+            </div>
+        </div>
+    </body>
+    <style>
+        * {
+            font-family: Roboto,Helvetica Neue,sans-serif;
+        }
+
+        div.barcode-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 90vh;
+            width: 100vw;
+            margin: 10vh 0 0 5vw;
+        }
+
+        div.barcode-box div.box#logo {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        div.barcode-box div.box#logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        div.barcode-box div.box#barcode-img {
+            display: flex;
+            justify-content: center;
+        }
+
+        div.barcode-box div.box#barcode-img img {
+            height: 50px;
+            width: 50vw;
+        }
+
+        div.barcode-box div.box#barcode-text {
+            font-size: 50px;
+            text-align: center;
+        }
+        
+    </style>
+</html>

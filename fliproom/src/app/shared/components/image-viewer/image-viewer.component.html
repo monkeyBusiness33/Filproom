@@ -1,0 +1,18 @@
+
+<ion-header>
+  <ion-toolbar>
+
+    <ion-title>{{'View Image'}}</ion-title>
+    <ion-buttons slot="end">
+
+      <button mat-button   test-id="cancel"(click)="closeModal()" color="basic">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-img [src]="imageURl" alt="Some Image"></ion-img>
+</ion-content>
+

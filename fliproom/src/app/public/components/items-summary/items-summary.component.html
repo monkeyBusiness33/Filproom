@@ -1,0 +1,47 @@
+<div class="order-summary" *ngIf="order">
+  <div class="order-summary-content">
+    <div class="form-section-toolbar margin-bottom">
+      <div class="section-title">Order Summary</div>
+      <div class="flex-centered">{{ order.quantity }} {{ (order.quantity === 1 ? 'item' : 'items') | uppercase }}</div>
+    </div>
+    <div class="items-overview">
+      <div class="order-item" *ngFor="let orderLineItem of getVisibleOrderLineItems(order)">
+        <div class="item-prefix">
+          <div class="product-card-image-wrapper order-item-img-wrapper">
+            <img [src]="orderLineItem.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+        </div>
+        <div class="item-body">
+          <span  class="value block-display">{{(orderLineItem.product.title | titlecase)}} </span>
+          <span class="value block-display" *ngIf="orderLineItem.product.code">{{(orderLineItem.product.code | uppercase)}} </span>
+          <span class="block-display light-grey">{{orderLineItem.variant.name| uppercase}} </span>
+        </div>
+        <div class="item-suffix">
+          <span class="flex-pin-right">{{'£ '+ orderLineItem.price }} </span>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="order-summary-breakdown">
+      <div class="flex-split bold">
+        <span >Subtotal</span>
+        <span >{{'£ '+( orderTotals.subtotal  | number : '1.2-2')}}</span>
+      </div>
+      <div class="flex-split light-grey" >
+        <span >Shipping</span>
+        <span >{{'£ '+ (orderTotals.shipping  | number : '1.2-2' )}}</span>
+      </div>
+<!--      <div class="flex-split light-grey">-->
+<!--        <span >Tax</span>-->
+<!--        <span >{{'Included'}}</span>-->
+<!--      </div>-->
+
+    </div>
+    <hr>
+    <div class="order-summary-total flex-split bold">
+      <div >TOTAL</div>
+      <div >{{'£ '+ orderTotals.total}}</div>
+    </div>
+
+  </div>
+</div>

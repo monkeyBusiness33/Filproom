@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="filterForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Product Code</mat-label>
+      <input matInput formControlName="product.code">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Product Title</mat-label>
+      <input matInput formControlName="product.title">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Variant</mat-label>
+      <input matInput formControlName="variant.name">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Account</mat-label>
+      <input matInput formControlName="account.name">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Warehouse</mat-label>
+      <mat-select formControlName="warehouseID">
+        <mat-option [value]="warehouse.ID" *ngFor="let warehouse of warehousesAvailable">{{warehouse.name | uppercase}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+
+</ion-content>
+
+<ion-footer>
+  <button (click)="onClear()" mat-stroked-button test-id="cancel">Clear</button>
+
+  <button (click)="onSearchClick()" color="primary" mat-flat-button test-id="edit-submit">Search</button>
+</ion-footer>

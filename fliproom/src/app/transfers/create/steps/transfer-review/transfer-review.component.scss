@@ -1,0 +1,27 @@
+div.page-wrapper {
+    max-width: 600px;
+    margin: auto;
+
+    ion-card.overview {
+        div.info-grid#locations {
+            grid-template-columns: 1fr 1fr;
+            text-align: center;
+        }
+    }
+
+
+    ion-list {
+        flex: 1;
+        overflow-y: scroll;
+    }
+
+    div.buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        button {
+            flex-grow: 1;
+        }
+    }
+
+}

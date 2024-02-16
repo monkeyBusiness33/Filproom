@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Fliproom</string>
+    <string name="title_activity_main">Fliproom</string>
+    <string name="package_name">io.fliproom.mobile</string>
+    <string name="custom_url_scheme">io.fliproom.mobile</string>
+    <string name="server_client_id">1059119330640-cvn18i8bo4k7dp0stbatqn5piitjgsfp.apps.googleusercontent.com</string>
+</resources>

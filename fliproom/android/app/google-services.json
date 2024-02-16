@@ -1,0 +1,124 @@
+{
+  "project_info": {
+    "project_number": "1059119330640",
+    "project_id": "fliproom---ga4",
+    "storage_bucket": "fliproom---ga4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059119330640:android:7b016e2e0c33bfa490e855",
+        "android_client_info": {
+          "package_name": "com.editldn.wiredhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059119330640-i6fa82bouihdr25atdfjtk2r1dhveagq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.editldn.wiredhub",
+            "certificate_hash": "05b892a79c93e72c63c547ff4ef753c5ade92856"
+          }
+        },
+        {
+          "client_id": "1059119330640-so90m6tstor65ach5evve1bbfc6mqg0l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.editldn.wiredhub",
+            "certificate_hash": "b46f047aa551cc7a14f35601aa66a2e746f19917"
+          }
+        },
+        {
+          "client_id": "1059119330640-cvn18i8bo4k7dp0stbatqn5piitjgsfp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzblu7DhH4goGMAO_x3I6zW856IHPSpiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059119330640-cvn18i8bo4k7dp0stbatqn5piitjgsfp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1059119330640-j98vvdpfpju0kps82hnb6cuihdr63eke.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.editldn.wiredhub",
+                "app_store_id": "1612305615"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059119330640:android:af626f54afb6a28390e855",
+        "android_client_info": {
+          "package_name": "io.fliproom.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059119330640-6425tce7dpfq5kr1ce7dc3opgqfm2bs1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.fliproom.mobile",
+            "certificate_hash": "97421ad3edb8a62dfb2cae1b8559981c8d570f06"
+          }
+        },
+        {
+          "client_id": "1059119330640-bir99gh99s9oidkcibduf01ehkl7lg9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.fliproom.mobile",
+            "certificate_hash": "b46f047aa551cc7a14f35601aa66a2e746f19917"
+          }
+        },
+        {
+          "client_id": "1059119330640-r4h2qi6vb8s3q8hr7mhq80rv3ep57l46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.fliproom.mobile",
+            "certificate_hash": "6a5f4ad72aea8657ec7bd3e3ceef3f470290b6fa"
+          }
+        },
+        {
+          "client_id": "1059119330640-cvn18i8bo4k7dp0stbatqn5piitjgsfp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzblu7DhH4goGMAO_x3I6zW856IHPSpiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059119330640-cvn18i8bo4k7dp0stbatqn5piitjgsfp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1059119330640-j98vvdpfpju0kps82hnb6cuihdr63eke.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.editldn.wiredhub",
+                "app_store_id": "1612305615"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

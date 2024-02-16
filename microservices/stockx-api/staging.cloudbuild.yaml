@@ -1,0 +1,24 @@
+steps:
+# Load Dockerfile
+- name: gcr.io/cloud-builders/gsutil
+  args: ['mv', 'microservices/stockx-api/staging.dockerfile', 'Dockerfile']
+
+# Load gc-auths
+- name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'gs://$_BUCKET/wiredhub.storage.admin.auths.json', 'wiredhub.storage.admin.auths.json']
+
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/wiredhub/staging-stockx-api', '.']
+
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/wiredhub/staging-stockx-api']
+
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'staging-stockx-api', '--image', 'gcr.io/wiredhub/staging-stockx-api', '--region', 'europe-west2', '--platform', 'managed', '--timeout', '899']
+
+images:
+- gcr.io/wiredhub/staging-stockx-api

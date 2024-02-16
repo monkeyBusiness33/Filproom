@@ -1,0 +1,37 @@
+app-transfer-review {
+    height: inherit;
+}
+
+div.page-wrapper {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+ion-card.item {
+    div.section1 {
+        display: flex;
+
+        div.card-image-wrapper {
+            width: auto;
+            img {
+                margin-top: auto;
+                margin-bottom: auto;
+                max-width: 7em;
+            }
+        }
+
+        ion-card-content {
+            display: flex;
+            flex-direction: column;
+
+            div.tags-list {
+                margin: auto;
+                margin-bottom: 0;
+            }
+        }
+
+    }
+}
+
+

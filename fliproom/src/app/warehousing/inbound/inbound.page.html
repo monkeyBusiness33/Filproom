@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inbound</ion-title>
+  </ion-toolbar>
+  <ion-button id="warehouse-selection" expand="full" (click)="onWarehouseSelection()" test-id="warehouseButton" class="margin-bottom-s" *ngIf="user.account.warehouses.length > 1">
+    <p test-id="warehouseName">{{('Current warehouse | ' + selectedWarehouse.name) | titlecase }}</p>
+    <ion-icon name="caret-down-outline"></ion-icon>
+  </ion-button>
+  <ion-segment (ionChange)="onSegmentChanged($event)" [(ngModel)]="currentSelectedSegment" [scrollable]="true" mode="ios">
+    <ion-segment-button value="all" test-id="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="sold" test-id="sold">
+      <ion-label>Sold</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="stock" test-id="stock">
+      <ion-label>Stock</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="transfer" test-id="transfer">
+      <ion-label>Transfer</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <fliproom-list id="inbound" [style.display]="isLoading ? 'hidden' : 'block'" #fliproomList (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested"  (onRowClick)="onItemSelected($event)" [emptyListPlaceholder]="'No Items to Inbound'">
+    <ng-template #itemList let-element >
+      <div class="card-wrapper oli-inbound" [attr.test-id]="element.itemID">
+        <div class="product-card-image-wrapper-sm">
+          <img [src]="element.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+        </div>
+        <ion-card-content>
+          <span class="bold" test-id="title">{{element.product.code | uppercase}} ({{element.variant | variant}})</span>
+          <span class="grey">{{element.product.title | uppercase}}</span>
+          <span test-id="order">Order #{{element.order.ID}} - {{element.order.reference1}}</span>
+          <span class="grey notes">{{element.notes}}</span>
+          <div class="tags-list">
+            <span class="tag" color="primary">{{element.item.account.name}}</span>
+            <span class="tag" color="primary" *ngIf="currentSelectedSegment == 'all' && element.item.inventoryID == null">Sold</span>
+            <span class="tag" color="primary" *ngIf="currentSelectedSegment == 'all' && element.item.inventoryID != null">Stock</span>
+            <span class="tag" color="primary" *ngIf="currentSelectedSegment == 'all' && element.order.type.name == 'transfer-in'">Transfer</span>
+          </div>
+        </ion-card-content>
+      </div>
+      <span class="suffix barcode" *ngIf="element.item.barcode">{{element.item.barcode | uppercase}}</span>
+    </ng-template>
+  </fliproom-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isLoading">
+    <ion-fab-button (click)="onBarcodeStart()" test-id='scan-barcode'>
+      <span class="material-symbols-outlined" translate="no">qr_code_scanner</span>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

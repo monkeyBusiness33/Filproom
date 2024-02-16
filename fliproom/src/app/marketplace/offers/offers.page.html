@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <!--      <ion-back-button  mode="md" #backButton></ion-back-button>-->
+
+      <ion-button  (click)="onBackClick()">
+        <ion-icon  slot="icon-only" ios="arrow-back-outline" md="arrow-back-outline" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Offers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="offers">
+  <div class="flex-centered" style="height: 100%" *ngIf="isLoading">
+    <ion-spinner  name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading">
+    <ion-slides #componentSlider class="component-slider" [options]="slideOpts"
+                *ngIf="environment.screenType == 'mobile'">
+      <ion-slide>
+        <!--Chats -->
+        <app-offers-list [selectedOffer]="selectedOffer" (offerSelected)="onOfferSelected($event)"></app-offers-list>
+      </ion-slide>
+
+      <ion-slide>
+        <!--ChatDetails Component-->
+        <app-offer-chat [selectedOffer]="selectedOffer" (offerRefreshed)="onOfferRefreshed()"></app-offer-chat>
+      </ion-slide>
+    </ion-slides>
+
+
+    <div class="web-view" *ngIf="environment.screenType != 'mobile'">
+      <div>
+        <!--Chats -->
+        <app-offers-list [selectedOffer]="selectedOffer" (offerSelected)="onOfferSelected($event)"></app-offers-list>
+      </div>
+      <div>
+        <!--ChatDetails Component-->
+        <app-offer-chat [selectedOffer]="selectedOffer" ></app-offer-chat>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>
+

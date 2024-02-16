@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Checkout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="payment-summary-section">
+    <h2>Payment Summary</h2>
+    <ion-card>
+      <ion-card-content>
+        <div class="info-grid">
+          <span class="key">Subtotal (x{{items}} items)</span> <span class="value">{{subtotal | currency}}</span>
+          <span class="key">Tax ({{data.saleChannel?.taxRate}} %)</span> <span class="value">{{taxAmount | currency}}</span>
+          <span class="key">Shipping</span> <span class="value">{{shippingCost| currency}}</span>
+          <span class="key">Discount Applied</span> <span class="value">{{discount | currency}}</span>
+          <span class="key">Total</span> <span class="value">{{total | currency}}</span>
+          <span class="key">Payment Status</span> <span class="value" [attr.color]="(paymentMethodSelected == 'unpaid' || !paymentMethodSelected ) ?  'warning':'success'">{{(paymentMethodSelected == 'unpaid' || !paymentMethodSelected ) ? 'UNPAID' : 'PAID' }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="payment-method-section" >
+    <h2>Payment Method</h2>
+    <div class="payment-methods-grid margin-top">
+      <ion-card button (click)="onPaymentMethodSelected('card')" [ngClass]="{'selected': paymentMethodSelected == 'card'}" class="margin-right">
+        <ion-card-content>
+          <span class="material-symbols-outlined margin-right-xs">credit_card</span>
+          Card
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card button (click)="onPaymentMethodSelected('cash')" [ngClass]="{'selected': paymentMethodSelected == 'cash'}">
+        <ion-card-content>
+          <span class="material-symbols-outlined margin-right-xs">attach_money</span>
+          Cash
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card button test-id="unpaid-btn" (click)="onPaymentMethodSelected('unpaid')" *ngIf="user.isPersonalShopper" [ngClass]="{'selected': paymentMethodSelected == 'unpaid'}" class="margin-left">
+        <ion-card-content>
+          <span class="material-symbols-outlined margin-right-xs">money_off</span>
+          Unpaid
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  <div class="delivery-section" >
+    <h2>Delivery</h2>
+    <div class="margin-bottom-s">
+      <mat-checkbox   test-id="skip" (change)="setAsDeliveredChange($event.checked)" [checked]="setAsDelivered" >
+        Mark As Delivered</mat-checkbox>
+    </div>
+  </div>
+
+
+</ion-content>
+
+<ion-footer>
+  <button mat-stroked-button (click)="onCancel()" test-id="cancel">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" test-id="confirm">Pay Now</button>
+</ion-footer>

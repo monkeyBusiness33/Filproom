@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{(documentsType == "invoices" ? 'invoices' : 'purchase orders') | titlecase}}</ion-title>
+    <ion-buttons slot="end">
+      <button mat-button (click)="onBatchDownloadDocuments()" color="primary" [disabled] = "tableWrapper?.selector.selected.length == 0">
+        <mat-icon>download</mat-icon>
+        Download {{tableWrapper?.selector.selected.length}} Documents
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <table-wrapper #tableWrapper [configs]=tableConfigs (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested" matSort (onRowClick)="onRowClick($event)">
+    <ng-container matColumnDef="ID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="reference1">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference </th>
+      <td mat-cell *matCellDef="let element"> {{element.reference1}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Created At </th>
+      <td mat-cell *matCellDef="let element"> {{element.createdAt | date:'d/M/yy hh:mm a'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="saleChannel.title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sale Channel </th>
+      <td mat-cell *matCellDef="let element"> {{element.saleChannel.title | titlecase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="consignee.fullName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Destination </th>
+      <td mat-cell *matCellDef="let element"> {{(element.consignee ? element.consignee.fullName : 'N/A') | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="consignor.fullName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Origin </th>
+      <td mat-cell *matCellDef="let element">
+        {{(element.consignor ? element.consignor.fullName : 'N/A') | titlecase}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="status.name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status </th>
+      <td mat-cell *matCellDef="let element" [attr.color]="element.status.color" class="bold"> {{element.status.name | uppercase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+      <td mat-cell *matCellDef="let element"> 
+        <a class="button" *ngIf="!element.invoiceFilename" (click)="onGenerateInvoice($event, element)">Generate</a>
+        <a class="button" (click)="onViewOrder($event, element)">View Order</a>
+      </td>
+    </ng-container>
+
+  </table-wrapper>
+</ion-content>

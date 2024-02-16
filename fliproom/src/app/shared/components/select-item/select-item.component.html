@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onClose()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Items</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="variants-section" *ngIf="product">
+    <h2>Variants</h2>
+    <mat-form-field appearance="fill" id="variant">
+      <mat-label>Variants</mat-label>
+      <mat-select test-id="select-variant" (selectionChange)="onVariantSelected($event.value)" [value]="variantSelected">
+        <mat-option *ngFor="let variant of variantsAvailableToSelect" [value]="variant" [attr.test-id]="variant.ID">
+          {{variant | variant}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="items-section" *ngIf="product">
+    <div class="form-section-toolbar">
+      <h2>{{'Items' | titlecase}}</h2>
+      <div class="centred-container display-right" *ngIf="variantSelected">
+        <a class="button" (click)="onSourceItem()" *ngIf="!disableSource" test-id="sourcing-btn">Source Item</a>
+      </div>
+    </div>
+    <div class="loading-placeholder" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    <ion-list *ngIf="!isLoading">
+      <ion-card *ngFor="let item of itemsList" class="margin-bottom" (click)="onItemSelected(item)" [attr.test-id]="item.ID">
+        <ion-card-content>
+          <div class="flex-split">
+            <div>
+              <div class="icon-info">
+                <mat-icon>account_circle</mat-icon>
+                <span>{{item.account.name}}</span>
+              </div>
+              <div class="icon-info">
+                <mat-icon>pin_drop</mat-icon>
+                <span>{{item.warehouse?.name || 'transit'}}</span>
+              </div>
+            </div>
+            <div class="pricing-info" *ngIf="data.saleChannel">
+              <div class="flex-split">
+                <span class="key margin-right-s">{{'price' | uppercase}}</span>
+                <span class="value">{{getInventoryListing(item).saleChannel.computeListingPrice(getInventoryListing(item))| currency}}</span>
+              </div>
+              <div class="flex-split" *ngIf="data.orderLineItem">
+                <span class="key margin-right-s">{{'difference'| uppercase}}</span>
+                <span class="value" [attr.color]="getPriceDifference(getInventoryListing(item))< 0? 'error': 'success' ">{{getPriceDifference(getInventoryListing(item)) | currency}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="tags-list" *ngIf="getInventoryListing(item) && getInventoryListing(item).status == 'drafted'" >
+            <span class="tag" color="warning" >drafted</span>
+          </div>
+
+          <span class="key margin-right-s" *ngIf="item.inventory.notes">Notes</span>
+            <span class="value margin-top-xs italics" id="notes">{{item.inventory.notes}}</span>
+
+        </ion-card-content>
+        <span class="suffix barcode" *ngIf="item.barcode">
+          {{item.barcode | uppercase}}
+        </span>
+      </ion-card>
+    </ion-list>
+
+    <div class="sourcing-box" style="text-align: center;" *ngIf="!isLoading && variantSelected && itemsList.length == 0">
+      <p>
+        No Items Available
+    </div>
+  </div>
+</ion-content>

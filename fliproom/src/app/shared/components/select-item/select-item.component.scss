@@ -1,0 +1,51 @@
+mat-form-field#variant {
+    width: 100%;
+}
+
+ion-card-content {
+    //display: flex;
+
+    div.info-grid {
+        flex-grow: 1;
+
+        span#notes {
+            grid-column: 1 / span 2;
+        }
+    }
+  span.key {
+    color: var(--ion-color-grey);
+  }
+}
+
+div.icon-info-list {
+  padding-top: 5px;
+  display: flex;
+  overflow-y: hidden;
+}
+
+div.icon-info {
+  display: flex;
+  justify-content:left;
+  margin-right: 1em;
+
+  mat-icon{
+    color: var(--ion-color-primary);
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 20px;
+  }
+  span{
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}
+
+.pricing-info{
+  span.key {
+    color: var(--ion-color-grey);
+  }
+  span.value{
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+</head>
+<html>
+    <body>
+        <h1 style="text-align: center;">Packing List</h1>
+
+        <div class="wrapper">
+            <div class="company-info">
+                <img id="company-logo" src="{{companyLogoUrl}}" alt="">
+                <div class="text-box">
+                </div>
+            </div>
+            
+            <div class="consignee-info card">
+                <div class="header">
+                    <span>Consignee</span>
+                </div>
+                <div class="grid-info">
+                    <span>{{consignee.fullName}}</span>
+                    <span>{{consignee.address}}</span>
+                    <span>{{consignee.postcode}}</span>
+                </div>
+            </div>
+    
+            <div class="order-info">
+                <div class="box">
+                    <span class="header">ORDER</span>
+                    <span class="key">{{ID}}</span>
+                </div>
+                <div class="box">
+                    <span class="header">REFERENCE</span>
+                    <span class="key">{{ref1}}</span>
+                </div>
+                <div class="box">
+                    <span class="header">QUANTITY</span>
+                    <span class="key">{{quantity}}</span>
+                </div>
+                <div class="box">
+                    <span class="header">WEIGHT (Kg)</span>
+                    <span class="key">{{weight}}</span>
+                </div>
+                <div class="box">
+                    <span class="header">VOLUME (Cbm)</span>
+                    <span class="key">{{volume}}</span>
+                </div>
+            </div>
+    
+            <table class="inventory-records">
+                <tr>
+                    <th style="width: 20%;">Code</th>
+                    <th style="width: 30%;">Description</th>
+                    <th style="width: 20%;">Reference</th>
+                    <th style="width: 10%;">Quantity</th>
+                    <th style="width: 20%;">Notes</th>
+                </tr>
+                {{#each inventoryRecords}}
+                <tr>
+                    <td>{{this.code}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.reference}}</td>
+                    <td style="text-align: center;">{{this.quantity}}</td>
+                    <td></td>
+                </tr>
+                {{/each}}
+            </table>
+
+            <table class="additonal-notes">
+                <tr>
+                    <th>Additional Notes</th>
+                </tr>
+                <tr>
+                    <th style="height: 10vh;"></th>
+                </tr>
+            </table>
+        </div>
+    </body>
+    <style>
+        * {
+            font-family: Roboto,Helvetica Neue,sans-serif;
+        }
+    
+        div.wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 15vw;
+        }
+
+        div.company-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.company-info img {
+            height: 50px;
+            width: auto;
+        }
+
+        div.company-info div.text-box span#company-name {
+            font-size: 1.5em;
+        }
+
+        div.card {
+            padding: 1em;
+            padding-top: 0.5em;
+        }
+
+        div.card div.header {
+            font-weight: bold;
+            padding-bottom: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        div.grid-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            row-gap: 0.5em;
+        }
+
+        div.consignee-info {
+            font-size: 1.15em;
+        }
+
+        div.order-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            column-gap: 5vw;
+            grid-column: 1 / span 2;
+            width: 98vw;
+            margin: 2vh auto;
+        }
+
+        div.order-info div.box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        div.order-info div.box span.header {
+            text-align: center;
+            font-size: 0.85em;
+            margin-bottom: 2vh;
+        }
+        
+        div.order-info div.box span.key {
+            text-align: center;
+        }
+
+        table.inventory-records {
+            grid-column: 1 / span 2;
+            border-collapse: collapse;
+            width: 98vw;
+            margin: 2vh auto;
+        }
+
+        table.inventory-records td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table.inventory-records tr:nth-child(even){background-color: #f2f2f2;}
+
+        table.inventory-records th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #ffffff;
+            color:  black;
+        }
+
+        table.additonal-notes {
+            grid-column: 1 / span 2;
+            width: 98vw;
+            margin: 2vh auto;
+        }
+    </style>
+</html>

@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Item</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ion-card *ngIf="!isLoading" (click)="onOpenActionSheet()">
+    <div class="product-card-image-wrapper-container">
+      <div class="product-card-image-wrapper">
+        <img [src]="item.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+      </div>
+    </div>
+    <ion-card-content>
+      <span class="bold">{{item.product.code | uppercase}} ({{item.variant | variant }})</span>
+      <span>{{item.product.title | uppercase}}</span>
+
+      <div class="info-grid margin-bottom margin-top-s" id="details">
+        <span class="key">Owner</span>
+        <span class="key">Warehouse</span>
+        <span class="key">Status</span>
+        <span class="tag" color="primary">{{item.account.name}}</span>
+        <span class="tag" color="primary">{{item.warehouse.name || 'in-transit' | titlecase}}</span>
+        <span class="tag" color="success" *ngIf="item.inventoryID">in stock</span>
+        <span class="tag" color="error" *ngIf="item.deletedAt">deleted</span>
+        <span class="tag" color="error" *ngIf="!item.inventoryID && !item.deletedAt">sold</span>
+      </div>
+
+      <span class="bold grey" *ngIf="item.deletedAt">Deleted On: {{item.deletedAt | date:'EEE, MMM d y HH:mm:ss'}}</span>
+
+      <div id="inventory-section" class="margin-bottom-s" *ngIf="item.inventoryID">
+        <span class="bold large">Inventory</span>
+        <!--TODO: REMOVE HARRODS HARDCODED PATCH-->
+        <!--REMOVE following from below *ngIf="user.email != 'kurtgeiger2022@gmail.com'"-->
+        <div class="flex-split-even margin-top-xs" id="inventory" *ngIf="user.email != 'kurtgeiger2022@gmail.com' && user.iam.inventory.view_cost">
+          <div class="vertical-grid">
+            <span class="key">Cost</span>
+            <span class="value">{{item.inventoryID ? (item.inventory.cost | currency): 'Set Cost'}}</span>
+          </div>
+          <div class="vertical-grid">
+            <span class="key">Market Price</span>
+            <span class="value">{{item.variant.sourceProductVariant ? (item.variant.sourceProductVariant.price | currency) : 'N/A'}}</span>
+          </div>
+
+
+
+        </div>
+        <div class="margin-top-s" id="listings">
+          <div class="listing info-grid" *ngFor="let inventoryListing of accessibleInventoryListings">
+            <span class="key">{{getSaleChannel(inventoryListing.saleChannelID).title | uppercase}}</span>
+            <span class="value">{{inventoryListing.price | currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="order-section" class="margin-bottom-s" *ngIf="!item.inventoryID && !item.deletedAt">
+        <span class="bold large">Sale Order</span>
+        <div class="info-grid margin-top-xs" id="order">
+          <span class="key">Sold On</span>
+          <span class="key">Order ID</span>
+          <span class="key">Order Status</span>
+          <span class="value">{{saleOrder.createdAt | date:'EEE, MMM d y'}}</span>
+          <span class="value">{{saleOrder.ID}}</span>
+          <span class="tag" [attr.color]="saleOrder.completedAt ? 'success' : 'warning' ">{{saleOrder.status.name}}</span>
+        </div>
+      </div>
+
+      <span *ngIf="item.inventory && item.inventory.notes">{{item.inventory.notes}}</span>
+    </ion-card-content>
+    <span class="suffix barcode" *ngIf="item.barcode">{{item.barcode}}</span>
+  </ion-card>
+
+</ion-content>

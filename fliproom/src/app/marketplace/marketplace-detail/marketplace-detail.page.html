@@ -1,0 +1,143 @@
+<ion-header *ngIf="marketplaceListing">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button  mode="md"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title | uppercase}} - #{{marketplaceListing.ID}}</ion-title>
+
+    <ion-buttons slot="end" *ngIf="environment.screenType === 'desktop'">
+      <button mat-button (click)="onMenuButtonClick(button.id)" color="primary" *ngFor="let button of buttons">
+        <mat-icon>{{button.icon}}</mat-icon>
+        {{button.label | titlecase}}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="environment.screenType == 'mobile'">
+    <ion-fab-button>
+      <mat-icon>more_vert</mat-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button *ngFor="let button of buttons" (click)="onMenuButtonClick(button.id)" color="primary">
+        <mat-icon>{{button.icon}}</mat-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="marketplace-listing-detail-con" *ngIf="!isLoading">
+    <div *ngIf="user.ID === marketplaceListing.user.ID || marketplaceListing.status.name !== 'deleted'">
+      <ion-card class="margin-bottom" id="listing-overview">
+        <div class="container">
+          <div class="product-card-image-wrapper-container">
+            <div class="product-card-image-wrapper">
+              <img class="vertically-centered" [src]="marketplaceListing.product.imageReference" onerror="this.src = './assets/images/placeholder.png';" />
+            </div>
+          </div>
+
+          <ion-card-content>
+            <div class="margin-bottom-s">
+              <div class="product-info">
+                <div class="split-info-pair">
+                  <div class="sub-title-small" *ngIf="marketplaceListing.product.code">{{marketplaceListing.product.code}}</div>
+                  <div class="sub-title-small " >{{marketplaceListing.user.account.name}}</div>
+                </div>
+                <div class="title">{{marketplaceListing.variant | variant}}</div>
+                <div class="alt-title">{{marketplaceListing.product.title}}</div>
+              </div>
+
+            </div>
+            <div class="info-pair col-span-3 margin-bottom-s" *ngIf="marketplaceListing.notes" >
+              <div class="title">Notes</div>
+              <div>{{marketplaceListing.notes }}</div>
+            </div>
+            <div class="offer-info" >
+              <div class="tags-list">
+                <span class="tag" id="status"
+                      [attr.color]="marketplaceListing.status.name === 'claimed' ? 'success' : marketplaceListing.status.name === 'deleted' ? 'error' : 'warning'">{{ marketplaceListing.status.name }}</span>
+                <span class="tag" color="primary" *ngFor="let tag of marketplaceListing.tags">{{ tag }}</span>
+              </div>
+              <div class="offer-price flex-centered">
+                <div class="vertically-centered bold">{{(marketplaceListing.price | currency)+ ' X'+ marketplaceListing.quantityRequested}}</div>
+              </div>
+            </div>
+
+          </ion-card-content>
+<!--          <ion-card-content>-->
+<!--            <span class="bold">{{marketplaceListing.product.code | uppercase}} ({{marketplaceListing.variant.name | uppercase}})</span>-->
+<!--            <span class="grey small">{{marketplaceListing.product.title | uppercase}}</span>-->
+<!--            <span class="value col-span-2 margin-top-xs" id="notes-value">{{marketplaceListing.notes}}</span>-->
+<!--            <span class="bold large margin-top-xs" id="price">{{marketplaceListing.price | currency}}</span>-->
+
+<!--            <div class="tags-list margin-top-s">-->
+<!--              <span class="tag" [attr.color]="getStatusClass(marketplaceListing.status.name)">-->
+<!--                {{marketplaceListing.status.name | uppercase}}-->
+<!--              </span>-->
+<!--              <span class="tag" color="primary" *ngFor="let tag of marketplaceListing.tags" >{{tag}}</span>-->
+<!--            </div>-->
+
+<!--          </ion-card-content>-->
+        </div>
+      </ion-card>
+
+      <div class="offers-section">
+        <div class="header">
+          <h2>Offers</h2>
+          <a class="button" (click)="onPlaceAnOffer()" *ngIf="canPlaceOffer()">Make an Offer</a>
+        </div>
+
+        <ion-list>
+          <ion-card id="overview" class="margin-bottom">
+            <ion-card-content>
+              <div class="info-grid">
+                <span class="key">Pending</span>
+                <span class="key">Approved</span>
+                <span class="key">Declined</span>
+                <span class="value">{{marketplaceListing.pendingOffers().length}}</span>
+                <span class="value">{{marketplaceListing.approvedOffers().length}}</span>
+                <span class="value">{{marketplaceListing.declinedOffers().length}}</span>
+              </div>
+              <div class="progress-bar-con margin-top-s">
+                <span class="bold">{{marketplaceListing.quantityClaimed}}/{{marketplaceListing.quantityRequested}}</span>
+                <mat-progress-bar mode="determinate" [value]="getProgress()" color="primary"></mat-progress-bar>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card *ngFor="let offer of sortedOffers" button (click)="onOfferClick(offer)" class="margin-bottom-s">
+            <ion-card-content>
+              <div class="section1">
+                <span class="bold">{{offer.user.account.name | uppercase }} </span>
+                <span class="bold">x{{offer.quantity}} • {{ offer.price | currency }}</span>
+                <span class="margin-top-s">{{offer.notes}}</span>
+              </div>
+              <div class="section2">
+                <span class="grey bold small" id="date">{{ offer.createdAt | date: 'd/M/yy hh:mm a' }}</span>
+                <div class="tag-wrapper">
+                  <span class="tag" [attr.color]="offer.status.name === 'approved' ? 'success' : offer.status.name === 'declined' ? 'error' : offer.status.name === 'deleted' ? 'error' : 'warning'">
+                    {{ offer.status.name }}
+                  </span>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+          <div class="no-data-con" *ngIf="marketplaceListing.marketplaceOffers.length === 0">
+            <p>No offers yet</p>
+          </div>
+        </ion-list>
+      </div>
+    </div>
+
+    <div
+      *ngIf="user.ID !== marketplaceListing.user.ID && marketplaceListing.status.name === 'deleted'"
+      class="no-data-con"
+    >
+      <p>Sorry! The listing has been deleted.</p>
+    </div>
+  </div>
+</ion-content>

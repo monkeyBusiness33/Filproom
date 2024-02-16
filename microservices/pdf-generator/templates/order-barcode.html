@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+</head>
+<html>
+    <body>
+        <div class="barcode-box">
+            <div class="box" id="logo">
+                <img id="company-logo" src="{{companyLogoUrl}}" alt="">
+            </div>
+            
+            <div class="box" id="product">
+                <p class="field-box">
+                    <span class="key">PRODUCT CODE</span>
+                    <span class="value">{{productCode}}</span>
+                </p>
+            </div>
+
+            <div class="box" id="principal-reference">
+                <p class="field-box">
+                    <span class="key">{{reference1.name}}</span>
+                    <span class="value">{{reference1.value}}</span>
+                </p>
+            </div>
+
+            <div class="box" id="extra-references">
+                <p class="field-box inline">
+                    <span class="key">{{reference2.name}}</span>
+                    <span class="value">{{reference2.value}}</span>
+                </p>
+
+                <p class="field-box" id="item-counter">
+                    <span class="key">ITEM</span>
+                    <span class="value">{{counter}}</span>
+                </p>
+
+                <p class="field-box inline">
+                    <span class="key">{{reference3.name}}</span>
+                    <span class="value">{{reference3.value}}</span>
+                </p>
+
+                <p class="field-box inline">
+                    <span class="key">{{reference4.name}}</span>
+                    <span class="value">{{reference4.value}}</span>
+                </p>
+
+            </div>
+
+            <div class="box" id="barcode">
+                <img src="{{barcodeImgUrl}}" alt="">
+                <span>{{barcodeValue}}</span>
+            </div>
+        </div>
+    </body>
+    <style>
+        * {
+            font-family: Roboto,Helvetica Neue,sans-serif;
+        }
+
+        p.field-box {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        p.field-box span.key {
+            font-size: 6px;
+        }
+
+        p.field-box span.value {
+            font-size: 20px;
+        }
+
+        body {
+            height: 88vh;
+            width: 100vw;
+        }
+
+        div.barcode-box {
+            display: grid;
+            grid-template-areas: 'logo product'
+                                 'principal-reference principal-reference'
+                                 'extra-references extra-references'
+                                 'barcode barcode';
+            height: 80vh;
+            width: 90vw;
+            margin: 10vh 0 0 5vw;
+            row-gap: 1em;
+        }
+
+        div.box#logo {
+            grid-area: logo;
+        }
+        
+        div.box#logo img {
+            height: 33px;
+            width: auto;
+            margin: auto;
+        }
+
+        div.box#product {
+            grid-area: product;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* PRINCIPAL REFERENCE */
+        div.box#principal-reference {
+            grid-area: principal-reference;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.box#principal-reference p.field-box span.value {
+            font-size: 30px;
+        }
+
+        /* EXTRA REFERENCES */
+        div.box#extra-references {
+            grid-area: extra-references;
+            display: grid;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-columns: 9fr 1fr;
+        }
+
+        div.box#extra-references p.field-box.inline {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        div.box#extra-references p.field-box.inline span.key {
+            width: 20vw;
+            font-size: 7px;
+            color: grey;
+            font-style: italic;
+        }
+
+        div.box#extra-references p.field-box.inline span.value {
+            font-size: 14px;
+        }
+
+        div.box#extra-references span#counter {
+            font-weight: bold;
+        }
+
+        div.box#extra-references p.field-box#item-counter {
+            display: flex;
+            justify-content: center;
+            grid-row: 1 / span 3;
+            grid-column: 2;
+        }
+
+        div.box#extra-references p.field-box#item-counter span.key {
+            width: auto;
+        }
+
+        div.box#extra-references p.field-box#item-counter span.value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+
+
+        /* BARCODE */
+
+        div.box#barcode {
+            grid-area: barcode;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        div.box#barcode img {
+            height: 50px;
+            width: auto;
+            margin: auto;
+        }
+
+        div.box#barcode span {
+            display: inline-block;
+            font-size: 10px;
+        }
+        
+    </style>
+</html>

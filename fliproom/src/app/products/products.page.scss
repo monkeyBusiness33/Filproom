@@ -1,0 +1,92 @@
+::ng-deep fliproom-list.private-product-list ion-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2em;
+
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.img-wrapper {
+    height: 100px;
+
+    img {
+      height: 100%;
+      width: auto;
+      margin: auto;
+      display: block;
+    }
+  }
+
+}
+
+::ng-deep fliproom-list.public-product-list ion-list {
+
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    div.title-container {
+      margin-bottom: .25em;
+      .public-title {
+          font-size: .85em;
+          font-weight: bold;
+          max-width: 75%;
+        }
+        .public-days {
+          font-size: .75em;
+          font-style: italic;
+          color: var(--ion-color-grey);
+        }
+    }
+    div.details-container {
+      margin-bottom: .25em;
+      .public-subtitle {
+          font-size: .8em;
+        }
+        .public-description {
+          font-size: .8em;
+          color: var(--ion-color-grey);
+        }
+    }
+    .public-score {
+      mat-icon {
+        font-size: .9em;
+        height: .9em;
+        width: 1em;
+      }
+    }
+  }
+
+  div.img-wrapper {
+    height: 100px;
+
+    img {
+      height: 100%;
+      width: auto;
+      margin: auto;
+      display: block;
+    }
+  }
+
+}
+
+td {
+  .img-wrapper img {
+    max-height: 2em;
+  }
+}
+.empty-list-placeholder-action{
+  display: flex;
+  justify-content: center;
+  & > * {
+    display: flex;
+    justify-content: center;
+  }
+}
+.empty-list-placeholder-desktop-action{
+  margin-top: -40vh;
+  @extend .empty-list-placeholder-action
+}

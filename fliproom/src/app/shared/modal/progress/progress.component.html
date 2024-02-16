@@ -1,0 +1,16 @@
+<h1 class="progress-title" mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+  <p class="progress-subtitle">
+    <span [innerHTML]="data.subtitle"></span>
+    <span class="margin-left-xs" *ngIf="data.counter">{{seconds}}s</span>
+  </p>
+  <div class="progress-bar">
+    <mat-progress-bar *ngIf="data.status == 'loading'" mode="indeterminate" class="mat-progress-bar-buffer margin-bottom-xs"></mat-progress-bar>
+    <mat-progress-bar *ngIf="data.status !== 'loading'" mode="determinate" value="100" class="mat-progress-bar-buffer" [ngClass]="{'success': data.status == 'complete', 'error': data.status == 'error'}"></mat-progress-bar>
+  </div>
+
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="data.cancel" mat-stroked-button  test-id="cancel" (click)="onCancel()">{{data.cancel}}</button>
+  <button *ngIf="data.confirm" mat-flat-button     test-id="confirm" (click)="onConfirm()" color="primary" >{{data.confirm}}</button>
+</div>

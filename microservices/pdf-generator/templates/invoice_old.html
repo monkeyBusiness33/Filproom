@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="top-section">
+        <img id="account-logo" src="{{accountLogo}}" alt="">
+        <div class="account-info">
+            <span class="uppercase">{{accountName}}</span>
+            <span>{{VATNumber}}</span>
+            <span class="uppercase">{{accountAddress}}</span>
+        </div>
+    </div>
+    <div class="invoice-info">
+        <div class="customer">
+            <span class="bold">Billed To</span>
+            <p>
+                <span class="uppercase">{{customerName}}</span>
+                <br>
+                <span class="uppercase">{{customerAddress}}</span>
+            </p>
+        </div>
+
+        <div class="invoice">
+            <span class="bold">Invoice Number</span>
+            <span class="value">{{invoiceID}}</span>
+    
+            <span class="bold" id="invoiceDate">Invoice Date</span>
+            <span class="value">{{invoiceDate}}</span>
+        </div>
+
+    </div>
+    <div class="line-items">
+        <div class="header">Description</div>
+        <div class="header">Amount</div>
+        {{#each lineItems}}
+        <div class="row">{{description}}</div>
+        <div class="row" id="amount">{{amount}}</div>
+        {{/each}}
+    </div>
+
+    <div class="checkout">
+        <span class="bold">Subtotal</span>            <span class="value">{{currency}} {{subTotal}}</span>
+        <span class="bold">VAT ({{VATRate}} %)</span> <span class="value">{{currency}} {{VATAmount}}</span>
+        <span id="total">{{currency}} {{totalAmount}}</span>
+    </div>
+</body>
+<style>
+    body {
+        width: 80%;
+        margin: auto;
+        margin-top: 2em;
+    }
+
+    img {
+        height: 5vh;
+    }
+
+    div.top-section {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    div.top-section div.account-info {
+        width: 30vw;
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.top-section div.account-info span {
+        margin-bottom: 0.5em;
+    }
+
+    div.invoice-info {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        margin-top: 5em;
+        width: 50vw;
+        column-gap: 2em;
+    }
+
+    div.customer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.customer p {
+        margin: 0;
+    }
+
+    div.invoice {
+        display: grid;
+    }
+
+    span#invoiceDate {
+        margin-top: 2em;
+    }
+
+    div.line-items {
+        display: grid;
+        grid-template-columns: 9fr 1fr;
+        margin-top: 5em;
+        border-top: 2px solid black;
+        padding-top: 1em;
+        width: 80vw;
+    }
+
+    div.line-items div.header {
+        font-weight: bold;
+        padding-bottom: 2em;
+    }
+
+    div.line-items div.row {
+        padding-top: 2em;
+        padding-bottom: 1em;
+        border-bottom: 1px solid grey;
+    }
+
+    div#amount {
+        text-align: center;
+    }
+
+    div.checkout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 25vw;
+        margin: auto;
+        margin-top: 5em;
+        margin-right: 0;
+    }
+
+    div.checkout span.value {
+        text-align: right;
+    }
+
+    div.checkout span#total {
+        font-size: 26px;
+        grid-column: 1 / span 2;
+        margin-top: 1.5em;
+        text-align: right;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .uppercase {
+        text-transform: uppercase;
+    }
+    
+</style>
+</html>

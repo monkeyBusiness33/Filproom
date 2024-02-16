@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button mat-button (click)="onBack()"  color="primary"> <mat-icon>arrow_back</mat-icon></button>
+    </ion-buttons>
+    <ion-title>{{'Create Stock-check'}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <div class="mobile">
+
+  <form [formGroup]="jobForm" class="margin-top" >
+    <mat-form-field appearance="fill" test-id="warehouse-select">
+      <mat-label>{{'Warehouse' | titlecase}}</mat-label>
+      <mat-select formControlName="warehouseID" >
+        <mat-option [value]="warehouse.ID" *ngFor="let warehouse of user.account.warehouses">{{warehouse.name | uppercase}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" >
+      <mat-label>{{'Notes' | titlecase}}</mat-label>
+      <input matInput id="notes"  test-id="notes" type="text" autocomplete="null" formControlName="notes"  maxlength=500>
+    </mat-form-field>
+
+  </form>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <button  mat-flat-button color="primary" [disabled] = '!jobForm.valid || isLoading' (click)="onSubmit()" test-id="submit" [class.loading]="isLoading">Create</button>
+</ion-footer>

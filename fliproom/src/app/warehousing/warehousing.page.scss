@@ -1,0 +1,29 @@
+ion-list {
+    display: grid;
+    row-gap: 1em;
+    max-width: 600px;
+    margin: auto;
+
+    ion-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        span.icon {
+            font-size: 2.5em;
+            color: var(--ion-color-grey-light);
+        }
+    }
+
+    ion-card#inbound {
+        span.icon {
+            transform: rotateZ(270deg);
+        }
+    }
+
+    ion-card#outbound {
+        span.icon {
+            transform: rotateZ(90deg);
+        }
+    }
+}

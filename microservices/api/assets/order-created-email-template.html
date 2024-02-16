@@ -1,0 +1,58 @@
+<div id="wrapper">
+    <div id="card" style="width: 700px; margin: auto;">
+        <img src="{{accountLogoUrl}}" alt="" style="width: 250px; object-fit: fill; margin-bottom: 2em;">
+        
+        <div id="content" style="font-size: 1.25em">
+            <p id="message" style="margin-bottom: 2em;">{{message}}</p>
+            <table style="margin-bottom: 2em; width: 100%; text-align: left;">
+                <tr>
+                    <td style="font-weight: bold;">Order ID</td><td>{{order-number}}</td>
+                    <td style="font-weight: bold; padding-left: 2em;">Order Ref</td><td>{{order-ref}}</td>
+                </tr>
+            </table>
+            <table style="margin-bottom: 2em; width: 100%;">
+                <tr>
+                    <td class="vertical" style="text-align: center;">
+                        <span class="key" style="display: block;">Quantity</span>
+                        <span class="value" style="display: block; font-weight: bold;">{{quantity}}</span>
+                    </td>
+                    <td class="vertical" style="text-align: center;">
+                        <span class="key" style="display: block;">Weight (Kg)</span>
+                        <span class="value" style="display: block; font-weight: bold;">{{weight}}</span>
+                    </td>
+                    <td class="vertical" style="text-align: center;">
+                        <span class="key" style="display: block;">Volume (Cbm)</span>
+                        <span class="value" style="display: block; font-weight: bold;">{{volume}}</span>
+                    </td>
+                    <td class="vertical" style="text-align: center;">
+                        <span class="key" style="display: block;">Price</span>
+                        <span class="value"  style="display: block; font-weight: bold;">{{price}}</span>
+                    </td> 
+                </tr>
+            </table>
+
+            <table style="margin-bottom: 3em; width: 100%; text-align: left;">
+                <tr>
+                    <th>Account</th>
+                    <th>Item Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                </tr>
+                {{#details}}
+                <tr>
+                    <td style="padding-left: 0;">{{oliAccount}}</td>
+                    <td style="padding-left: 0; overflow:hidden; max-width: 20vw; ">{{itemDescription}}</td> 
+                    <td style="padding-left: 0;">{{qty}}</td>
+                    <td style="padding-left: 0;">{{unitPrice}}</td>
+                </tr>
+                {{/details}}
+            </table>
+        </div>
+        
+        <a id="button" href="{{orderURL}}" target="_blank" style="background-color: #445ec1; padding: 1em 3em; border-radius: 0.25em; color: white; text-decoration: none; display: block; width: 100px; text-align: center; letter-spacing: 0.05em; font-family: 'Roboto', sans-serif; margin: auto;">
+            View Order
+        </a>
+
+        <img src="https://app.fliproom.io/assets/fliproom_logo-text.png" alt="" style="width: 150px; margin: auto; margin-top: 2em; margin-right: 0; display: block;">
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="txFormData.type == 'purchase'">Add Purchase Transaction</ion-title>
+    <ion-title *ngIf="txFormData.type == 'cancellation fee'">Add Cancellation Fee</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!isLoading">
+  <form [formGroup]="txForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Amount ({{user.account.currency | uppercase}})</mat-label>
+      <input matInput type="number" autocomplete="null" formControlName="grossAmount" autocomplete="off">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Payment Reference</mat-label>
+      <input matInput type="text" autocomplete="null" formControlName="reference" autocomplete="off">
+    </mat-form-field>
+
+    <div class="mat-checkbox margin-bottom-s">
+      <mat-checkbox formControlName="setAsPaid">
+          Set Transaction as Paid
+      </mat-checkbox>
+    </div>
+
+    <mat-form-field appearance="fill" *ngIf="txFormData.setAsPaid">
+      <mat-label>Payment Method</mat-label>
+      <mat-select formControlName="paymentMethod">
+        <mat-option [value]="paymentMethod" *ngFor="let paymentMethod of paymentMethodsAvailable">{{paymentMethod | titlecase}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <button mat-flat-button color="primary" (click)="onCreate()" [class.loading]="isLoading" [disabled]="!txForm.valid" test-id="submit">Create</button>
+</ion-footer>

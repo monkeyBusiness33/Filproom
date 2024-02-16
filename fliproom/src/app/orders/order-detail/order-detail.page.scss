@@ -1,0 +1,25 @@
+@media screen and (min-width: 900px) {
+  div.wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 2em;
+
+    div.details-section {
+      div.info-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      }
+
+      span.value {
+        grid-row: 2 / span 1;
+      }
+    }
+
+    div.items-section {
+      grid-row: 2 / span 2;
+    }
+  }
+}
+
+th.mat-header-cell {
+  padding-right: 1em;
+}

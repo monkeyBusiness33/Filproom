@@ -1,0 +1,7 @@
+ion-label {
+    padding-right: 1em;
+}
+
+ion-card ion-list ion-item::part(native) {
+  --background: var(--ion-card-background);
+}

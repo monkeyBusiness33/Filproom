@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button mat-button (click)="onBack()"> <mat-icon>arrow_back</mat-icon></button>
+    </ion-buttons>
+    <ion-title>{{data.inventoryRecord.ID ? 'Edit Inventory #' + data.inventoryRecord.ID : 'Create Inventory'}}</ion-title>
+    <ion-buttons slot="end">
+
+      <ion-button *ngIf="formOptions.length > 0"  test-id="form-options" (click)="onOptionsClick()">
+        <mat-icon>more_vert</mat-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <!--Inventory Product Overview Card-->
+    <ion-card class="inventory-product-overview-card margin-bottom">
+      <ion-card-content>
+        <div class="product-header margin-bottom-s">
+          <div class="product-card-image-wrapper margin-right-s">
+            <img [src]="product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <div class="product-info">
+            <div class="bold">{{product.title | titlecase}} </div>
+            <div class="bold grey">{{product.code | uppercase}} </div>
+            <div>{{inventoryRecord.variant | variant | uppercase}} </div>
+          </div>
+        </div>
+        <div class="three-cell-grid margin-bottom-s" *ngIf="isFormInitialized">
+          <div>
+            <div>Location</div>
+            <div class="bold">{{inventoryRecord.warehouse.name | uppercase}}</div>
+          </div>
+          <div>
+            <div>Market Price</div>
+            <div class="bold">
+              {{inventoryRecord.variant?.sourceProductVariant?.price ? ((inventoryRecord.variant?.sourceProductVariant?.price * utilsService.getExchangeRate('gbp', user.account.currency)) | currency) : "N/A"}}
+            </div>
+          </div>
+          <div>
+            <div>Incoming Qty</div>
+            <div class="bold">{{ inventoryRecord.quantityIncoming }}</div>
+          </div>
+        </div>
+        <div class="tags-list">
+          <span class="tag" color="primary" *ngIf="inventoryRecord.account.ID !== user.account.ID">{{ inventoryRecord.account.name }} #{{ inventoryRecord.account.ID }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <app-inventory-record-form [displayMode]="'standard'"  [standalone] = 'true' [inventoryRecord]="inventoryRecord" [product]="product"></app-inventory-record-form>
+
+
+
+  </div>
+</ion-content>
+<ion-footer>
+  <button *ngIf="isFormInitialized"  mat-flat-button color="primary"  [disabled] = '!inventoryRecordFormComponent.inventoryForm.valid || isLoadingAction'  (click)="onSave()" test-id="save" [class.loading]="isLoadingAction">Save</button>
+</ion-footer>
+

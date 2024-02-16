@@ -1,0 +1,186 @@
+div.mobile {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    div.details-section {
+        a.button {
+            // fix them on the right
+            margin: auto;
+            margin-right: 0;
+        }
+    }
+
+    div.items-section {
+        flex-grow: 1;
+    }
+
+    div.buttons {
+        display: flex;
+        justify-content: space-evenly;
+
+        button {
+            width: 35vw;
+        }
+    }
+
+    div.section-go-to-payment button {
+        width: 100%;
+    }
+
+}
+
+
+
+@media screen and (min-width: 900px) {
+    div.desktop {
+        display: grid;
+        column-gap: 3em;
+        grid-template-columns: 2fr 1fr;
+        height: 100%;
+
+        ::ng-deep fliproom-searchbar div.mat-form-field-wrapper {
+            padding-bottom: 0;
+        }
+
+        div.item-selection {
+            div.toolsbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                fliproom-searchbar {
+                    width: 30vw;
+                }
+            }
+
+            div.selection {
+                ion-card#product-selected {
+                    width: 20em;
+                }
+
+                div#variants-list.tags-list {
+                    flex-wrap: wrap;
+                }
+
+                ion-list#items-list {
+                    display: flex;
+                    flex-flow: wrap;
+
+                    ion-card {
+                        display: flex;
+                        flex-direction: column;
+                        height: fit-content;
+                        width: 25vh;
+
+                        ion-card-content {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
+
+                p#source-item-text {
+                    text-align: center;
+                }
+            }
+        }
+
+        div.details-section {
+            ion-card {
+                height: 100%;
+            }
+
+
+            ion-card-content {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                div.overview-text {
+                    text-align: center;
+                }
+            }
+
+            div.info-grid a.button {
+                justify-content: flex-end;
+            }
+
+            div.basket-content {
+                flex-grow: 1;
+                padding: 1em;
+                margin-top: 2em;
+                margin-bottom: 2em;
+                border-top: 1px solid var(--ion-color-grey-light);
+                border-bottom: 1px solid var(--ion-color-grey-light);
+                overflow-y: scroll;
+                height: 0vh; // this allow to overflow-y when too many items while keeping 100vh
+
+                p.placeholder {
+                    text-align: center;
+                }
+
+                div.basket-items {
+                    display: flex;
+                    align-items: center;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+
+                    div.info {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+                    }
+                }
+
+            }
+
+            div.payment-summary-section {
+                div.info-grid {
+                    span.value {
+                        text-align: right;
+                    }
+                }
+            }
+
+
+            div.payment-methods-grid {
+                display: flex;
+
+                ion-card {
+                    width: 100%;
+
+                    &.selected {
+                        background-color: var(--ion-color-primary);
+                        color: var(--ion-color-primary-contrast);
+                    }
+
+                    ion-card-content {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+            }
+
+            div.pay-button button {
+                width: 100%;
+            }
+        }
+
+    }
+
+    .notes-wrapper {
+        display: flex;
+
+        .notes {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+}

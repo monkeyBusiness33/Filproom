@@ -1,0 +1,175 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="help" (click)="onOpenHelp()">
+      Listings
+    </ion-title>
+  </ion-toolbar>
+  <ion-segment (ionChange)="onSegmentChanged($event)" [value]="saleChannel"  [scrollable]="true" mode="ios" *ngIf="tabs.length > 1" >
+    <ion-segment-button *ngFor="let tab of tabs" [value]="tab">
+      <ion-label>{{tab | titlecase}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <div class="mobile" *ngIf="environment.screenType == 'mobile'">
+    <fliproom-list class="listings-list"  #fliproomList (onDataRequest)="onDataRequest($event)"
+    [dataRequested]="dataRequested" (onRowClick)="onRowClick($event)" [emptyListPlaceholder]="'No listing records available'"
+    [placeholderButtonText]="'Start to sell your products'" (onPlaceholderButtonClick)="onButtonClick('add-inventory')"
+    >
+      <ng-template #itemList let-element>
+        <div class="wrapper">
+          <div class="product-card-image-wrapper-sm">
+            <img [src]="element.product.imageReference" onerror="this.src = './assets/images/placeholder.png';"/>
+          </div>
+          <ion-card-content>
+            <div class="header">
+              <span class="title">{{element.product.code | uppercase}} - {{element.product.title | titlecase}}</span>
+              <span class="subtitle">{{element.variant.name | uppercase}}</span>
+            </div>
+            <div class="body margin-top-xs margin-bottom-xs">
+              <span class="grey margin-bottom-xs">{{(element.inventory.warehouse?.name || 'in-transit') | titlecase}} {{(element.account.ID != user.account.ID ? (' • ' + element.account.name) : '') | titlecase}}</span>
+              <div class="price-box margin-bottom-xs">
+                <span class="margin-right-xs" *ngIf="user.iam.inventory.view_cost">
+                  <span class="bold">Cost: </span>
+                  <span class="amount">
+                    {{element.inventory.cost | currency}}
+                  </span>
+                </span>
+                <span class="margin-right-xs">
+                  <span class="bold">Payout: </span>
+                  <span class="amount">
+                    {{element.payout | currency}}
+                  </span>
+                </span>
+                <span class="margin-right-xs">
+                  <span class="bold">Price: </span>
+                  <span class="amount" [ngClass]="{'success': element.isActiveListing, 'warning': !element.isActiveListing}">
+                    {{element.price | currency}}
+                  </span>
+                </span>
+              </div>
+              <div class="tags">
+                <span class="tag" color="primary" *ngIf="element.inventory.virtual">virtual</span>
+                <span class="tag" [attr.color]="element.statusColor" *ngIf="element.status != 'active'">{{element.status}}</span>
+              </div>
+            </div>
+          </ion-card-content>
+        </div>
+        <span class="suffix" *ngIf="!element.isActiveListing">
+          <span class="bold">This listing has been undercut!</span>
+        </span>
+      </ng-template>
+    </fliproom-list>
+  </div>
+
+  <div class="desktop page-content" *ngIf="environment.screenType == 'desktop'">
+    <table-wrapper #tableWrapper [configs]=tableConfigs (onDataRequest)="onDataRequest($event)"
+      (onRowClick)="onRowClick($event)" [dataRequested]="dataRequested" matSort>
+      <ng-container matColumnDef="product.imageReference">
+        <th mat-header-cell *matHeaderCellDef> Image </th>
+        <td mat-cell *matCellDef="let element" class="image">
+          <img [src]="element.product.imageReference" alt="" onerror="this.src = './assets/images/placeholder.png';">
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="product.code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+        <td mat-cell *matCellDef="let element"> {{element.product.code | uppercase}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="product.title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Title</th>
+        <td mat-cell *matCellDef="let element"> {{element.product.title | uppercase}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="variant.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant </th>
+        <td mat-cell *matCellDef="let element"> {{element.variant | variant}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="account.ID">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account ID</th>
+        <td mat-cell *matCellDef="let element"> {{element.account.ID}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isActiveListing">
+        <th mat-header-cell *matHeaderCellDef class="image">Best Price</th>
+        <td mat-cell *matCellDef="let element" >
+          <span class="tag" [attr.color]="element.isActiveListing ? 'success' : 'warning'" > {{element.isActiveListing}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="account.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
+        <td mat-cell *matCellDef="let element"> {{element.account.name | uppercase}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="inventory.warehouse.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Inventory Location </th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="!element.inventory.virtual">{{(element.inventory.warehouse?.name || 'transit') | uppercase}}</span>
+          <span class="tag" *ngIf="element.inventory.virtual" color="primary">VIRTUAL</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="inventory.quantity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total QTY </th>
+        <td mat-cell *matCellDef="let element"> {{element.inventory.quantity}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="inventory.quantityAtHand">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Location QTY </th>
+        <td mat-cell *matCellDef="let element"> {{element.inventory.quantityAtHand}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="inventory.quantityIncoming">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Incoming QTY </th>
+        <td mat-cell *matCellDef="let element"> {{element.inventory.quantityIncoming}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="inventory.notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes </th>
+        <td mat-cell *matCellDef="let element"> {{element.inventory.notes}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="accountID">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> AccountID </th>
+        <td mat-cell *matCellDef="let element"> {{element.accountID}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="inventory.cost">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cost</th>
+        <td mat-cell *matCellDef="let element">{{element.inventory.cost | currency}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="payout">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Payout</th>
+        <td mat-cell *matCellDef="let element">{{element.payout | currency}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Listing Price</th>
+        <td mat-cell *matCellDef="let element">{{element.price | currency}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="marketOracle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Market Oracle </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="tag" color="success" *ngIf="element.priceSourceName"> ON </span>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element" test-id="test-tags">
+          <span class="tag" [attr.color]="element.status == 'active' ? 'success' : 'warning'">{{(element.status) | uppercase}} </span>
+        </td>
+      </ng-container>
+
+    </table-wrapper>
+  </div>
+</ion-content>

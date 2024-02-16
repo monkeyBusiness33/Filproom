@@ -1,0 +1,32 @@
+div.list-item {
+    display: flex;
+    border-radius: var(--ion-border-radius);
+    max-height: 80vh;
+    overflow-y: scroll;
+
+    div.section1,div.section2,div.section3 {
+        display: flex;
+        flex-direction: column;
+    } 
+    
+    div.section1 {
+        text-align: center;
+    }
+    
+    div.section2 {
+        flex-grow: 1;
+    }
+    
+    div.section1, div.section3 {
+        justify-content: center;
+        align-items: center;
+    }
+
+    div.section3 span.tag {
+        margin: 0;
+    }
+}
+
+div.list-item:hover {
+    background-color: var(--ion-color-grey-light);
+}

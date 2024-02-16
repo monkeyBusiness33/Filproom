@@ -1,0 +1,106 @@
+<ion-split-pane contentId="main" when="(min-width: 901px)">
+  <ion-menu side="start" menuId="first" [type]="menuType" contentId="main">
+    <div class="wrapper">
+
+      <div class="account margin-bottom-l">
+        <div id="account-img-placeholder" *ngIf="!user.account.logo">
+          {{user.account.name[0] | uppercase}}
+        </div>
+        <img id="account-img" [src]="user.account.logoUrl" *ngIf="user.account.logo">
+        <div class="info" *ngIf="env.screenType == 'mobile'">
+          <span class="account-name">{{user.account.name | titlecase}}</span>
+          <span class="user-info small">{{user.fullName | titlecase}} ({{user.role.name | titlecase}})</span>
+        </div>
+      </div>
+
+      <div class="list">
+        <!--
+          <a class="button" id="marketplace" [ngClass]="{'selected': selectedOption == 'marketplace'}" [routerLink]="['/marketplace']" *ngIf="user.account.ID != 3 && !user.account.isConsignor " (click)="onButtonClick('marketplace')">
+            <span class="material-symbols-outlined" translate="no">compare_arrows</span>
+            <span class="text">Marketplace</span>
+          </a>
+        -->
+        <a class="button" id="dashboard" [ngClass]="{'selected': selectedOption == 'dashboard'}" [routerLink]="['/dashboard']" (click)="onButtonClick('dashboard')">
+          <span class="material-symbols-outlined" translate="no">dashboard</span>
+          <span class="text">Dashboard</span>
+        </a>
+
+        <a class="button" id="listings" *ngIf="user.iam.inventory.view" [ngClass]="{'selected': selectedOption == 'listings'}" [routerLink]="['/listings']" (click)="onButtonClick('listings')">
+          <span class="material-symbols-outlined" translate="no">checklist</span>
+          <span class="text">Listings</span>
+        </a>
+
+        <a class="button" id="inventory" *ngIf="user.iam.inventory.view" [ngClass]="{'selected': selectedOption == 'inventory'}" [routerLink]="['/inventory']" [queryParams]="{type: 'stock'}" (click)="onButtonClick('inventory')">
+          <span class="material-symbols-outlined" translate="no">inventory_2</span>
+          <span class="text">Inventory</span>
+        </a>
+
+        <!--   REMOVED:     -->
+        <a class="button" id="inbound" *ngIf="user.iam.purchase.view"  [ngClass]="{'selected': selectedOption == 'inbound'}" [routerLink]="['/orders']" [queryParams]="{type: 'inbound', status: 'all'}" (click)="onButtonClick('inbound')">
+          <span class="material-symbols-outlined" translate="no">archive</span>
+          <span class="text">Purchases</span>
+        </a>
+
+        <a class="button" id="outbound" [ngClass]="{'selected': selectedOption == 'outbound'}" [routerLink]="['/orders']" [queryParams]="{type: 'outbound', status: 'all'}"  (click)="onButtonClick('outbound')">
+          <span class="material-symbols-outlined" translate="no" translate="no">sell</span>
+          <span class="text">Sales</span>
+        </a>
+
+        <a class="button" id="pos"  *ngIf="user.iam.order.create" [ngClass]="{'selected': selectedOption == 'pos'}" [routerLink]="['/orders/create/checkout']"  (click)="onButtonClick('pos')">
+          <span class="material-symbols-outlined" translate="no">store</span>
+          <span class="text">POS</span>
+        </a>
+
+        <a class="button" id="transfers" *ngIf="user.iam.service.transfer" [ngClass]="{'selected': selectedOption == 'transfers'}" [routerLink]="['/transfers']" [queryParams]="{status: 'all'}"  (click)="onButtonClick('transfers')">
+          <span class="material-symbols-outlined" translate="no">swap_horiz</span>
+          <span class="text">Transfers</span>
+        </a>
+
+        <a class="button" id="payments" *ngIf="user.iam.transaction.view" [ngClass]="{'selected': selectedOption == 'payments'}" [routerLink]="['/payments']"  (click)="onButtonClick('payments')">
+          <span class="material-symbols-outlined" translate="no">contactless</span>
+          <span class="text">Payments</span>
+        </a>
+
+        <a class="button" id="warehousing" *ngIf="user.iam.service.warehousing" [ngClass]="{'selected': selectedOption == 'warehousing'}" [routerLink]="['/warehousing']"  (click)="onButtonClick('warehousing')">
+          <span class="material-symbols-outlined" translate="no">forklift</span>
+          <span class="text">Warehousing</span>
+        </a>
+
+        <a class="button" id="search" [ngClass]="{'selected': selectedOption == 'search'}" [routerLink]="['/warehousing/item-search']"  (click)="onButtonClick('search')">
+          <span class="material-symbols-outlined" translate="no">search</span>
+          <span class="text">Search</span>
+        </a>
+
+        <a class="button" id="reports" *ngIf="env.screenType == 'desktop' && user.iam.report.view" [ngClass]="{'selected': selectedOption == 'reports'}" [routerLink]="['/reports']"  (click)="onButtonClick('reports')">
+          <span class="material-symbols-outlined" translate="no">pie_chart</span>
+          <span class="text">Reports</span>
+        </a>
+
+        <a class="button" id="products" *ngIf="user.iam.product.view" [ngClass]="{'selected': selectedOption == 'products'}"  [routerLink]="['/products']"  (click)="onButtonClick('products')">
+          <span class="material-symbols-outlined" translate="no">dataset</span>
+          <span class="text">Products</span>
+        </a>
+
+        <a class="button" id="integrations" [ngClass]="{'selected': selectedOption == 'integrations'}"  [routerLink]="['/integrations']"  (click)="onButtonClick('integrations')">
+          <!--<span class="new-feature">NEW!</span>-->
+          <span class="material-symbols-outlined" translate="no">call_merge</span>
+          <span class="text">Integrations</span>
+        </a>
+
+        <a class="button" id="settings" [ngClass]="{'selected': selectedOption == 'settings'}" [routerLink]="['/settings']"  (click)="onButtonClick('settings')">
+          <span class="material-symbols-outlined" translate="no">settings</span>
+          <span class="text">Settings</span>
+        </a>
+      </div>
+
+      <div class="brand">
+        <img *ngIf="env.screenType == 'desktop'" src="assets/fliproom_logo_white.svg" alt="">
+        <img *ngIf="env.screenType == 'mobile'" src="assets/fliproom_logo-text_white.svg" alt="">
+
+        <span>{{env.appVersion}}</span>
+      </div>
+    </div>
+  </ion-menu>
+  <ion-router-outlet id="main"></ion-router-outlet>
+
+</ion-split-pane>

@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button  mode="md"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="job" >Stock-take #{{jobID}}</ion-title>
+    <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop'">
+      <button mat-button (click)="onButtonClick(button.id)" color="primary" *ngFor="let button of buttons"
+              [id]="button.id">
+        <mat-icon>{{button.icon}}</mat-icon>
+        {{button.label | titlecase}}</button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <div class="loading-placeholder" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div class="wrapper" *ngIf="job">
+    <div class="details-section">
+      <div class="header">
+        <h2>Details</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid">
+            <span class="key">ID</span>     <span class="value">{{job.ID }}</span>
+            <span class="key">Created By</span>       <span class="value">{{(job.user.name | uppercase) + (job.createdAt | date:' dd/MM/yyyy h:mm:ss a')}}</span>
+            <span class="key ">Started At</span>       <span class="value">{{(job.startedAt| date:' dd/MM/yyyy h:mm:ss a' )|| 'N/A'}}</span>
+            <span class="key ">Completed At</span>       <span class="value">{{(job.completedAt | date:'dd/MM/yyyy h:mm:ss a') || 'N/A'}}</span>
+            <span class="key ">Quantity</span>       <span class="value">{{job.quantity}}</span>
+          </div>
+          <div>
+            <span class="key" *ngIf="job.notes">Notes</span>
+          </div>
+          <div>
+            <span *ngIf="job.notes" class="value">{{job.notes}}</span>
+          </div>
+          <div class="chips-list margin-top-s">
+            <span class="tag" [attr.color]="job.completedAt ? 'success' : 'warning'">{{job.status.name}}</span>
+            <span class="tag" color="primary">{{job.warehouse.name}}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="details-section">
+      <div class="header">
+        <h2>Checks</h2>
+      </div>
+      <div class="checks-content button">
+        <ion-card  (click)="openJobLineItemViewer('confirm')" id="confirmation-checks">
+          <ion-card-content>
+            <div>
+              <div class="flex-split">
+                <span class="bold">{{'Confirmation Checks' | uppercase}}</span>
+
+                <span class="tag no-padding" id="action" *ngIf="!loadingJobProgress && confirmationsLeft > 0" color="warning">{{ confirmationsLeft }}</span>
+                <ion-icon *ngIf="confirmationsLeft == 0" color="success" class="check-complete display-right"
+                          name="checkmark-circle-outline"></ion-icon>
+
+              </div>
+              <div class="progress-bar-con ">
+                <span class="bold">{{confirmationCompleteTot}}/{{confirmationTot}}</span>
+                <mat-progress-bar [mode]="loadingJobProgress ?'indeterminate':'determinate'" [value]="confirmationsProgress" color="primary"></mat-progress-bar>
+              </div>
+            </div>
+
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="margin-top button"  id="anomaly-checks" (click)="openJobLineItemViewer('anomaly')">
+          <ion-card-content>
+            <div>
+              <div class="flex-split">
+                <span class="bold">{{'anomaly checks' | uppercase}}</span>
+
+                <span class="tag no-padding"  *ngIf="!loadingJobProgress && anomaliesLeft > 0" color="warning">{{anomaliesLeft}}</span>
+                <ion-icon *ngIf="anomaliesLeft == 0" color="success" class="check-complete display-right"
+                          name="checkmark-circle-outline"></ion-icon>
+              </div>
+              <div class="progress-bar-con">
+                <span class="bold">{{anomaliesCompleteTot}}/{{anomaliesTot}}</span>
+                <mat-progress-bar [mode]="loadingJobProgress ?'indeterminate':'determinate'" [value]="anomaliesProgress" color="primary"></mat-progress-bar>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- fab placed to the (vertical) center and end -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="environment.screenType == 'mobile'">
+    <ion-fab-button test-id="options">
+      <mat-icon>more_vert</mat-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button *ngFor="let button of buttons" (click)="onButtonClick(button.id)" [id]="button.id" color="primary">
+        <mat-icon>{{button.icon}}</mat-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+
+
+  </ion-fab>
+
+
+
+</ion-content>

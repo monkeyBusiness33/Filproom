@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-buttons slot="start">
+    <ion-back-button ></ion-back-button>
+  </ion-buttons>
+  <ion-toolbar>
+    <ion-title>Consignors</ion-title>
+  </ion-toolbar>
+  <ion-buttons slot="end" *ngIf="environment.screenType == 'desktop' && buttons.length > 0">
+    <button mat-button (click)="onButtonClick(button.id)" [id]="button.id" color="primary" *ngFor="let button of buttons">
+    <mat-icon>{{button.icon}}</mat-icon>
+    {{button.label | titlecase}}</button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="environment.screenType == 'mobile' && buttons.length > 0">
+    <ion-fab-button>
+      <mat-icon>more_vert</mat-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button *ngFor="let button of buttons" (click)="onButtonClick(button.id)" [id]="button.id" color="primary">
+        <mat-icon>{{button.icon}}</mat-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  
+  <div class="mobile" *ngIf="environment.screenType == 'mobile'">
+    <fliproom-list #fliproomList (onDataRequest)="onDataRequest($event)" [dataRequested]="dataRequested" (onRowClick)="onRowClick($event)" (onPlaceholderButtonClick)="onButtonClick('invite')" [emptyListPlaceholder]="'No consignors available'" [placeholderButtonText]="'Send Invite'">
+      <ng-template #itemList let-element>
+        <ion-card-content>
+          <span class="bold">{{element.name | titlecase}}</span>
+          <div class="tags-list">
+            <span class="tag" color="primary">{{element.saleChannels[0].tier}}</span>
+            <span class="tag" [attr.color]="element.saleChannels[0].status == 'active' ? 'success' : 'warning'">{{element.saleChannels[0].status}}</span>
+          </div>
+        </ion-card-content>
+      </ng-template>
+    </fliproom-list>
+  </div>
+
+
+  <div class="desktop" *ngIf="environment.screenType == 'desktop' ">
+    <table-wrapper #tableWrapper [configs]=tableConfigs (onDataRequest)="onDataRequest($event)"
+      [dataRequested]="dataRequested" (onRowClick)="onRowClick($event)" (onPlaceholderButtonClick)="onButtonClick('invite')" matSort>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name | titlecase}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element"> 
+          <span class="tag" [attr.color]="element.saleChannels[0].status == 'active' ? 'success' : 'warning'">{{element.saleChannels[0].status}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tier">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tier </th>
+        <td mat-cell *matCellDef="let element"> 
+          <span class="tag" color="primary">{{element.saleChannels[0].tier}}</span>
+        </td>
+      </ng-container>
+    </table-wrapper>
+  </div>
+
+</ion-content>

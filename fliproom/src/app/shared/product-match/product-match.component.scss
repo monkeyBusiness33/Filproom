@@ -1,0 +1,25 @@
+div.products-wrapper {
+    display: grid;
+    grid-template-columns: 5fr 1fr 5fr;
+
+    ion-card {
+        div.product-card-image-wrapper-sm {
+            width: auto;
+        }
+
+        ion-card-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        ion-card-content.placeholder {
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    }
+
+    span#match-icon {
+        margin: auto;
+    }
+}

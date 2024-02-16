@@ -1,0 +1,59 @@
+ion-card#product-card {
+  div.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: auto;
+      height: 10em;
+    }
+
+    ion-card-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+}
+
+.offer-form {
+  div.img-wrapper {
+    height: 100px;
+
+    img {
+      height: 100%;
+      width: auto;
+      margin: auto;
+      display: block;
+    }
+  }
+}
+
+div.info-grid {
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
+}
+
+button#submit {
+  width: 100%;
+}
+
+.form-section-suffix{
+    display: flex;
+    justify-content: end;
+    color: var(--ion-color-grey);
+    align-content: end;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 12px;
+    margin-right: 0.5em;
+}
+
+.offer-form-fields{
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0px !important;
+  }
+}
+
+

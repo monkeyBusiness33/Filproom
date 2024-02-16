@@ -1,0 +1,138 @@
+ion-card.notification-card {
+    ion-card-content {
+        display: flex;
+
+        span#notification-icon {
+            color: var(--ion-color-primary);
+            font-size: 40px;
+            margin: auto;
+        }
+
+        div.body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            margin: 0em 1em;
+
+            span.subtitle {
+                color: var(--ion-color-grey-light);
+            }
+
+            a {
+                font-weight: bold;
+            }
+        }
+
+        span#close-icon {
+            color: grey;
+        }
+    }
+}
+
+div.analytics {
+
+
+
+    ion-card {
+        white-space: nowrap;
+        background-color: transparent;
+
+        &.success {
+            color: var(--ion-color-success);
+        }
+
+        &.error {
+            color: var(--ion-color-danger);
+        }
+
+        ion-card-content {
+            display: flex;
+            flex-direction: column;
+
+            p {
+                font-size: var(--ion-font-size-m);
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                color: white;
+            }
+
+            span.value {
+                font-size: var(--ion-font-size-xl);
+                //color: white;
+            }
+
+            span.change-value.neutral {
+                color: var(--ion-color-medium);
+            }
+
+            .loading-placeholder {
+                font-size: var(--ion-font-size-xl);
+                height: 1.4em;
+            }
+        }
+    }
+}
+
+div.insights {
+
+    ion-card ion-card-content{
+        display: flex;
+        align-items: center;
+
+        span.from-now {
+            font-style: italic;
+            color: var(--ion-color-medium);
+            margin-right: 0.5em;
+        }
+
+        span.report-name {
+            flex-grow: 1;
+        }
+    }
+
+    span.no-insights-placeholder {
+        font-style: italic;
+        color: var(--ion-color-medium);
+    }
+}
+
+
+ion-card.notification-card {
+    animation: slideIn ease 1s forwards;
+}
+
+div.analytics {
+    transform: scale(0);
+    animation: slideIn ease 1s forwards;
+    animation-delay: .5s;
+
+}
+
+div.insights {
+    transform: scale(0);
+    animation: slideIn ease 1s forwards;
+    animation-delay: 0.75s;
+}
+
+div.insights ion-card:nth-of-type(2) { transform: scale(0); animation: slideIn ease 0.5s forwards; animation-delay: 1.0s }
+div.insights ion-card:nth-of-type(3) { transform: scale(0); animation: slideIn ease 0.5s forwards; animation-delay: 1.4s  }
+div.insights ion-card:nth-of-type(4) { transform: scale(0); animation: slideIn ease 0.5s forwards; animation-delay: 1.8s  }
+
+
+@keyframes slideIn {
+    from {
+        transform: scale(0);
+        transform: translateY(50px);
+    }
+    to {
+        transform: scale(1);
+        transform: translateY(0px);
+    }
+}
+
+.analytics{
+  .two-cell-grid{
+    row-gap: 1em;
+  }
+}
