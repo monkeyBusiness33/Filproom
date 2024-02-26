@@ -1573,7 +1573,9 @@ describe("Sales Orders", () => {
       })
     })
 
-    it("Customer pays for order", () => {
+  describe("Customer pays for order", () => {
+    let order
+    it("Create order", () => {
       cy.all([
         () => cy.login('personal-shopper'),
         () => cy.task('createInventory')
@@ -1633,34 +1635,38 @@ describe("Sales Orders", () => {
         cy.get('button#share-order').click()
         return cy.task('getOrder', {ID: order.ID})
       })
-      .then((order) => {
-        cy.visit(`share/order/${order.ID}?accessToken=${order.accessToken}`)
-
-        // Add address
-        cy.get('[test-id="edit-customer"]').click()
-        cy.fillAddressForm()
-        cy.wait(500)
-        cy.toastMessage('Address Updated')
-
-        // Edit address
-        cy.get('[test-id="edit-customer"]').click()
-        cy.get('app-address-contact input[formcontrolname="name"]').should('be.visible').clear().type('new name')
-        cy.get('app-address-contact input[formcontrolname="surname"]').should('be.visible').clear().type('new surname')
-        cy.get('app-address-contact button[test-id="submit"]').should('be.visible').click()
-        cy.wait(500)
-        cy.toastMessage('Address Updated')
-
-        // Add notes
-        cy.get('[test-id="edit-notes"]').click()
-        cy.get('app-input input[formcontrolname="input"]').should('be.visible').clear().type('notes')
-        cy.get('app-input button[test-id="confirm"]').should('be.visible').click()
-        cy.wait(500)
-        cy.toastMessage('Notes Updated')
-
-        cy.get('button#payment-redirect-btn').should('be.visible').click()
-
-        return cy.get('app-checkout-container iframe').its('0.contentDocument.body').should('not.be.empty')
+      .then((orderCreated) => {
+        order = orderCreated
       })
+    })
+
+    it("Pays for order", () => {
+      cy.visit(`share/order/${order.ID}?accessToken=${order.accessToken}`)
+
+      // Add address
+      cy.get('[test-id="edit-customer"]').click()
+      cy.fillAddressForm()
+      cy.wait(500)
+      cy.toastMessage('Address Updated')
+
+      // Edit address
+      cy.get('[test-id="edit-customer"]').click()
+      cy.get('app-address-contact input[formcontrolname="name"]').should('be.visible').clear().type('new name')
+      cy.get('app-address-contact input[formcontrolname="surname"]').should('be.visible').clear().type('new surname')
+      cy.get('app-address-contact button[test-id="submit"]').should('be.visible').click()
+      cy.wait(500)
+      cy.toastMessage('Address Updated')
+
+      // Add notes
+      cy.get('[test-id="edit-notes"]').click()
+      cy.get('app-input input[formcontrolname="input"]').should('be.visible').clear().type('notes')
+      cy.get('app-input button[test-id="confirm"]').should('be.visible').click()
+      cy.wait(500)
+      cy.toastMessage('Notes Updated')
+
+      cy.get('button#payment-redirect-btn').should('be.visible').click()
+
+      return cy.get('app-checkout-container iframe').its('0.contentDocument.body').should('not.be.empty')
       .then((body) => {
         cy.wrap(body).find('input[name="email"]').type('test@gmail.com')
         cy.wrap(body).find('button[data-testid="card-tab-button"]').click()
