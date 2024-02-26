@@ -44,9 +44,8 @@ export class InventoryRecord {
       return null;
     }
 
-    data.payout = data.payout ? parseFloat(data.price) : null
     data.cost = parseFloat(data.cost) || 0
-    data.price = data.payout ? parseFloat(data.price) : null
+    data.price = parseFloat(data.price)
     data.product = new Product(data.product)
     data.variant = new ProductVariant(data.variant)
     data.items = data.items ? data.items.map(item => new Item(item)): null
