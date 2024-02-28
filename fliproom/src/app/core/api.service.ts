@@ -261,6 +261,12 @@ export class ApiService {
       .pipe(map(order => new Order(order)))
   }
 
+  refundOrder (orderID: number, body: Object) {
+    return this._http
+      .post<Order>(environment.apiUrl + `api/order/${orderID}/refund`, body)
+      .pipe(map(order => new Order(order)))
+  }
+
   replaceOrder (orderID: number, body: Object) {
     return this._http
       .post<Order>(environment.apiUrl + `api/order/${orderID}/replace`, body)

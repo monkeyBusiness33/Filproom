@@ -1,39 +1,112 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-button>
-          <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
-        </ion-button>
-      </ion-buttons>
-      <ion-title>Cancel</ion-title>
-    </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <span class="material-symbols-outlined" translate="no" (click)="onCancel()">arrow_back</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Cancel Order</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <form [formGroup]="orderCancelForm" test-id="order-cancel" autocomplete="off">
-        <mat-form-field appearance="fill">
-            <mat-label>Reason</mat-label>
-            <input matInput type="text" autocomplete="null" formControlName="reason" autocomplete="off">
-            <mat-icon matSuffix *ngIf="orderCancelForm.get('reason').value" (click)="orderCancelForm.get('reason').reset()"></mat-icon>
-            <mat-hint class="info">Add optional comment about the reason of why this item has been canceled</mat-hint>
-        </mat-form-field>
+  <form [formGroup]="orderCancelForm" test-id="order-cancel" autocomplete="off">
+    <div class="mat-label">Cancellation Options:</div>
+    <div class="margin-left-xxs">
+      <mat-form-field appearance="fill">
+        <mat-label>Reason*</mat-label>
+        <input matInput type="text" autocomplete="null" formControlName="reason" autocomplete="off" />
+        <mat-icon matSuffix *ngIf="orderCancelForm.get('reason').value"
+          (click)="orderCancelForm.get('reason').reset()"></mat-icon>
+        <mat-hint class="info">Add optional comment about the reason of why this item has been
+          canceled</mat-hint>
+      </mat-form-field>
 
-        <div class="mat-checkbox margin-bottom-s" *ngIf="!orderCancelForm.get('restock').disabled">
-            <mat-checkbox formControlName="restock" (change)="onRestockInventoryChange($event)">
-                Restock the item in the inventory
-            </mat-checkbox>
-        </div>
+      <mat-radio-group formControlName="action" (change)="onActionChange()">
+        <mat-radio-button value="refund">Remove & Refund</mat-radio-button>
+        <mat-radio-button value="remove">Remove</mat-radio-button>
+        <mat-radio-button value="hold">Hold</mat-radio-button>
+      </mat-radio-group>
+
+      <div class="mat-checkbox margin-top-s">
+        <mat-checkbox formControlName="refundShipping" *ngIf="orderCancelForm.get('refundShipping').enabled">Refund {{shippingCost | currency}}
+          shipping</mat-checkbox>
+      </div>
+    </div>
+    <div class="mat-label">Restock Options</div>
+    <div class="margin-left-xxs">
+      <div class="mat-checkbox margin-bottom-s margin-top-s" *ngIf="!orderCancelForm.get('restock').disabled">  
+        <mat-checkbox formControlName="restock" (change)="onRestockInventoryChange($event)">
+          Restock the item in the inventory
+        </mat-checkbox>
+      </div>
       <mat-form-field appearance="fill" *ngIf="orderCancelForm.get('warehouse').enabled">
         <mat-label>Location</mat-label>
         <mat-select formControlName="warehouse" [compareWith]="compareObjectsByIDFn">
-          <mat-option [value]="warehouse" *ngFor="let warehouse of availableWarehouses">{{warehouse.name | titlecase}}</mat-option>
+          <mat-option [value]="warehouse" *ngFor="let warehouse of availableWarehouses">{{ warehouse.name | titlecase
+            }}</mat-option>
         </mat-select>
         <mat-hint class="info">Select warehouse where item will be restocked</mat-hint>
       </mat-form-field>
-    </form>
+    </div>
+    <div class="mat-label">
+      Select items to cancel:
+    </div>
+    <div class="margin-left-xxs">
+      <mat-checkbox class="margin-bottom-s" 
+        [checked]="orderLineItemsCount === selectedOrderLineItemsCount && orderLineItemsCount > 0"
+        [indeterminate]="selectedOrderLineItemsCount > 0 && orderLineItemsCount > selectedOrderLineItemsCount"
+        [disabled]="orderLineItemsCount === 0"
+        (change)="onCheckAllChange()"
+      > 
+        Select all 
+      </mat-checkbox>
+      <div class="list-wrapper">
+        <ion-list formArrayName="orderLineItems" test-id="oli-list">
+          <ion-card *ngFor="let oliControl of orderLineItems['controls']; index as i" class="template1 margin-bottom"
+            [formGroupName]="i" [attr.test-id]="oliControl.value.ID">
+            <div class="container">
+              <ion-card-content>
+                <div class="product-card-image-wrapper-sm">
+                  <img [src]="oliControl.value.product.imageReference" alt=""
+                    onerror="this.src = './assets/images/placeholder.png';" />
+                </div>
+                <div class="section1">
+                  <span class="bold">{{ oliControl.value.product.code | uppercase }} ({{
+                    oliControl.value.variant | variant
+                    }})</span>
+                  <span>{{ oliControl.value.product.title | titlecase }}</span>
+                  <span class="grey">{{
+                    oliControl.value.item.warehouse.name || "in-transit"
+                    | uppercase
+                    }}</span>
+                  <div class="tags-list">
+                    <span class="tag" color="primary">{{
+                      oliControl.value.item.account.name | uppercase
+                      }}</span>
+                    <span class="tag" color="primary">{{
+                      oliControl.value.status.name | uppercase
+                      }}</span>
+                  </div>
+                </div>
+                <mat-checkbox formControlName="selected">
+                </mat-checkbox>
+              </ion-card-content>
+            </div>
+            <span class="suffix barcode bold" *ngIf="oliControl.value.item.barcode"
+              [attr.barcode]="oliControl.value.item.barcode">{{ oliControl.value.item.barcode | uppercase }}</span>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
+  </form>
 </ion-content>
 
 <ion-footer>
-    <button mat-stroked-button (click)="onCancel()" test-id="cancel">Cancel</button>
-    <button mat-flat-button color="primary" [disabled]="!orderCancelForm.valid" (click)="onSubmit()" test-id="submit">Submit</button>
+  <button mat-stroked-button (click)="onCancel()" test-id="cancel">
+    Cancel
+  </button>
+  <button mat-flat-button color="primary" [disabled]="!orderCancelForm.valid" (click)="onSubmit()" test-id="submit">
+    Submit
+  </button>
 </ion-footer>

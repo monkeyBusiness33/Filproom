@@ -1,13 +1,27 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
+}
+mat-radio-group {
+  width: 100%;
+  display: flex;
 }
 
 div#replace-section {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+}
 
-    mat-radio-group {
-        display: flex;
-        justify-content: space-between;
-    }
+.mat-checkbox {
+  display: block;
+  margin-bottom: 20px;
+  margin-left: 3px;
+}
+
+mat-radio-button {
+  margin-right: 30px;
+  margin-left: 4px;
+}
+
+.mat-label {
+  margin-bottom: 5px;
 }

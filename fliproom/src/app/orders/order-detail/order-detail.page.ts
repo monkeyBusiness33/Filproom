@@ -13,11 +13,11 @@ import { OrdersListComponent } from '../modals/orders-list/orders-list.component
 import { InputResponse } from 'src/app/shared/modal/input/input.component';
 import { CancelOrderComponent, OrderCancelRequest } from '../modals/cancel-order/cancel-order.component';
 import { FulfillmentFormComponent } from '../modals/fulfillment-form/fulfillment-form.component';
-import {forkJoin, of} from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { Address } from 'src/app/shared/models/Address.model';
 import { SelectItemComponent } from 'src/app/shared/components/select-item/select-item.component';
 import { PluginsService } from 'src/app/core/plugins.service';
-import {AddressContactPage} from "../modals/address-contact/address-contact.page";
+import { AddressContactPage } from "../modals/address-contact/address-contact.page";
 import { Fulfillment } from 'src/app/shared/models/Fulfillment.model';
 import { PayoutFormComponent } from 'src/app/payments/modals/payout-form/payout-form.component';
 import { TransactionFormComponent } from 'src/app/payments/modals/transaction-form/transaction-form.component';
@@ -47,7 +47,7 @@ export class OrderDetailPage implements OnInit {
     private _router: Router,
     private _plugins: PluginsService,
     public user: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this._route.params.subscribe((params) => this._onRefresh());
@@ -59,107 +59,107 @@ export class OrderDetailPage implements OnInit {
       order: this._api.getOrderByID(parseInt(this._route.snapshot.paramMap.get('orderID'))),
       transactions: this._api.getOrderTransactions(parseInt(this._route.snapshot.paramMap.get('orderID')))
     })
-    .subscribe((resp) => {
-      this.order = resp.order as Order
-      this.transactionsDataSource.data = resp.transactions as Transaction[]
+      .subscribe((resp) => {
+        this.order = resp.order as Order
+        this.transactionsDataSource.data = resp.transactions as Transaction[]
 
-      if (this.order.parentOrderID != null) {
-        this.displayedColumns = ['image', 'product.title', 'product.code', 'productVariant.name', 'price', 'fees', 'payout', 'cost', 'profit', 'warehouse.name', 'status.name']
-      } else {
-        this.displayedColumns = ['image','account.name','account.ID', 'product.title', 'product.code', 'productVariant.name', 'price', 'cost', 'profit', 'warehouse.name', 'status.name']
-      }
+        if (this.order.parentOrderID != null) {
+          this.displayedColumns = ['image', 'product.title', 'product.code', 'productVariant.name', 'price', 'fees', 'payout', 'cost', 'profit', 'warehouse.name', 'status.name']
+        } else {
+          this.displayedColumns = ['image', 'account.name', 'account.ID', 'product.title', 'product.code', 'productVariant.name', 'price', 'cost', 'profit', 'warehouse.name', 'status.name']
+        }
 
-      //  Remove cost and profit if permission false
-      if (!this.user.iam.inventory.view_cost) {
-        let positionCost = this.displayedColumns.indexOf('cost')
-        this.displayedColumns.splice(positionCost, 1)
-        let positionProfit = this.displayedColumns.indexOf('profit')
-        this.displayedColumns.splice(positionProfit, 1)
-      }
+        //  Remove cost and profit if permission false
+        if (!this.user.iam.inventory.view_cost) {
+          let positionCost = this.displayedColumns.indexOf('cost')
+          this.displayedColumns.splice(positionCost, 1)
+          let positionProfit = this.displayedColumns.indexOf('profit')
+          this.displayedColumns.splice(positionProfit, 1)
+        }
 
-      // Adding the new icon to the displayedColumns array
-      this.displayedColumns.push('iconColumn');
+        // Adding the new icon to the displayedColumns array
+        this.displayedColumns.push('iconColumn');
 
-      this.transactionsDataSourceColumns = ['amount', 'feesAmount', 'type']
+        this.transactionsDataSourceColumns = ['amount', 'feesAmount', 'type']
 
-      // Display transaction details dependig on type of order (consignment or not)
-      if (this.order.parentOrderID) {
-        this.transactionsDataSourceColumns.push('fromAccount.name')
-      } else {
-        this.transactionsDataSourceColumns.push('toAccount.name')
-      }
+        // Display transaction details dependig on type of order (consignment or not)
+        if (this.order.parentOrderID) {
+          this.transactionsDataSourceColumns.push('fromAccount.name')
+        } else {
+          this.transactionsDataSourceColumns.push('toAccount.name')
+        }
 
-      this.transactionsDataSourceColumns = this.transactionsDataSourceColumns.concat(['status', 'details'])
+        this.transactionsDataSourceColumns = this.transactionsDataSourceColumns.concat(['status', 'details'])
 
-      //add available buttons
-      this.buttons = []
-      const itemsAvailableToBeFulfilled = this.order.orderLineItems.find(oli=>oli.canFulfill().value)
-      if (itemsAvailableToBeFulfilled) {
-        this.buttons.push({ label: 'Ship Items', icon: 'add', id: 'create-fulfillment' })
-      }
+        //add available buttons
+        this.buttons = []
+        const itemsAvailableToBeFulfilled = this.order.orderLineItems.find(oli => oli.canFulfill().value)
+        if (itemsAvailableToBeFulfilled) {
+          this.buttons.push({ label: 'Ship Items', icon: 'add', id: 'create-fulfillment' })
+        }
 
-      if (this.order.tags.includes('personal-shopping')){
-        this.buttons.push({ label: 'Share Order', icon: 'link', id: 'share-order' })
-      }
+        if (this.order.tags.includes('personal-shopping')) {
+          this.buttons.push({ label: 'Share Order', icon: 'link', id: 'share-order' })
+        }
 
-      if (this.user.iam.order.dispatch && this.orderLineItemsCanBeDispatched.length > 1) {
-        this.buttons.push({ label: 'Dispatch items', icon: 'move_to_inbox', id: 'dispatch-items' })
-      }
+        if (this.user.iam.order.dispatch && this.orderLineItemsCanBeDispatched.length > 1) {
+          this.buttons.push({ label: 'Dispatch items', icon: 'move_to_inbox', id: 'dispatch-items' })
+        }
 
-      if (this.user.iam.order.deliver && this.order.parentOrderID == null && this.orderLineItemsCanBeDelivered.length > 1) {
-        this.buttons.push({ label: 'Deliver items', icon: 'done_all', id: 'deliver-items' })
-      }
+        if (this.user.iam.order.deliver && this.order.parentOrderID == null && this.orderLineItemsCanBeDelivered.length > 1) {
+          this.buttons.push({ label: 'Deliver items', icon: 'done_all', id: 'deliver-items' })
+        }
 
-      if (this.order.type.name == 'outbound') {
-        this.buttons.push({label: 'Download Receipt', icon: 'receipt', id: 'download-receipt'})
-      }
+        if (this.order.type.name == 'outbound') {
+          this.buttons.push({ label: 'Download Receipt', icon: 'receipt', id: 'download-receipt' })
+        }
 
-      if (this.order.type.name == 'outbound' || this.order.type.name == 'inbound') {
-        this.buttons.push({label: 'Download Invoice', icon: 'description', id: 'download-invoice'})
-      }
+        if (this.order.type.name == 'outbound' || this.order.type.name == 'inbound') {
+          this.buttons.push({ label: 'Download Invoice', icon: 'description', id: 'download-invoice' })
+        }
 
-      if (this.order.type.name == 'outbound' && this.transactionsDataSource.data.find(transaction => transaction.type === 'sale')?.status === 'paid') {
-        this.buttons.push({label: 'Download Customer Invoice', icon: 'description', id: 'download-customer-invoice'})
-      }
+        if (this.order.type.name == 'outbound' && this.transactionsDataSource.data.find(transaction => transaction.type === 'sale')?.status === 'paid') {
+          this.buttons.push({ label: 'Download Customer Invoice', icon: 'description', id: 'download-customer-invoice' })
+        }
 
-      if (this.order.foreignID) {
-        this.buttons.push({label: 'View Shopify Order', icon: 'link', id: 'view-shopify-order'})
-      }
+        if (this.order.foreignID) {
+          this.buttons.push({ label: 'View Shopify Order', icon: 'link', id: 'view-shopify-order' })
+        }
 
-      this.isLoading = false;
-      this.dataSource.data = this.order.orderLineItems;
-    });
-    }
+        this.isLoading = false;
+        this.dataSource.data = this.order.orderLineItems;
+      });
+  }
 
   onCustomerAddEdit(address: Address | null) {
     this._modalCtrl.open(AddressContactPage, { address: address }, { cssClass: 'full-screen-y' }).pipe(
       filter(data => data),
       mergeMap((address: Address) => {
-          return this._api.updateOrder(this.order.ID, {consigneeID: address.ID})
+        return this._api.updateOrder(this.order.ID, { consigneeID: address.ID })
       })
-    ).subscribe(() =>  this._onRefresh())
+    ).subscribe(() => this._onRefresh())
   }
 
   onSupplierAddEdit(address: Address | null) {
     this._modalCtrl.open(AddressContactPage, { address: address }, { cssClass: 'full-screen-y' }).pipe(
       filter(data => data),
       mergeMap((address: Address) => {
-        return this._api.updateOrder(this.order.ID, {consignorID: address.ID})
+        return this._api.updateOrder(this.order.ID, { consignorID: address.ID })
       })
-    ).subscribe(() =>  this._onRefresh())
+    ).subscribe(() => this._onRefresh())
   }
 
   onButtonClick(buttonId: string) {
     switch (buttonId) {
       //called from mobiel only - allow to display all the actions buttons available
       case 'open-action-sheet':
-        const actionSheetButtons = this.buttons.map(buttonObj => {return {title: buttonObj.label, icon: buttonObj.icon, key: buttonObj.id}})
+        const actionSheetButtons = this.buttons.map(buttonObj => { return { title: buttonObj.label, icon: buttonObj.icon, key: buttonObj.id } })
         this._modalCtrl.actionSheet('Actions', actionSheetButtons)
-        .pipe(
-          filter((resp: IModalResponse) => resp.role == "submit"),
-          map((resp: IModalResponse) => resp.data),
-        )
-        .subscribe((action: string) => this.onButtonClick(action))
+          .pipe(
+            filter((resp: IModalResponse) => resp.role == "submit"),
+            map((resp: IModalResponse) => resp.data),
+          )
+          .subscribe((action: string) => this.onButtonClick(action))
         break;
       case 'create-fulfillment':
         this.onFulfill()
@@ -182,12 +182,12 @@ export class OrderDetailPage implements OnInit {
       case 'share-order':
         let query = of(null)
         if (!this.order.linkFirstSharedAt) {
-          query = this._api.updateOrder(this.order.ID, {linkFirstSharedAt: moment().utc()})
+          query = this._api.updateOrder(this.order.ID, { linkFirstSharedAt: moment().utc() })
         }
-          //extract root url
+        //extract root url
         query.subscribe(() => {
           const rootUrl = window.location.href.split('/orders')[0]
-          const link = rootUrl+ '/share/order/' +this.order.ID+ '?accessToken='+this.order.accessToken;
+          const link = rootUrl + '/share/order/' + this.order.ID + '?accessToken=' + this.order.accessToken;
           navigator.clipboard.writeText(link);
           this._modalCtrl.info('Order Link Copied to Clipboard')
           this._modalCtrl.clipboard({
@@ -195,7 +195,7 @@ export class OrderDetailPage implements OnInit {
             buttonText: 'Copy',
             value: link,
             valueLabel: 'Link'
-          }, {cssClass: 'custom'}).pipe(filter(res => res)).subscribe((res) => {
+          }, { cssClass: 'custom' }).pipe(filter(res => res)).subscribe((res) => {
             this._modalCtrl.info('Order Link Copied to Clipboard')
           });
         })
@@ -260,7 +260,7 @@ export class OrderDetailPage implements OnInit {
       fromAccountID: this.user.account.ID,
       currency: this.user.account.currency,
       orderID: this.order.ID,
-    }, {cssClass: 'full-screen-y'}).pipe(
+    }, { cssClass: 'full-screen-y' }).pipe(
       filter(data => data),
     ).subscribe(() => this._onRefresh())
   }
@@ -270,7 +270,7 @@ export class OrderDetailPage implements OnInit {
       filter((confirm: boolean) => confirm),
       mergeMap(() => {
         this.isLoading = true
-        return this._api.acceptOrder(this.order.ID, [{ID: orderLineItem.ID}])
+        return this._api.acceptOrder(this.order.ID, [{ ID: orderLineItem.ID }])
       })
     ).subscribe(() => {
       this._onRefresh()
@@ -279,11 +279,11 @@ export class OrderDetailPage implements OnInit {
   }
 
   onCancel(orderLineItem: OrderLineItem) {
-    this._modalCtrl.open(CancelOrderComponent, orderLineItem).pipe(
+    this._modalCtrl.open(CancelOrderComponent, orderLineItem,{ cssClass: 'full-screen-y' }).pipe(
       filter(data => data),
       mergeMap((response: OrderCancelRequest) => {
         this.isLoading = true
-        return this._api.cancelOrder(this.order.ID, {orderLineItems: [{ID: orderLineItem.ID, reason: response.reason, restock: response.restock, warehouseID: response.warehouse?.ID}]})
+        return this._api.cancelOrder(this.order.ID, response)
       })
     ).subscribe(() => {
       this._onRefresh()
@@ -303,7 +303,7 @@ export class OrderDetailPage implements OnInit {
           consigneeID: this.user.account.warehouses.find(warehouse => warehouse.addressID == this.order.consignor.ID).addressID,
           arrivalDate: null,
           reference1: `[ORDER #${this.order.reference1}]`,
-          details: this.orderLineItemsToTransfer.map(oli => {return {itemID: oli.itemID}})
+          details: this.orderLineItemsToTransfer.map(oli => { return { itemID: oli.itemID } })
         })
       })
     ).subscribe((order) => {
@@ -314,7 +314,7 @@ export class OrderDetailPage implements OnInit {
   }
 
   onFulfill() {
-    this._modalCtrl.open(FulfillmentFormComponent, {mode: "create", orderID: this.order.ID}, {cssClass: 'full-screen-y'}).pipe(
+    this._modalCtrl.open(FulfillmentFormComponent, { mode: "create", orderID: this.order.ID }, { cssClass: 'full-screen-y' }).pipe(
       filter(res => res),
     ).subscribe((fulfillment: Fulfillment) => {
       this._modalCtrl.success('Fulfillment Created')
@@ -332,9 +332,9 @@ export class OrderDetailPage implements OnInit {
     let itemSelected;
 
     const actionsList = [
-      {title: 'Source',  description: 'Generate a source order',           key: 'source'},
-      {title: 'Replace', description: 'Select an item from the inventory', key: 'replace'},
-      {title: 'Refund',  description: 'Reject it and trigger the refund',  key: 'refund'},
+      { title: 'Source', description: 'Generate a source order', key: 'source' },
+      { title: 'Replace', description: 'Select an item from the inventory', key: 'replace' },
+      { title: 'Refund', description: 'Reject it and trigger the refund', key: 'refund' },
     ]
     this._modalCtrl.actionSheet('Replace Options', actionsList).pipe(
       filter((resp: IModalResponse) => resp.role == "submit"),
@@ -344,7 +344,7 @@ export class OrderDetailPage implements OnInit {
         if (action == "source") {
           return this._modalCtrl.confirm("Are you sure you want to proceed by generating a sourcing order for this item?")
         } else if (action == "replace") {
-          return this._modalCtrl.open(SelectItemComponent, {product: orderLineItem.product, variant: orderLineItem.variant, saleChannel: this.order.saleChannel, disableSource: true, orderLineItem: orderLineItem}, {cssClass: 'full-screen-y'}).pipe(
+          return this._modalCtrl.open(SelectItemComponent, { product: orderLineItem.product, variant: orderLineItem.variant, saleChannel: this.order.saleChannel, disableSource: true, orderLineItem: orderLineItem }, { cssClass: 'full-screen-y' }).pipe(
 
             mergeMap((item: Item) => {
               itemSelected = item
@@ -359,11 +359,11 @@ export class OrderDetailPage implements OnInit {
       mergeMap((response) => {
         this.isLoading = true
         if (actionSelected == "source") {
-          return this._api.replaceOrder(this.order.ID, {orderLineItems: [{ID: orderLineItem.ID, action: 'source'}]})
+          return this._api.replaceOrder(this.order.ID, { orderLineItems: [{ ID: orderLineItem.ID, action: 'source' }] })
         } else if (actionSelected == "replace") {
-          return this._api.replaceOrder(this.order.ID, {orderLineItems: [{ID: orderLineItem.ID, action: 'manual', itemID: itemSelected.ID}]})
+          return this._api.replaceOrder(this.order.ID, { orderLineItems: [{ ID: orderLineItem.ID, action: 'manual', itemID: itemSelected.ID }] })
         } else if (actionSelected == "refund") {
-          return this._api.replaceOrder(this.order.ID, {orderLineItems: [{ID: orderLineItem.ID, action: 'refund'}]})
+          return this._api.replaceOrder(this.order.ID, { orderLineItems: [{ ID: orderLineItem.ID, action: 'refund' }] })
         } else {
           return of(null)
         }
@@ -379,7 +379,7 @@ export class OrderDetailPage implements OnInit {
       filter(res => res),
       mergeMap(() => {
         this.isLoading = true
-        return this._api.fulfillmentDispatch(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ID: orderLineItem.ID}])
+        return this._api.fulfillmentDispatch(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ ID: orderLineItem.ID }])
       })
     ).subscribe(() => {
       this._onRefresh()
@@ -397,7 +397,7 @@ export class OrderDetailPage implements OnInit {
       mergeMap(() => {
         this.isLoading = true
         return forkJoin(this.orderLineItemsCanBeDispatched.map((orderLineItem) =>
-          this._api.fulfillmentDispatch(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ID: orderLineItem.ID}])
+          this._api.fulfillmentDispatch(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ ID: orderLineItem.ID }])
         ))
       })
     ).subscribe(() => {
@@ -412,7 +412,7 @@ export class OrderDetailPage implements OnInit {
         filter((res) => res),
         mergeMap(() => {
           this.isLoading = true;
-          return this._api.fulfillmentDeliver(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ID: orderLineItem.ID}])
+          return this._api.fulfillmentDeliver(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ ID: orderLineItem.ID }])
         })
       )
       .subscribe(() => {
@@ -431,7 +431,7 @@ export class OrderDetailPage implements OnInit {
       mergeMap(() => {
         this.isLoading = true
         return forkJoin(this.orderLineItemsCanBeDelivered.map((orderLineItem) =>
-          this._api.fulfillmentDeliver(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ID: orderLineItem.ID}])
+          this._api.fulfillmentDeliver(orderLineItem.orderID, orderLineItem.fulfillmentID, [{ ID: orderLineItem.ID }])
         ))
       })
     ).subscribe(() => {
@@ -452,7 +452,7 @@ export class OrderDetailPage implements OnInit {
   onSetItemsCostPrice(orderLineItem: OrderLineItem) {
     const isConsignorItem = this.user.account.ID != orderLineItem.item.accountID
     this._modalCtrl.input({
-      title: isConsignorItem ? 'Update Consignor Item Payout':'Update Item Cost',
+      title: isConsignorItem ? 'Update Consignor Item Payout' : 'Update Item Cost',
       subtitle: orderLineItem.product.title + ' | ' + orderLineItem.variant.name,
       type: 'number',
       input: orderLineItem.cost,
@@ -460,11 +460,11 @@ export class OrderDetailPage implements OnInit {
       filter(cost => cost != null),
       mergeMap((cost: number) => {
         this.isLoading = true;
-        return this._api.updateOrderLineItem(orderLineItem.orderID, orderLineItem.ID, { cost: cost})
+        return this._api.updateOrderLineItem(orderLineItem.orderID, orderLineItem.ID, { cost: cost })
       })
     ).subscribe((res) => {
-        this._onRefresh();
-        this._modalCtrl.success('Item Price Updated');
+      this._onRefresh();
+      this._modalCtrl.success('Item Price Updated');
     });
   }
 
@@ -493,7 +493,7 @@ export class OrderDetailPage implements OnInit {
     }).pipe(
       mergeMap((reference: string) => {
         this.isLoading = true;
-        return this._api.updateOrder(this.order.ID, { reference1: reference})
+        return this._api.updateOrder(this.order.ID, { reference1: reference })
       })
     ).subscribe((notes) => {
       this._onRefresh();
@@ -512,10 +512,10 @@ export class OrderDetailPage implements OnInit {
   }
 
   onViewTransactionDetails(tx: Transaction) {
-    this._modalCtrl.open(PayoutFormComponent, {txId: tx.ID}, {cssClass: 'full-screen-y'})
-    .subscribe(() => {
-      this._onRefresh()
-    })
+    this._modalCtrl.open(PayoutFormComponent, { txId: tx.ID }, { cssClass: 'full-screen-y' })
+      .subscribe(() => {
+        this._onRefresh()
+      })
   }
 
   get orderLineItemsCanBeDispatched() {
@@ -542,7 +542,7 @@ export class OrderDetailPage implements OnInit {
   }
 
   canBeTransferred(): boolean {
-    this.orderLineItemsToTransfer = this.order.orderLineItems.filter(oli =>  this.order.type.name == 'outbound' && oli.status.name == 'fulfill' && oli.item.warehouse && oli.item.warehouse.accountID == this.order.accountID && this.order.consignor.ID != oli.item.warehouse.addressID && oli.item.statusID == null)
+    this.orderLineItemsToTransfer = this.order.orderLineItems.filter(oli => this.order.type.name == 'outbound' && oli.status.name == 'fulfill' && oli.item.warehouse && oli.item.warehouse.accountID == this.order.accountID && this.order.consignor.ID != oli.item.warehouse.addressID && oli.item.statusID == null)
     return this.orderLineItemsToTransfer.length > 0
   }
 
@@ -567,21 +567,21 @@ export class OrderDetailPage implements OnInit {
     const actions = []
     // accept
     if (this.order.type.name == 'outbound' && orderLineItem.status.name == 'pending' && this.user.iam.order.accept) {
-      actions.push({icon: 'done', title: 'Accept', description: orderLineItem.canAccept().message, disabled: !orderLineItem.canAccept().value, key: 'accept'})
+      actions.push({ icon: 'done', title: 'Accept', description: orderLineItem.canAccept().message, disabled: !orderLineItem.canAccept().value, key: 'accept' })
     }
 
     // cancel
     if (this.user.iam.order.cancel && orderLineItem.canceledAt == null) {
-      actions.push({icon: 'close', title: 'Cancel', description: orderLineItem.canCancel().message, disabled: !orderLineItem.canCancel().value, key: 'cancel'})
+      actions.push({ icon: 'close', title: 'Cancel', description: orderLineItem.canCancel().message, disabled: !orderLineItem.canCancel().value, key: 'cancel' })
     }
 
     // fulfill
     if (this.user.iam.order.fulfill && orderLineItem.canFulfill().value) {
-      actions.push({icon: 'move_to_inbox', title: 'Fulfill', description: orderLineItem.canFulfill().message, disabled: !orderLineItem.canFulfill().value, key: 'fulfill'})
+      actions.push({ icon: 'move_to_inbox', title: 'Fulfill', description: orderLineItem.canFulfill().message, disabled: !orderLineItem.canFulfill().value, key: 'fulfill' })
     }
 
     // dispatch
-    if (this.user.iam.order.dispatch && orderLineItem.status.name == 'fulfilling' ) {
+    if (this.user.iam.order.dispatch && orderLineItem.status.name == 'fulfilling') {
       console.log(orderLineItem.fulfillment)
       console.log(orderLineItem.order.account)
       // If the consignor fulfills some items using the courier service the "dispatch" button is not available
@@ -592,7 +592,7 @@ export class OrderDetailPage implements OnInit {
 
     // deliver
     if (this.user.iam.order.deliver && orderLineItem.canDeliver().value && this.order.parentOrderID == null) {
-      actions.push({icon: 'done_all', title: 'Deliver', description: orderLineItem.canDeliver().message, disabled: orderLineItem.canDeliver().disabled, key: 'deliver'})
+      actions.push({ icon: 'done_all', title: 'Deliver', description: orderLineItem.canDeliver().message, disabled: orderLineItem.canDeliver().disabled, key: 'deliver' })
     }
 
     // shipping label available for order line item
@@ -602,42 +602,42 @@ export class OrderDetailPage implements OnInit {
 
     // transfer
     if (this.canBeTransferred()) {
-      actions.push({icon: 'switch_access_shortcut', title: 'Transfer', description: '', disabled: false, key: 'transfer'})
+      actions.push({ icon: 'switch_access_shortcut', title: 'Transfer', description: '', disabled: false, key: 'transfer' })
     }
 
     // replace
     if (this.user.iam.order.replace && orderLineItem.replacePending) {
-      actions.push({icon: 'autorenew', title: 'Replace', description: '', disabled: false, key: 'replace'})
+      actions.push({ icon: 'autorenew', title: 'Replace', description: '', disabled: false, key: 'replace' })
     }
 
     // add cancellation fee if not already created for consignment item
     const oliCancellationFee = this.transactionsDataSource.data.find(tx => tx.orderLineItemID == orderLineItem.ID && tx.type == 'cancellation fee')
     if (orderLineItem.canceledAt && orderLineItem.item.accountID != this.order.accountID && !oliCancellationFee) {
-      actions.push({icon: 'autorenew', title: 'Add Cancellation Fee', description: '', disabled: false, key: 'add-cancellation-fee'})
+      actions.push({ icon: 'autorenew', title: 'Add Cancellation Fee', description: '', disabled: false, key: 'add-cancellation-fee' })
     }
 
     // fulfillment
     if (orderLineItem.fulfillmentID) {
-      actions.push({icon: 'local_shipping', title: 'Fulfillment', description: '', disabled: false, key: 'fulfillment-view'})
+      actions.push({ icon: 'local_shipping', title: 'Fulfillment', description: '', disabled: false, key: 'fulfillment-view' })
     }
 
     // order & notes
-    actions.push({icon: 'info', title: 'Details',      description: '', disabled: false, key: 'details'})
-    actions.push({icon: 'account_tree', title: 'View Orders',      description: '', disabled: false, key: 'orders'})
-    actions.push({icon: 'notes', title: 'Update Notes', description: '', disabled: false, key: 'notes'})
-    actions.push({icon: 'copy_content', title: 'Copy Info', description: '', disabled: false, key: 'copy-info'})
+    actions.push({ icon: 'info', title: 'Details', description: '', disabled: false, key: 'details' })
+    actions.push({ icon: 'account_tree', title: 'View Orders', description: '', disabled: false, key: 'orders' })
+    actions.push({ icon: 'notes', title: 'Update Notes', description: '', disabled: false, key: 'notes' })
+    actions.push({ icon: 'copy_content', title: 'Copy Info', description: '', disabled: false, key: 'copy-info' })
 
     // update cost
     if (this.user.iam.order.update) {
       const isConsignorItem = this.user.account.ID != orderLineItem.item.accountID
-      actions.push({icon: 'attach_money', title: isConsignorItem ? 'Update Payout' : 'Update Cost', description: '', disabled: false, key: 'update-cost'})
+      actions.push({ icon: 'attach_money', title: isConsignorItem ? 'Update Payout' : 'Update Cost', description: '', disabled: false, key: 'update-cost' })
     }
 
     this._modalCtrl.actionSheet('Actions', actions).pipe(
       filter((resp: IModalResponse) => resp.role == "submit"),
       map((resp: IModalResponse) => resp.data),
     ).subscribe((action: string) => {
-      switch(action) {
+      switch (action) {
         case 'accept':
           this.onAccept(orderLineItem)
           break;
@@ -685,7 +685,7 @@ export class OrderDetailPage implements OnInit {
             currency: this.user.account.currency,
             orderID: this.order.ID,
             orderLineItemID: orderLineItem.ID,
-          }, {cssClass: 'full-screen-y'}).pipe(
+          }, { cssClass: 'full-screen-y' }).pipe(
             filter(data => data),
           ).subscribe(() => this._onRefresh())
           break;
